@@ -1,9 +1,24 @@
 {
+  "name": "symbols-view",
+  "version": "0.0.0",
   "main": "./lib/symbols-view",
   "description": "Jump to a function or method in the current editor with `meta-j`.",
   "activationEvents": {
     "symbols-view:toggle-file-symbols": ".editor",
     "symbols-view:toggle-project-symbols": null,
     "symbols-view:go-to-declaration": ".editor"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atom/symbols-view.git"
+  },
+  "bugs": {
+    "url": "https://github.com/atom/symbols-view/issues"
+  },
+  "engines": {
+    "atom": "*"
+  },
+  "publishConfig": {
+    "registry": "https://atom.iriscouch.com/registry/_design/app/_rewrite"
   }
 }
