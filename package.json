@@ -8,6 +8,9 @@
     "symbols-view:toggle-project-symbols": null,
     "symbols-view:go-to-declaration": ".editor"
   },
+  "dependencies": {
+    "ctags": "~0.5.0"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/atom/symbols-view.git"
