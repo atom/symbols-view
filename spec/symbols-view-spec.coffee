@@ -1,6 +1,6 @@
 RootView = require 'root-view'
-SymbolsView = require 'symbols-view/lib/symbols-view'
-TagGenerator = require 'symbols-view/lib/tag-generator'
+SymbolsView = require '../lib/symbols-view'
+TagGenerator = require '../lib/tag-generator'
 fsUtils = require 'fs-utils'
 
 describe "SymbolsView", ->
