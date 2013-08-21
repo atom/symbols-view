@@ -20,7 +20,8 @@ class TagGenerator
     deferred = $.Deferred()
     tags = []
     command = path.resolve(__dirname, '..', 'vendor', 'ctags')
-    args = ['--fields=+KS', '-nf', '-', @path]
+    defaultCtagsFile = path.resolve(__dirname, '..', '.ctags')
+    args = ["--options=#{defaultCtagsFile}", '--fields=+KS', '-nf', '-', @path]
     stdout = (lines) =>
       for line in lines.split('\n')
         tag = @parseTagLine(line)
