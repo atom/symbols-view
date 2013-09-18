@@ -1,7 +1,4 @@
-{Point} = require 'telepath'
-$ = require 'jquery'
-BufferedProcess = require 'buffered-process'
-fsUtils = require 'fs-utils'
+{$, BufferedProcess, Point} = require 'atom-api'
 path = require 'path'
 
 module.exports =
