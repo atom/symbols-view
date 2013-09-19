@@ -1,4 +1,4 @@
-{$, BufferedProcess, Point} = require 'atom-api'
+{$, BufferedProcess, Point} = require 'atom'
 path = require 'path'
 
 module.exports =

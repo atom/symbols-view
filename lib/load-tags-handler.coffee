@@ -1,5 +1,5 @@
 ctags = require 'ctags'
-{fs} = require 'atom-api'
+{fs} = require 'atom'
 path = require 'path'
 
 getTagsFile = (directoryPath) ->

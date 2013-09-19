@@ -1,4 +1,4 @@
-{fs, RootView} = require 'atom-api'
+{fs, RootView} = require 'atom'
 SymbolsView = require '../lib/symbols-view'
 TagGenerator = require '../lib/tag-generator'
 

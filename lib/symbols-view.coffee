@@ -1,4 +1,4 @@
-{_, $, $$, fs, Point, SelectList} = require 'atom-api'
+{_, $, $$, fs, Point, SelectList} = require 'atom'
 TagGenerator = require './tag-generator'
 TagReader = require './tag-reader'
 path = require 'path'

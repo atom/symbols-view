@@ -1,4 +1,4 @@
-{$, fs, Task} = require 'atom-api'
+{$, fs, Task} = require 'atom'
 ctags = require 'ctags'
 
 handlerPath = require.resolve('./load-tags-handler')
