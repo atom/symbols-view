@@ -80,7 +80,7 @@ describe "SymbolsView", ->
     tags = []
 
     waitsForPromise ->
-      path = require.resolve('fixtures/sample.js')
+      path = project.resolve('sample.js')
       generator = new TagGenerator(path)
       generator.generate().done (generatedTags) ->
         tags = generatedTags
@@ -101,7 +101,7 @@ describe "SymbolsView", ->
       tags = []
 
       waitsForPromise ->
-        path = require.resolve('fixtures/sample.js')
+        path = project.resolve('sample.js')
         generator = new TagGenerator(path)
         generator.generate().done (generatedTags) ->
           tags = generatedTags
@@ -117,7 +117,7 @@ describe "SymbolsView", ->
       tags = []
 
       waitsForPromise ->
-        path = require.resolve('fixtures/sample.txt')
+        path = project.resolve('sample.txt')
         generator = new TagGenerator(path)
         generator.generate().done (generatedTags) ->
           tags = generatedTags
