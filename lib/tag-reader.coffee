@@ -1,6 +1,4 @@
-fsUtils = require 'fs-utils'
-$ = require 'jquery'
-Task = require 'task'
+{$, fs, Task} = require 'atom'
 ctags = require 'ctags'
 
 handlerPath = require.resolve('./load-tags-handler')
@@ -8,7 +6,7 @@ handlerPath = require.resolve('./load-tags-handler')
 module.exports =
 getTagsFile: (project) ->
   tagsFile = project.resolve("tags") or project.resolve("TAGS")
-  return tagsFile if fsUtils.isFileSync(tagsFile)
+  return tagsFile if fs.isFileSync(tagsFile)
 
 find: (editor) ->
   word = editor.getTextInRange(editor.getCursor().getCurrentWordBufferRange())

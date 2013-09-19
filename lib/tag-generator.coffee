@@ -1,7 +1,4 @@
-{Point} = require 'telepath'
-$ = require 'jquery'
-BufferedProcess = require 'buffered-process'
-fsUtils = require 'fs-utils'
+{$, BufferedProcess, Point} = require 'atom'
 path = require 'path'
 
 module.exports =
@@ -20,7 +17,7 @@ class TagGenerator
     deferred = $.Deferred()
     tags = []
     command = path.resolve(__dirname, '..', 'vendor', 'ctags')
-    defaultCtagsFile = path.resolve(__dirname, '..', '.ctags')
+    defaultCtagsFile = require.resolve('./.ctags')
     args = ["--options=#{defaultCtagsFile}", '--fields=+KS', '-nf', '-', @path]
     stdout = (lines) =>
       for line in lines.split('\n')

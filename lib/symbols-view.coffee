@@ -1,11 +1,7 @@
-{$$} = require 'space-pen'
-SelectList = require 'select-list'
+{_, $, $$, fs, Point, SelectList} = require 'atom'
 TagGenerator = require './tag-generator'
 TagReader = require './tag-reader'
-{Point} = require 'telepath'
-fsUtils = require 'fs-utils'
 path = require 'path'
-$ = require 'jquery'
 
 module.exports =
 class SymbolsView extends SelectList
@@ -69,7 +65,7 @@ class SymbolsView extends SelectList
       @setArray(tags)
 
   confirmed : (tag) ->
-    if tag.file and not fsUtils.isFileSync(project.resolve(tag.file))
+    if tag.file and not fs.isFileSync(project.resolve(tag.file))
       @setError('Selected file does not exist')
       setTimeout((=> @setError()), 2000)
     else
@@ -98,8 +94,8 @@ class SymbolsView extends SelectList
     pattern = $.trim(tag.pattern?.replace(/(^^\/\^)|(\$\/$)/g, '')) # Remove leading /^ and trailing $/
     return unless pattern
     file = project.resolve(tag.file)
-    return unless fsUtils.isFileSync(file)
-    for line, index in fsUtils.read(file).split('\n')
+    return unless fs.isFileSync(file)
+    for line, index in fs.read(file).split('\n')
       return new Point(index, 0) if pattern is $.trim(line)
 
   goToDeclaration: ->
