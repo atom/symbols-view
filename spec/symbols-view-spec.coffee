@@ -35,6 +35,42 @@ describe "SymbolsView", ->
         expect(symbolsView.list.children('li:last').find('.secondary-line')).toHaveText 'Line 2'
         expect(symbolsView.error).not.toBeVisible()
 
+    it "caches tags until the buffer changes", ->
+      editSession = rootView.open('sample.js')
+      rootView.getActiveView().trigger "symbols-view:toggle-file-symbols"
+      symbolsView = rootView.find('.symbols-view').view()
+
+      waitsFor ->
+        setArraySpy.callCount > 0
+
+      runs ->
+        setArraySpy.reset()
+        symbolsView.cancel()
+        spyOn(symbolsView, 'generateTags').andCallThrough()
+        rootView.getActiveView().trigger "symbols-view:toggle-file-symbols"
+
+      waitsFor ->
+        setArraySpy.callCount > 0
+
+      runs ->
+        expect(symbolsView.loading).toBeEmpty()
+        expect(symbolsView.list.children('li').length).toBe 2
+        expect(symbolsView.generateTags).not.toHaveBeenCalled()
+        editSession.getBuffer().trigger 'saved'
+        setArraySpy.reset()
+        symbolsView.cancel()
+        rootView.getActiveView().trigger "symbols-view:toggle-file-symbols"
+
+      waitsFor ->
+        setArraySpy.callCount > 0
+
+      runs ->
+        expect(symbolsView.loading).toBeEmpty()
+        expect(symbolsView.list.children('li').length).toBe 2
+        expect(symbolsView.generateTags).toHaveBeenCalled()
+        editSession.destroy()
+        expect(symbolsView.cachedTags).toEqual {}
+
     it "displays error when no tags match text in mini-editor", ->
       rootView.open('sample.js')
       rootView.getActiveView().trigger "symbols-view:toggle-file-symbols"

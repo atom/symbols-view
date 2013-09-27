@@ -15,6 +15,13 @@ class SymbolsView extends SelectList
   initialize: ->
     super
 
+    @cachedTags = {}
+    rootView.eachBuffer (buffer) =>
+      @subscribe buffer, 'saved destroyed path-changed', =>
+        delete @cachedTags[buffer.getPath()]
+      @subscribe buffer, 'destroyed', =>
+        @unsubscribe(buffer)
+
     rootView.command 'symbols-view:toggle-file-symbols', => @toggleFileSymbols()
     rootView.command 'symbols-view:toggle-project-symbols', => @toggleProjectSymbols()
     rootView.command 'symbols-view:go-to-declaration', => @goToDeclaration()
@@ -38,15 +45,24 @@ class SymbolsView extends SelectList
   toggleFileSymbols: ->
     if @hasParent()
       @cancel()
-    else
-      @populateFileSymbols()
+    else if filePath = @getPath()
+      @populateFileSymbols(filePath)
       @attach()
 
-  populateFileSymbols: ->
-    filePath = rootView.getActiveView().getPath()
+  getPath: -> rootView.getActiveView()?.getPath?()
+
+  populateFileSymbols: (filePath) ->
     @list.empty()
     @setLoading("Generating symbols...")
+    if tags = @cachedTags[filePath]
+      @maxItem = Infinity
+      @setArray(tags)
+    else
+      @generateTags(filePath)
+
+  generateTags: (filePath) ->
     new TagGenerator(filePath).generate().done (tags) =>
+      @cachedTags[filePath] = tags
       @maxItem = Infinity
       @setArray(tags)
 
