@@ -17,7 +17,7 @@ class SymbolsView extends SelectList
 
     @cachedTags = {}
     rootView.eachBuffer (buffer) =>
-      @subscribe buffer, 'saved destroyed path-changed', =>
+      @subscribe buffer, 'reloaded saved destroyed path-changed', =>
         delete @cachedTags[buffer.getPath()]
       @subscribe buffer, 'destroyed', =>
         @unsubscribe(buffer)
