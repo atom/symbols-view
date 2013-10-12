@@ -1,4 +1,5 @@
-{$, BufferedProcess, Point} = require 'atom'
+{BufferedProcess, Point} = require 'atom'
+Q = require 'q'
 path = require 'path'
 
 module.exports =
@@ -14,7 +15,7 @@ class TagGenerator
       null
 
   generate: ->
-    deferred = $.Deferred()
+    deferred = Q.defer()
     tags = []
     command = path.resolve(__dirname, '..', 'vendor', 'ctags')
     defaultCtagsFile = require.resolve('./.ctags')
@@ -25,5 +26,7 @@ class TagGenerator
         tags.push(tag) if tag
     exit = ->
       deferred.resolve(tags)
+
     new BufferedProcess({command, args, stdout, exit})
-    deferred
+
+    deferred.promise

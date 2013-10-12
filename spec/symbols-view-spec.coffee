@@ -117,9 +117,7 @@ describe "SymbolsView", ->
 
     waitsForPromise ->
       path = project.resolve('sample.js')
-      generator = new TagGenerator(path)
-      generator.generate().done (generatedTags) ->
-        tags = generatedTags
+      new TagGenerator(path).generate().then (o) -> tags = o
 
     runs ->
       rootView.open('sample.js')
@@ -138,9 +136,7 @@ describe "SymbolsView", ->
 
       waitsForPromise ->
         path = project.resolve('sample.js')
-        generator = new TagGenerator(path)
-        generator.generate().done (generatedTags) ->
-          tags = generatedTags
+        new TagGenerator(path).generate().then (o) -> tags = o
 
       runs ->
         expect(tags.length).toBe 2
@@ -154,9 +150,7 @@ describe "SymbolsView", ->
 
       waitsForPromise ->
         path = project.resolve('sample.txt')
-        generator = new TagGenerator(path)
-        generator.generate().done (generatedTags) ->
-          tags = generatedTags
+        new TagGenerator(path).generate().then (o) -> tags = o
 
       runs ->
         expect(tags.length).toBe 0

@@ -1,5 +1,6 @@
-{$, fs, Task} = require 'atom'
+{fs, Task} = require 'atom'
 ctags = require 'ctags'
+Q = require 'q'
 
 handlerPath = require.resolve('./load-tags-handler')
 
@@ -18,11 +19,11 @@ find: (editor) ->
   ctags.findTags(tagsFile, word)
 
 getAllTags: (project, callback) ->
-  deferred = $.Deferred()
+  deferred = Q.defer()
 
   task = new Task(handlerPath)
   task.start project.getPath(), (tags) ->
     deferred.resolve(tags)
     task.terminate()
 
-  deferred.promise()
+  deferred.promise
