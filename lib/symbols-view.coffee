@@ -91,8 +91,11 @@ class SymbolsView extends SelectList
   openTag: (tag) ->
     position = tag.position
     position = @getTagLine(tag) unless position
-    rootView.open(tag.file, {changeFocus: true, allowActiveEditorChange:true}) if tag.file
-    @moveToPosition(position) if position
+    if tag.file
+      rootView.open(tag.file).done =>
+        @moveToPosition(position) if position
+    else if position
+      @moveToPosition(position)
 
   moveToPosition: (position) ->
     editor = rootView.getActiveView()
