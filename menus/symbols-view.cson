@@ -1,0 +1,16 @@
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'Symbols'
+      'submenu': [
+        { 'label': 'File Symbols', 'command': 'symbols-view:toggle-file-symbols' }
+        { 'label': 'Project Symbols', 'command': 'symbols-view:toggle-project-symbols' }
+      ]
+    ]
+  }
+]
+
+'context-menu':
+  '.overlayer':
+    'Go to Declaration': 'symbols-view:go-to-declaration'
