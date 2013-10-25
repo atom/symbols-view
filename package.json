@@ -9,7 +9,7 @@
     "symbols-view:go-to-declaration": ".editor"
   },
   "dependencies": {
-    "ctags": "~0.5.0",
+    "ctags": "~0.6.0",
     "q": "~0.9.7"
   },
   "repository": {
