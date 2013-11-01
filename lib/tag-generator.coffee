@@ -17,7 +17,7 @@ class TagGenerator
   generate: ->
     deferred = Q.defer()
     tags = []
-    command = path.resolve(__dirname, '..', 'vendor', 'ctags')
+    command = path.resolve(__dirname, '..', 'vendor', "ctags-#{process.platform}")
     defaultCtagsFile = require.resolve('./.ctags')
     args = ["--options=#{defaultCtagsFile}", '--fields=+KS', '-nf', '-', @path]
     stdout = (lines) =>
