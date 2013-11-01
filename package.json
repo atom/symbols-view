@@ -1,6 +1,6 @@
 {
   "name": "symbols-view",
-  "version": "0.16.0",
+  "version": "0.17.0",
   "main": "./lib/symbols-view",
   "description": "Jump to a function or method in the current editor with `meta-j`.",
   "activationEvents": {
