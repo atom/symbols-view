@@ -12,7 +12,12 @@ describe "SymbolsView", ->
     rootView.attachToDom()
     setArraySpy = spyOn(SymbolsView.prototype, 'setArray').andCallThrough()
 
+    fs.writeFileSync(project.resolve('tagged.js'), fs.readFileSync(project.resolve('tagged-original.js')))
+    fs.writeFileSync(project.resolve('tagged-duplicate.js'), fs.readFileSync(project.resolve('tagged-duplicate-original.js')))
+
   afterEach ->
+    fs.removeSync(project.resolve('tagged.js'))
+    fs.removeSync(project.resolve('tagged-duplicate.js'))
     setArraySpy.reset()
 
   describe "when tags can be generated for a file", ->
@@ -196,17 +201,8 @@ describe "SymbolsView", ->
         expect(rootView.getActiveView().getCursorBufferPosition()).toEqual [0,4]
 
     describe "when the tag is in a file that doesn't exist", ->
-      renamedPath = null
-
-      beforeEach ->
-        renamedPath = project.resolve("tagged-duplicate-renamed.js")
-        fs.remove(renamedPath) if fs.exists(renamedPath)
-        fs.move(project.resolve("tagged-duplicate.js"), renamedPath)
-
-      afterEach ->
-        fs.move(renamedPath, project.resolve("tagged-duplicate.js"))
-
       it "doesn't display the tag", ->
+        fs.removeSync(project.resolve("tagged-duplicate.js"))
         rootView.openSync("tagged.js")
         editor = rootView.getActiveView()
         editor.setCursorBufferPosition([8,14])
@@ -238,15 +234,8 @@ describe "SymbolsView", ->
 
     describe "when selecting a tag", ->
       describe "when the file doesn't exist", ->
-        renamedPath = null
-
         beforeEach ->
-          renamedPath = project.resolve("tagged-renamed.js")
-          fs.remove(renamedPath) if fs.exists(renamedPath)
-          fs.move(project.resolve("tagged.js"), renamedPath)
-
-        afterEach ->
-          fs.move(renamedPath, project.resolve("tagged.js"))
+          fs.removeSync(project.resolve("tagged.js"))
 
         it "doesn't open the editor", ->
           rootView.trigger "symbols-view:toggle-project-symbols"
