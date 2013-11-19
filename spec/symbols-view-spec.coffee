@@ -61,7 +61,7 @@ describe "SymbolsView", ->
         expect(symbolsView.loading).toBeEmpty()
         expect(symbolsView.list.children('li').length).toBe 2
         expect(symbolsView.generateTags).not.toHaveBeenCalled()
-        editSession.getBuffer().trigger 'saved'
+        editSession.getBuffer().emit 'saved'
         setArraySpy.reset()
         symbolsView.cancel()
         rootView.getActiveView().trigger "symbols-view:toggle-file-symbols"
