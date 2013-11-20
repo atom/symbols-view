@@ -16,15 +16,15 @@ class SymbolsView extends SelectList
     super
 
     @cachedTags = {}
-    rootView.eachBuffer (buffer) =>
+    atom.rootView.eachBuffer (buffer) =>
       @subscribe buffer, 'reloaded saved destroyed path-changed', =>
         delete @cachedTags[buffer.getPath()]
       @subscribe buffer, 'destroyed', =>
         @unsubscribe(buffer)
 
-    rootView.command 'symbols-view:toggle-file-symbols', => @toggleFileSymbols()
-    rootView.command 'symbols-view:toggle-project-symbols', => @toggleProjectSymbols()
-    rootView.command 'symbols-view:go-to-declaration', => @goToDeclaration()
+    atom.rootView.command 'symbols-view:toggle-file-symbols', => @toggleFileSymbols()
+    atom.rootView.command 'symbols-view:toggle-project-symbols', => @toggleProjectSymbols()
+    atom.rootView.command 'symbols-view:go-to-declaration', => @goToDeclaration()
 
   itemForElement: ({position, name, file}) ->
     $$ ->
@@ -49,7 +49,7 @@ class SymbolsView extends SelectList
       @populateFileSymbols(filePath)
       @attach()
 
-  getPath: -> rootView.getActiveView()?.getPath?()
+  getPath: -> atom.rootView.getActiveView()?.getPath?()
 
   populateFileSymbols: (filePath) ->
     @list.empty()
@@ -92,13 +92,13 @@ class SymbolsView extends SelectList
     position = tag.position
     position = @getTagLine(tag) unless position
     if tag.file
-      rootView.open(tag.file).done =>
+      atom.rootView.open(tag.file).done =>
         @moveToPosition(position) if position
     else if position
       @moveToPosition(position)
 
   moveToPosition: (position) ->
-    editor = rootView.getActiveView()
+    editor = atom.rootView.getActiveView()
     editor.scrollToBufferPosition(position, center: true)
     editor.setCursorBufferPosition(position)
     editor.moveCursorToFirstCharacterOfLine()
@@ -106,7 +106,7 @@ class SymbolsView extends SelectList
   attach: ->
     super
 
-    rootView.append(this)
+    atom.rootView.append(this)
     @miniEditor.focus()
 
   getTagLine: (tag) ->
@@ -118,7 +118,7 @@ class SymbolsView extends SelectList
       return new Point(index, 0) if pattern is $.trim(line)
 
   goToDeclaration: ->
-    editor = rootView.getActiveView()
+    editor = atom.rootView.getActiveView()
     matches = TagReader.find(editor)
     return unless matches.length
 

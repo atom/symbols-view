@@ -6,10 +6,10 @@ describe "SymbolsView", ->
   [symbolsView, setArraySpy] = []
 
   beforeEach ->
-    window.rootView = new RootView
-    atom.activatePackage("symbols-view")
+    atom.rootView = new RootView
+    atom.packages.activatePackage("symbols-view")
 
-    rootView.attachToDom()
+    atom.rootView.attachToDom()
     setArraySpy = spyOn(SymbolsView.prototype, 'setArray').andCallThrough()
 
     fs.writeFileSync(project.resolve('tagged.js'), fs.readFileSync(project.resolve('tagged-original.js')))
@@ -22,9 +22,9 @@ describe "SymbolsView", ->
 
   describe "when tags can be generated for a file", ->
     it "initially displays all JavaScript functions with line numbers", ->
-      rootView.openSync('sample.js')
-      rootView.getActiveView().trigger "symbols-view:toggle-file-symbols"
-      symbolsView = rootView.find('.symbols-view').view()
+      atom.rootView.openSync('sample.js')
+      atom.rootView.getActiveView().trigger "symbols-view:toggle-file-symbols"
+      symbolsView = atom.rootView.find('.symbols-view').view()
       expect(symbolsView.loading).toHaveText 'Generating symbols...'
 
       waitsFor ->
@@ -32,7 +32,7 @@ describe "SymbolsView", ->
 
       runs ->
         expect(symbolsView.loading).toBeEmpty()
-        expect(rootView.find('.symbols-view')).toExist()
+        expect(atom.rootView.find('.symbols-view')).toExist()
         expect(symbolsView.list.children('li').length).toBe 2
         expect(symbolsView.list.children('li:first').find('.primary-line')).toHaveText 'quicksort'
         expect(symbolsView.list.children('li:first').find('.secondary-line')).toHaveText 'Line 1'
@@ -41,9 +41,9 @@ describe "SymbolsView", ->
         expect(symbolsView.error).not.toBeVisible()
 
     it "caches tags until the buffer changes", ->
-      editSession = rootView.openSync('sample.js')
-      rootView.getActiveView().trigger "symbols-view:toggle-file-symbols"
-      symbolsView = rootView.find('.symbols-view').view()
+      editSession = atom.rootView.openSync('sample.js')
+      atom.rootView.getActiveView().trigger "symbols-view:toggle-file-symbols"
+      symbolsView = atom.rootView.find('.symbols-view').view()
 
       waitsFor ->
         setArraySpy.callCount > 0
@@ -52,7 +52,7 @@ describe "SymbolsView", ->
         setArraySpy.reset()
         symbolsView.cancel()
         spyOn(symbolsView, 'generateTags').andCallThrough()
-        rootView.getActiveView().trigger "symbols-view:toggle-file-symbols"
+        atom.rootView.getActiveView().trigger "symbols-view:toggle-file-symbols"
 
       waitsFor ->
         setArraySpy.callCount > 0
@@ -64,7 +64,7 @@ describe "SymbolsView", ->
         editSession.getBuffer().emit 'saved'
         setArraySpy.reset()
         symbolsView.cancel()
-        rootView.getActiveView().trigger "symbols-view:toggle-file-symbols"
+        atom.rootView.getActiveView().trigger "symbols-view:toggle-file-symbols"
 
       waitsFor ->
         setArraySpy.callCount > 0
@@ -77,9 +77,9 @@ describe "SymbolsView", ->
         expect(symbolsView.cachedTags).toEqual {}
 
     it "displays error when no tags match text in mini-editor", ->
-      rootView.openSync('sample.js')
-      rootView.getActiveView().trigger "symbols-view:toggle-file-symbols"
-      symbolsView = rootView.find('.symbols-view').view()
+      atom.rootView.openSync('sample.js')
+      atom.rootView.getActiveView().trigger "symbols-view:toggle-file-symbols"
+      symbolsView = atom.rootView.find('.symbols-view').view()
 
       waitsFor ->
         setArraySpy.callCount > 0
@@ -88,7 +88,7 @@ describe "SymbolsView", ->
         symbolsView.miniEditor.setText("nothing will match this")
         window.advanceClock(symbolsView.inputThrottle)
 
-        expect(rootView.find('.symbols-view')).toExist()
+        expect(atom.rootView.find('.symbols-view')).toExist()
         expect(symbolsView.list.children('li').length).toBe 0
         expect(symbolsView.error).toBeVisible()
         expect(symbolsView.error.text().length).toBeGreaterThan 0
@@ -102,9 +102,9 @@ describe "SymbolsView", ->
 
   describe "when tags can't be generated for a file", ->
     it "shows an error message when no matching tags are found", ->
-      rootView.openSync('sample.txt')
-      rootView.getActiveView().trigger "symbols-view:toggle-file-symbols"
-      symbolsView = rootView.find('.symbols-view').view()
+      atom.rootView.openSync('sample.txt')
+      atom.rootView.getActiveView().trigger "symbols-view:toggle-file-symbols"
+      symbolsView = atom.rootView.find('.symbols-view').view()
       setErrorSpy = spyOn(symbolsView, "setError").andCallThrough()
 
       waitsFor ->
@@ -125,15 +125,15 @@ describe "SymbolsView", ->
       new TagGenerator(path).generate().then (o) -> tags = o
 
     runs ->
-      rootView.openSync('sample.js')
-      expect(rootView.getActiveView().getCursorBufferPosition()).toEqual [0,0]
-      expect(rootView.find('.symbols-view')).not.toExist()
+      atom.rootView.openSync('sample.js')
+      expect(atom.rootView.getActiveView().getCursorBufferPosition()).toEqual [0,0]
+      expect(atom.rootView.find('.symbols-view')).not.toExist()
       symbolsView = SymbolsView.activate()
       symbolsView.setArray(tags)
       symbolsView.attach()
-      expect(rootView.find('.symbols-view')).toExist()
+      expect(atom.rootView.find('.symbols-view')).toExist()
       symbolsView.confirmed(tags[1])
-      expect(rootView.getActiveView().getCursorBufferPosition()).toEqual [1,2]
+      expect(atom.rootView.getActiveView().getCursorBufferPosition()).toEqual [1,2]
 
   describe "TagGenerator", ->
     it "generates tags for all JavaScript functions", ->
@@ -162,15 +162,15 @@ describe "SymbolsView", ->
 
   describe "go to declaration", ->
     it "doesn't move the cursor when no declaration is found", ->
-      rootView.openSync("tagged.js")
-      editor = rootView.getActiveView()
+      atom.rootView.openSync("tagged.js")
+      editor = atom.rootView.getActiveView()
       editor.setCursorBufferPosition([0,2])
       editor.trigger 'symbols-view:go-to-declaration'
       expect(editor.getCursorBufferPosition()).toEqual [0,2]
 
     it "moves the cursor to the declaration", ->
-      rootView.openSync("tagged.js")
-      editor = rootView.getActiveView()
+      atom.rootView.openSync("tagged.js")
+      editor = atom.rootView.getActiveView()
       editor.setCursorBufferPosition([6,24])
       spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
       editor.trigger 'symbols-view:go-to-declaration'
@@ -182,12 +182,12 @@ describe "SymbolsView", ->
         expect(editor.getCursorBufferPosition()).toEqual [2,0]
 
     it "displays matches when more than one exists and opens the selected match", ->
-      rootView.openSync("tagged.js")
-      editor = rootView.getActiveView()
+      atom.rootView.openSync("tagged.js")
+      editor = atom.rootView.getActiveView()
       editor.setCursorBufferPosition([8,14])
       editor.trigger 'symbols-view:go-to-declaration'
 
-      symbolsView = rootView.find('.symbols-view').view()
+      symbolsView = atom.rootView.find('.symbols-view').view()
       expect(symbolsView.list.children('li').length).toBe 2
       expect(symbolsView).toBeVisible()
       spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
@@ -197,26 +197,26 @@ describe "SymbolsView", ->
         SymbolsView.prototype.moveToPosition.callCount == 1
 
       runs ->
-        expect(rootView.getActiveView().getPath()).toBe project.resolve("tagged-duplicate.js")
-        expect(rootView.getActiveView().getCursorBufferPosition()).toEqual [0,4]
+        expect(atom.rootView.getActiveView().getPath()).toBe project.resolve("tagged-duplicate.js")
+        expect(atom.rootView.getActiveView().getCursorBufferPosition()).toEqual [0,4]
 
     describe "when the tag is in a file that doesn't exist", ->
       it "doesn't display the tag", ->
         fs.removeSync(project.resolve("tagged-duplicate.js"))
-        rootView.openSync("tagged.js")
-        editor = rootView.getActiveView()
+        atom.rootView.openSync("tagged.js")
+        editor = atom.rootView.getActiveView()
         editor.setCursorBufferPosition([8,14])
         editor.trigger 'symbols-view:go-to-declaration'
-        symbolsView = rootView.find('.symbols-view').view()
+        symbolsView = atom.rootView.find('.symbols-view').view()
         expect(symbolsView.list.children('li').length).toBe 1
         expect(symbolsView.list.children('li:first').find('.primary-line')).toHaveText 'tagged.js'
 
   describe "project symbols", ->
     it "displays all tags", ->
-      rootView.openSync("tagged.js")
-      expect(rootView.find('.symbols-view')).not.toExist()
-      rootView.trigger "symbols-view:toggle-project-symbols"
-      symbolsView = rootView.find('.symbols-view').view()
+      atom.rootView.openSync("tagged.js")
+      expect(atom.rootView.find('.symbols-view')).not.toExist()
+      atom.rootView.trigger "symbols-view:toggle-project-symbols"
+      symbolsView = atom.rootView.find('.symbols-view').view()
       expect(symbolsView.loading).toHaveText 'Loading symbols...'
 
       waitsFor ->
@@ -224,7 +224,7 @@ describe "SymbolsView", ->
 
       runs ->
         expect(symbolsView.loading).toBeEmpty()
-        expect(rootView.find('.symbols-view')).toExist()
+        expect(atom.rootView.find('.symbols-view')).toExist()
         expect(symbolsView.list.children('li').length).toBe 4
         expect(symbolsView.list.children('li:first').find('.primary-line')).toHaveText 'callMeMaybe'
         expect(symbolsView.list.children('li:first').find('.secondary-line')).toHaveText 'tagged.js'
@@ -238,14 +238,14 @@ describe "SymbolsView", ->
           fs.removeSync(project.resolve("tagged.js"))
 
         it "doesn't open the editor", ->
-          rootView.trigger "symbols-view:toggle-project-symbols"
-          symbolsView = rootView.find('.symbols-view').view()
+          atom.rootView.trigger "symbols-view:toggle-project-symbols"
+          symbolsView = atom.rootView.find('.symbols-view').view()
 
           waitsFor ->
             setArraySpy.callCount > 0
 
           runs ->
-            spyOn(rootView, 'open').andCallThrough()
+            spyOn(atom.rootView, 'open').andCallThrough()
             symbolsView.list.children('li:first').mousedown().mouseup()
-            expect(rootView.open).not.toHaveBeenCalled()
+            expect(atom.rootView.open).not.toHaveBeenCalled()
             expect(symbolsView.error.text().length).toBeGreaterThan 0
