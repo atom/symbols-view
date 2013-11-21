@@ -114,7 +114,7 @@ class SymbolsView extends SelectList
     return unless pattern
     file = atom.project.resolve(tag.file)
     return unless fs.isFileSync(file)
-    for line, index in fs.read(file).split('\n')
+    for line, index in fs.readFileSync(file, 'utf8').split('\n')
       return new Point(index, 0) if pattern is $.trim(line)
 
   goToDeclaration: ->
