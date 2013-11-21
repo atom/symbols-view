@@ -12,12 +12,12 @@ describe "SymbolsView", ->
     atom.rootView.attachToDom()
     setArraySpy = spyOn(SymbolsView.prototype, 'setArray').andCallThrough()
 
-    fs.writeFileSync(project.resolve('tagged.js'), fs.readFileSync(project.resolve('tagged-original.js')))
-    fs.writeFileSync(project.resolve('tagged-duplicate.js'), fs.readFileSync(project.resolve('tagged-duplicate-original.js')))
+    fs.writeFileSync(atom.project.resolve('tagged.js'), fs.readFileSync(atom.project.resolve('tagged-original.js')))
+    fs.writeFileSync(atom.project.resolve('tagged-duplicate.js'), fs.readFileSync(atom.project.resolve('tagged-duplicate-original.js')))
 
   afterEach ->
-    fs.removeSync(project.resolve('tagged.js'))
-    fs.removeSync(project.resolve('tagged-duplicate.js'))
+    fs.removeSync(atom.project.resolve('tagged.js'))
+    fs.removeSync(atom.project.resolve('tagged-duplicate.js'))
     setArraySpy.reset()
 
   describe "when tags can be generated for a file", ->
@@ -121,7 +121,7 @@ describe "SymbolsView", ->
     tags = []
 
     waitsForPromise ->
-      path = project.resolve('sample.js')
+      path = atom.project.resolve('sample.js')
       new TagGenerator(path).generate().then (o) -> tags = o
 
     runs ->
@@ -140,7 +140,7 @@ describe "SymbolsView", ->
       tags = []
 
       waitsForPromise ->
-        path = project.resolve('sample.js')
+        path = atom.project.resolve('sample.js')
         new TagGenerator(path).generate().then (o) -> tags = o
 
       runs ->
@@ -154,7 +154,7 @@ describe "SymbolsView", ->
       tags = []
 
       waitsForPromise ->
-        path = project.resolve('sample.txt')
+        path = atom.project.resolve('sample.txt')
         new TagGenerator(path).generate().then (o) -> tags = o
 
       runs ->
@@ -197,12 +197,12 @@ describe "SymbolsView", ->
         SymbolsView.prototype.moveToPosition.callCount == 1
 
       runs ->
-        expect(atom.rootView.getActiveView().getPath()).toBe project.resolve("tagged-duplicate.js")
+        expect(atom.rootView.getActiveView().getPath()).toBe atom.project.resolve("tagged-duplicate.js")
         expect(atom.rootView.getActiveView().getCursorBufferPosition()).toEqual [0,4]
 
     describe "when the tag is in a file that doesn't exist", ->
       it "doesn't display the tag", ->
-        fs.removeSync(project.resolve("tagged-duplicate.js"))
+        fs.removeSync(atom.project.resolve("tagged-duplicate.js"))
         atom.rootView.openSync("tagged.js")
         editor = atom.rootView.getActiveView()
         editor.setCursorBufferPosition([8,14])
@@ -235,7 +235,7 @@ describe "SymbolsView", ->
     describe "when selecting a tag", ->
       describe "when the file doesn't exist", ->
         beforeEach ->
-          fs.removeSync(project.resolve("tagged.js"))
+          fs.removeSync(atom.project.resolve("tagged.js"))
 
         it "doesn't open the editor", ->
           atom.rootView.trigger "symbols-view:toggle-project-symbols"

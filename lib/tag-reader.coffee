@@ -13,7 +13,7 @@ find: (editor) ->
   word = editor.getTextInRange(editor.getCursor().getCurrentWordBufferRange())
   return [] unless word.length > 0
 
-  tagsFile = @getTagsFile(project)
+  tagsFile = @getTagsFile(atom.project)
   return [] unless tagsFile
 
   ctags.findTags(tagsFile, word)

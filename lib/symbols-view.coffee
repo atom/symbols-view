@@ -76,12 +76,12 @@ class SymbolsView extends SelectList
   populateProjectSymbols: ->
     @list.empty()
     @setLoading("Loading symbols...")
-    TagReader.getAllTags(project).done (tags) =>
+    TagReader.getAllTags(atom.project).done (tags) =>
       @maxItems = 10
       @setArray(tags)
 
   confirmed : (tag) ->
-    if tag.file and not fs.isFileSync(project.resolve(tag.file))
+    if tag.file and not fs.isFileSync(atom.project.resolve(tag.file))
       @setError('Selected file does not exist')
       setTimeout((=> @setError()), 2000)
     else
@@ -112,7 +112,7 @@ class SymbolsView extends SelectList
   getTagLine: (tag) ->
     pattern = $.trim(tag.pattern?.replace(/(^^\/\^)|(\$\/$)/g, '')) # Remove leading /^ and trailing $/
     return unless pattern
-    file = project.resolve(tag.file)
+    file = atom.project.resolve(tag.file)
     return unless fs.isFileSync(file)
     for line, index in fs.read(file).split('\n')
       return new Point(index, 0) if pattern is $.trim(line)
