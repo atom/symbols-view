@@ -1,6 +1,13 @@
-'.editor':
-  'meta-r': 'symbols-view:toggle-file-symbols'
-  'meta-alt-down': 'symbols-view:go-to-declaration'
+'.platform-darwin .editor':
+  'cmd-r': 'symbols-view:toggle-file-symbols'
+  'cmd-alt-down': 'symbols-view:go-to-declaration'
 
-'body':
-  'meta-R': 'symbols-view:toggle-project-symbols'
+'.platform-win32 .editor':
+  'ctrl-r': 'symbols-view:toggle-file-symbols'
+  'ctrl-alt-down': 'symbols-view:go-to-declaration'
+
+'.platform-darwin':
+  'cmd-R': 'symbols-view:toggle-project-symbols'
+
+'.platform-win32':
+  'ctrl-R': 'symbols-view:toggle-project-symbols'
