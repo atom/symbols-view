@@ -16,15 +16,15 @@ class SymbolsView extends SelectList
     super
 
     @cachedTags = {}
-    atom.rootView.eachBuffer (buffer) =>
+    atom.workspaceView.eachBuffer (buffer) =>
       @subscribe buffer, 'reloaded saved destroyed path-changed', =>
         delete @cachedTags[buffer.getPath()]
       @subscribe buffer, 'destroyed', =>
         @unsubscribe(buffer)
 
-    atom.rootView.command 'symbols-view:toggle-file-symbols', => @toggleFileSymbols()
-    atom.rootView.command 'symbols-view:toggle-project-symbols', => @toggleProjectSymbols()
-    atom.rootView.command 'symbols-view:go-to-declaration', => @goToDeclaration()
+    atom.workspaceView.command 'symbols-view:toggle-file-symbols', => @toggleFileSymbols()
+    atom.workspaceView.command 'symbols-view:toggle-project-symbols', => @toggleProjectSymbols()
+    atom.workspaceView.command 'symbols-view:go-to-declaration', => @goToDeclaration()
 
   itemForElement: ({position, name, file}) ->
     $$ ->
@@ -49,7 +49,7 @@ class SymbolsView extends SelectList
       @populateFileSymbols(filePath)
       @attach()
 
-  getPath: -> atom.rootView.getActiveView()?.getPath?()
+  getPath: -> atom.workspaceView.getActiveView()?.getPath?()
 
   populateFileSymbols: (filePath) ->
     @list.empty()
@@ -92,13 +92,13 @@ class SymbolsView extends SelectList
     position = tag.position
     position = @getTagLine(tag) unless position
     if tag.file
-      atom.rootView.open(tag.file).done =>
+      atom.workspaceView.open(tag.file).done =>
         @moveToPosition(position) if position
     else if position
       @moveToPosition(position)
 
   moveToPosition: (position) ->
-    editor = atom.rootView.getActiveView()
+    editor = atom.workspaceView.getActiveView()
     editor.scrollToBufferPosition(position, center: true)
     editor.setCursorBufferPosition(position)
     editor.moveCursorToFirstCharacterOfLine()
@@ -106,7 +106,7 @@ class SymbolsView extends SelectList
   attach: ->
     super
 
-    atom.rootView.append(this)
+    atom.workspaceView.append(this)
     @miniEditor.focus()
 
   getTagLine: (tag) ->
@@ -118,7 +118,7 @@ class SymbolsView extends SelectList
       return new Point(index, 0) if pattern is $.trim(line)
 
   goToDeclaration: ->
-    editor = atom.rootView.getActiveView()
+    editor = atom.workspaceView.getActiveView()
     matches = TagReader.find(editor)
     return unless matches.length
 
