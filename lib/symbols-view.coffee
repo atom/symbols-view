@@ -16,7 +16,7 @@ class SymbolsView extends SelectList
     super
 
     @cachedTags = {}
-    atom.workspaceView.eachBuffer (buffer) =>
+    atom.project.eachBuffer (buffer) =>
       @subscribe buffer, 'reloaded saved destroyed path-changed', =>
         delete @cachedTags[buffer.getPath()]
       @subscribe buffer, 'destroyed', =>
