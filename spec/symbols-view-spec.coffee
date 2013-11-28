@@ -41,7 +41,7 @@ describe "SymbolsView", ->
         expect(symbolsView.error).not.toBeVisible()
 
     it "caches tags until the buffer changes", ->
-      editSession = atom.workspaceView.openSync('sample.js')
+      editor = atom.workspaceView.openSync('sample.js')
       atom.workspaceView.getActiveView().trigger "symbols-view:toggle-file-symbols"
       symbolsView = atom.workspaceView.find('.symbols-view').view()
 
@@ -61,7 +61,7 @@ describe "SymbolsView", ->
         expect(symbolsView.loading).toBeEmpty()
         expect(symbolsView.list.children('li').length).toBe 2
         expect(symbolsView.generateTags).not.toHaveBeenCalled()
-        editSession.getBuffer().emit 'saved'
+        editor.getBuffer().emit 'saved'
         setArraySpy.reset()
         symbolsView.cancel()
         atom.workspaceView.getActiveView().trigger "symbols-view:toggle-file-symbols"
@@ -73,7 +73,7 @@ describe "SymbolsView", ->
         expect(symbolsView.loading).toBeEmpty()
         expect(symbolsView.list.children('li').length).toBe 2
         expect(symbolsView.generateTags).toHaveBeenCalled()
-        editSession.destroy()
+        editor.destroy()
         expect(symbolsView.cachedTags).toEqual {}
 
     it "displays error when no tags match text in mini-editor", ->
