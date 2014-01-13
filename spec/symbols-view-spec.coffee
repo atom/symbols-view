@@ -126,14 +126,14 @@ describe "SymbolsView", ->
 
     runs ->
       atom.workspaceView.openSync('sample.js')
-      expect(atom.workspaceView.getActiveView().getCursorBufferPosition()).toEqual [0,0]
+      expect(atom.workspaceView.getActivePaneItem().getCursorBufferPosition()).toEqual [0,0]
       expect(atom.workspaceView.find('.symbols-view')).not.toExist()
       symbolsView = SymbolsView.activate()
       symbolsView.setArray(tags)
       symbolsView.attach()
       expect(atom.workspaceView.find('.symbols-view')).toExist()
       symbolsView.confirmed(tags[1])
-      expect(atom.workspaceView.getActiveView().getCursorBufferPosition()).toEqual [1,2]
+      expect(atom.workspaceView.getActivePaneItem().getCursorBufferPosition()).toEqual [1,2]
 
   describe "TagGenerator", ->
     it "generates tags for all JavaScript functions", ->
@@ -163,17 +163,17 @@ describe "SymbolsView", ->
   describe "go to declaration", ->
     it "doesn't move the cursor when no declaration is found", ->
       atom.workspaceView.openSync("tagged.js")
-      editor = atom.workspaceView.getActiveView()
+      editor = atom.workspaceView.getActivePaneItem()
       editor.setCursorBufferPosition([0,2])
-      editor.trigger 'symbols-view:go-to-declaration'
+      atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
       expect(editor.getCursorBufferPosition()).toEqual [0,2]
 
     it "moves the cursor to the declaration", ->
       atom.workspaceView.openSync("tagged.js")
-      editor = atom.workspaceView.getActiveView()
+      editor = atom.workspaceView.getActivePaneItem()
       editor.setCursorBufferPosition([6,24])
       spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
-      editor.trigger 'symbols-view:go-to-declaration'
+      atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
 
       waitsFor ->
         SymbolsView.prototype.moveToPosition.callCount == 1
@@ -183,9 +183,9 @@ describe "SymbolsView", ->
 
     it "displays matches when more than one exists and opens the selected match", ->
       atom.workspaceView.openSync("tagged.js")
-      editor = atom.workspaceView.getActiveView()
+      editor = atom.workspaceView.getActivePaneItem()
       editor.setCursorBufferPosition([8,14])
-      editor.trigger 'symbols-view:go-to-declaration'
+      atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
 
       symbolsView = atom.workspaceView.find('.symbols-view').view()
       expect(symbolsView.list.children('li').length).toBe 2
@@ -197,16 +197,16 @@ describe "SymbolsView", ->
         SymbolsView.prototype.moveToPosition.callCount == 1
 
       runs ->
-        expect(atom.workspaceView.getActiveView().getPath()).toBe atom.project.resolve("tagged-duplicate.js")
-        expect(atom.workspaceView.getActiveView().getCursorBufferPosition()).toEqual [0,4]
+        expect(atom.workspaceView.getActivePaneItem().getPath()).toBe atom.project.resolve("tagged-duplicate.js")
+        expect(atom.workspaceView.getActivePaneItem().getCursorBufferPosition()).toEqual [0,4]
 
     describe "when the tag is in a file that doesn't exist", ->
       it "doesn't display the tag", ->
         fs.removeSync(atom.project.resolve("tagged-duplicate.js"))
         atom.workspaceView.openSync("tagged.js")
-        editor = atom.workspaceView.getActiveView()
+        editor = atom.workspaceView.getActivePaneItem()
         editor.setCursorBufferPosition([8,14])
-        editor.trigger 'symbols-view:go-to-declaration'
+        atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
         symbolsView = atom.workspaceView.find('.symbols-view').view()
         expect(symbolsView.list.children('li').length).toBe 1
         expect(symbolsView.list.children('li:first').find('.primary-line')).toHaveText 'tagged.js'

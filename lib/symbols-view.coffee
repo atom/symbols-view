@@ -49,7 +49,7 @@ class SymbolsView extends SelectList
       @populateFileSymbols(filePath)
       @attach()
 
-  getPath: -> atom.workspaceView.getActiveView()?.getPath?()
+  getPath: -> atom.workspaceView.getActivePaneItem()?.getPath?()
 
   populateFileSymbols: (filePath) ->
     @list.empty()
@@ -98,15 +98,15 @@ class SymbolsView extends SelectList
       @moveToPosition(position)
 
   moveToPosition: (position) ->
-    editor = atom.workspaceView.getActiveView()
-    editor.scrollToBufferPosition(position, center: true)
+    editorView = atom.workspaceView.getActiveView()
+    editor = editorView.getEditor()
+    editorView.scrollToBufferPosition(position, center: true)
     editor.setCursorBufferPosition(position)
     editor.moveCursorToFirstCharacterOfLine()
 
   attach: ->
     super
-
-    atom.workspaceView.append(this)
+    atom.workspaceView.appendToTop(this)
     @miniEditor.focus()
 
   getTagLine: (tag) ->
@@ -118,7 +118,7 @@ class SymbolsView extends SelectList
       return new Point(index, 0) if pattern is $.trim(line)
 
   goToDeclaration: ->
-    editor = atom.workspaceView.getActiveView()
+    editor = atom.workspaceView.getActivePaneItem()
     matches = TagReader.find(editor)
     return unless matches.length
 
