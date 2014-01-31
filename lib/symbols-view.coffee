@@ -1,10 +1,10 @@
-{_, $, $$, fs, Point, SelectList} = require 'atom'
+{_, $, $$, fs, Point, SelectListView} = require 'atom'
 TagGenerator = require './tag-generator'
 TagReader = require './tag-reader'
 path = require 'path'
 
 module.exports =
-class SymbolsView extends SelectList
+class SymbolsView extends SelectListView
   @activate: ->
     new SymbolsView
 
