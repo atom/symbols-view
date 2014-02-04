@@ -1,5 +1,6 @@
-{fs, Task} = require 'atom'
+{Task} = require 'atom'
 ctags = require 'ctags'
+fs = require 'fs-plus'
 Q = require 'q'
 
 handlerPath = require.resolve('./load-tags-handler')

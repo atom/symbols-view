@@ -1,4 +1,5 @@
-{fs, WorkspaceView} = require 'atom'
+{WorkspaceView} = require 'atom'
+fs = require 'fs-plus'
 SymbolsView = require '../lib/symbols-view'
 TagGenerator = require '../lib/tag-generator'
 

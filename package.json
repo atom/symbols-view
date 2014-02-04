@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "ctags": "~0.8.0",
+    "fs-plus": "1.x",
     "q": "~0.9.7"
   },
   "repository": "https://github.com/atom/symbols-view",

@@ -1,6 +1,6 @@
-ctags = require 'ctags'
-{fs} = require 'atom'
 path = require 'path'
+ctags = require 'ctags'
+fs = require 'fs-plus'
 
 getTagsFile = (directoryPath) ->
   tagsFile = path.join(directoryPath, "tags")
