@@ -1,5 +1,5 @@
 path = require 'path'
-{$, $$, Point, SelectListView} = require 'atom'
+{$$, Point, SelectListView} = require 'atom'
 fs = require 'fs-plus'
 TagGenerator = require './tag-generator'
 TagReader = require './tag-reader'
@@ -111,12 +111,14 @@ class SymbolsView extends SelectListView
     @miniEditor.focus()
 
   getTagLine: (tag) ->
-    pattern = $.trim(tag.pattern?.replace(/(^^\/\^)|(\$\/$)/g, '')) # Remove leading /^ and trailing $/
+    # Remove leading /^ and trailing $/
+    pattern = tag.pattern?.replace(/(^^\/\^)|(\$\/$)/g, '').trim()
+
     return unless pattern
     file = atom.project.resolve(tag.file)
     return unless fs.isFileSync(file)
     for line, index in fs.readFileSync(file, 'utf8').split('\n')
-      return new Point(index, 0) if pattern is $.trim(line)
+      return new Point(index, 0) if pattern is line.trim()
 
   goToDeclaration: ->
     editor = atom.workspaceView.getActivePaneItem()
