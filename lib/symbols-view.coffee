@@ -1,5 +1,5 @@
 path = require 'path'
-{_, $, $$, Point, SelectListView} = require 'atom'
+{$, $$, Point, SelectListView} = require 'atom'
 fs = require 'fs-plus'
 TagGenerator = require './tag-generator'
 TagReader = require './tag-reader'
