@@ -4,11 +4,11 @@ SymbolsView = require '../lib/symbols-view'
 TagGenerator = require '../lib/tag-generator'
 
 describe "SymbolsView", ->
-  [symbolsView, setArraySpy] = []
+  [symbolsView, setArraySpy, setErrorSpy, activationPromise] = []
 
   beforeEach ->
     atom.workspaceView = new WorkspaceView
-    atom.packages.activatePackage("symbols-view")
+    activationPromise = atom.packages.activatePackage("symbols-view")
 
     atom.workspaceView.attachToDom()
     setArraySpy = spyOn(SymbolsView.prototype, 'setArray').andCallThrough()
@@ -25,8 +25,13 @@ describe "SymbolsView", ->
     it "initially displays all JavaScript functions with line numbers", ->
       atom.workspaceView.openSync('sample.js')
       atom.workspaceView.getActiveView().trigger "symbols-view:toggle-file-symbols"
-      symbolsView = atom.workspaceView.find('.symbols-view').view()
-      expect(symbolsView.loading).toHaveText 'Generating symbols...'
+
+      waitsForPromise ->
+        activationPromise
+
+      runs ->
+        symbolsView = atom.workspaceView.find('.symbols-view').view()
+        expect(symbolsView.loading).toHaveText 'Generating symbols...'
 
       waitsFor ->
         setArraySpy.callCount > 0
@@ -44,7 +49,12 @@ describe "SymbolsView", ->
     it "caches tags until the buffer changes", ->
       editor = atom.workspaceView.openSync('sample.js')
       atom.workspaceView.getActiveView().trigger "symbols-view:toggle-file-symbols"
-      symbolsView = atom.workspaceView.find('.symbols-view').view()
+
+      waitsForPromise ->
+        activationPromise
+
+      runs ->
+        symbolsView = atom.workspaceView.find('.symbols-view').view()
 
       waitsFor ->
         setArraySpy.callCount > 0
@@ -80,7 +90,12 @@ describe "SymbolsView", ->
     it "displays error when no tags match text in mini-editor", ->
       atom.workspaceView.openSync('sample.js')
       atom.workspaceView.getActiveView().trigger "symbols-view:toggle-file-symbols"
-      symbolsView = atom.workspaceView.find('.symbols-view').view()
+
+      waitsForPromise ->
+        activationPromise
+
+      runs ->
+        symbolsView = atom.workspaceView.find('.symbols-view').view()
 
       waitsFor ->
         setArraySpy.callCount > 0
@@ -105,8 +120,13 @@ describe "SymbolsView", ->
     it "shows an error message when no matching tags are found", ->
       atom.workspaceView.openSync('sample.txt')
       atom.workspaceView.getActiveView().trigger "symbols-view:toggle-file-symbols"
-      symbolsView = atom.workspaceView.find('.symbols-view').view()
-      setErrorSpy = spyOn(symbolsView, "setError").andCallThrough()
+
+      waitsForPromise ->
+        activationPromise
+
+      runs ->
+        symbolsView = atom.workspaceView.find('.symbols-view').view()
+        setErrorSpy = spyOn(symbolsView, "setError").andCallThrough()
 
       waitsFor ->
         setErrorSpy.callCount > 0
@@ -167,7 +187,12 @@ describe "SymbolsView", ->
       editor = atom.workspaceView.getActivePaneItem()
       editor.setCursorBufferPosition([0,2])
       atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
-      expect(editor.getCursorBufferPosition()).toEqual [0,2]
+
+      waitsForPromise ->
+        activationPromise
+
+      runs ->
+        expect(editor.getCursorBufferPosition()).toEqual [0,2]
 
     it "moves the cursor to the declaration", ->
       atom.workspaceView.openSync("tagged.js")
@@ -175,6 +200,9 @@ describe "SymbolsView", ->
       editor.setCursorBufferPosition([6,24])
       spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
       atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
+
+      waitsForPromise ->
+        activationPromise
 
       waitsFor ->
         SymbolsView.prototype.moveToPosition.callCount == 1
@@ -188,11 +216,15 @@ describe "SymbolsView", ->
       editor.setCursorBufferPosition([8,14])
       atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
 
-      symbolsView = atom.workspaceView.find('.symbols-view').view()
-      expect(symbolsView.list.children('li').length).toBe 2
-      expect(symbolsView).toBeVisible()
-      spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
-      symbolsView.confirmed(symbolsView.array[0])
+      waitsForPromise ->
+        activationPromise
+
+      runs ->
+        symbolsView = atom.workspaceView.find('.symbols-view').view()
+        expect(symbolsView.list.children('li').length).toBe 2
+        expect(symbolsView).toBeVisible()
+        spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
+        symbolsView.confirmed(symbolsView.array[0])
 
       waitsFor ->
         SymbolsView.prototype.moveToPosition.callCount == 1
@@ -208,17 +240,27 @@ describe "SymbolsView", ->
         editor = atom.workspaceView.getActivePaneItem()
         editor.setCursorBufferPosition([8,14])
         atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
-        symbolsView = atom.workspaceView.find('.symbols-view').view()
-        expect(symbolsView.list.children('li').length).toBe 1
-        expect(symbolsView.list.children('li:first').find('.primary-line')).toHaveText 'tagged.js'
+
+        waitsForPromise ->
+          activationPromise
+
+        runs ->
+          symbolsView = atom.workspaceView.find('.symbols-view').view()
+          expect(symbolsView.list.children('li').length).toBe 1
+          expect(symbolsView.list.children('li:first').find('.primary-line')).toHaveText 'tagged.js'
 
   describe "project symbols", ->
     it "displays all tags", ->
       atom.workspaceView.openSync("tagged.js")
       expect(atom.workspaceView.find('.symbols-view')).not.toExist()
       atom.workspaceView.trigger "symbols-view:toggle-project-symbols"
-      symbolsView = atom.workspaceView.find('.symbols-view').view()
-      expect(symbolsView.loading).toHaveText 'Loading symbols...'
+
+      waitsForPromise ->
+        activationPromise
+
+      runs ->
+        symbolsView = atom.workspaceView.find('.symbols-view').view()
+        expect(symbolsView.loading).toHaveText 'Loading symbols...'
 
       waitsFor ->
         setArraySpy.callCount > 0
@@ -240,7 +282,12 @@ describe "SymbolsView", ->
 
         it "doesn't open the editor", ->
           atom.workspaceView.trigger "symbols-view:toggle-project-symbols"
-          symbolsView = atom.workspaceView.find('.symbols-view').view()
+
+          waitsForPromise ->
+            activationPromise
+
+          runs ->
+            symbolsView = atom.workspaceView.find('.symbols-view').view()
 
           waitsFor ->
             setArraySpy.callCount > 0
