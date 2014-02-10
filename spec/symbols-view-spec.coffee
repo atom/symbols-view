@@ -1,5 +1,7 @@
+path = require 'path'
 {WorkspaceView} = require 'atom'
 fs = require 'fs-plus'
+temp = require 'temp'
 SymbolsView = require '../lib/symbols-view'
 TagGenerator = require '../lib/tag-generator'
 
@@ -8,18 +10,13 @@ describe "SymbolsView", ->
 
   beforeEach ->
     atom.workspaceView = new WorkspaceView
+    atom.project.setPath(temp.mkdirSync('atom-symbols-view-'))
+    fs.copySync(path.join(__dirname, 'fixtures'), atom.project.getPath())
+
     activationPromise = atom.packages.activatePackage("symbols-view")
 
     atom.workspaceView.attachToDom()
     setArraySpy = spyOn(SymbolsView.prototype, 'setArray').andCallThrough()
-
-    fs.writeFileSync(atom.project.resolve('tagged.js'), fs.readFileSync(atom.project.resolve('tagged-original.js')))
-    fs.writeFileSync(atom.project.resolve('tagged-duplicate.js'), fs.readFileSync(atom.project.resolve('tagged-duplicate-original.js')))
-
-  afterEach ->
-    fs.removeSync(atom.project.resolve('tagged.js'))
-    fs.removeSync(atom.project.resolve('tagged-duplicate.js'))
-    setArraySpy.reset()
 
   describe "when tags can be generated for a file", ->
     it "initially displays all JavaScript functions with line numbers", ->
@@ -142,8 +139,8 @@ describe "SymbolsView", ->
     tags = []
 
     waitsForPromise ->
-      path = atom.project.resolve('sample.js')
-      new TagGenerator(path).generate().then (o) -> tags = o
+      sampleJsPath = atom.project.resolve('sample.js')
+      new TagGenerator(sampleJsPath).generate().then (o) -> tags = o
 
     runs ->
       atom.workspaceView.openSync('sample.js')
@@ -161,8 +158,8 @@ describe "SymbolsView", ->
       tags = []
 
       waitsForPromise ->
-        path = atom.project.resolve('sample.js')
-        new TagGenerator(path).generate().then (o) -> tags = o
+        sampleJsPath = atom.project.resolve('sample.js')
+        new TagGenerator(sampleJsPath).generate().then (o) -> tags = o
 
       runs ->
         expect(tags.length).toBe 2
@@ -175,8 +172,8 @@ describe "SymbolsView", ->
       tags = []
 
       waitsForPromise ->
-        path = atom.project.resolve('sample.txt')
-        new TagGenerator(path).generate().then (o) -> tags = o
+        sampleJsPath = atom.project.resolve('sample.txt')
+        new TagGenerator(sampleJsPath).generate().then (o) -> tags = o
 
       runs ->
         expect(tags.length).toBe 0
