@@ -9,12 +9,9 @@ class SymbolsView extends SelectListView
   @activate: ->
     new SymbolsView
 
-  @viewClass: -> "#{super} symbols-view overlay from-top"
-
-  filterKey: 'name'
-
   initialize: ->
     super
+    @addClass('symbols-view overlay from-top')
 
     @cachedTags = {}
     atom.project.eachBuffer (buffer) =>
@@ -27,7 +24,9 @@ class SymbolsView extends SelectListView
     atom.workspaceView.command 'symbols-view:toggle-project-symbols', => @toggleProjectSymbols()
     atom.workspaceView.command 'symbols-view:go-to-declaration', => @goToDeclaration()
 
-  itemForElement: ({position, name, file}) ->
+  getFilterKey: -> 'name'
+
+  viewForItem: ({position, name, file}) ->
     $$ ->
       @li class: 'two-lines', =>
         @div name, class: 'primary-line'
@@ -57,7 +56,7 @@ class SymbolsView extends SelectListView
     @setLoading("Generating symbols...")
     if tags = @cachedTags[filePath]
       @maxItem = Infinity
-      @setArray(tags)
+      @setItems(tags)
     else
       @generateTags(filePath)
 
@@ -65,7 +64,7 @@ class SymbolsView extends SelectListView
     new TagGenerator(filePath).generate().done (tags) =>
       @cachedTags[filePath] = tags
       @maxItem = Infinity
-      @setArray(tags)
+      @setItems(tags)
 
   toggleProjectSymbols: ->
     if @hasParent()
@@ -79,7 +78,7 @@ class SymbolsView extends SelectListView
     @setLoading("Loading symbols...")
     TagReader.getAllTags(atom.project).done (tags) =>
       @maxItems = 10
-      @setArray(tags)
+      @setItems(tags)
 
   confirmed : (tag) ->
     if tag.file and not fs.isFileSync(atom.project.resolve(tag.file))
@@ -106,9 +105,9 @@ class SymbolsView extends SelectListView
     editor.moveCursorToFirstCharacterOfLine()
 
   attach: ->
-    super
+    @storeFocusedElement()
     atom.workspaceView.appendToTop(this)
-    @miniEditor.focus()
+    @focusFilterEditor()
 
   getTagLine: (tag) ->
     # Remove leading /^ and trailing $/
@@ -137,6 +136,5 @@ class SymbolsView extends SelectListView
           file: match.file
           name: path.basename(match.file)
           position: position
-      @miniEditor.show()
-      @setArray(tags)
+      @setItems(tags)
       @attach()

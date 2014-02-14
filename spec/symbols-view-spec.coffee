@@ -6,7 +6,7 @@ SymbolsView = require '../lib/symbols-view'
 TagGenerator = require '../lib/tag-generator'
 
 describe "SymbolsView", ->
-  [symbolsView, setArraySpy, setErrorSpy, activationPromise] = []
+  [symbolsView, setItemsSpy, setErrorSpy, activationPromise] = []
 
   beforeEach ->
     atom.workspaceView = new WorkspaceView
@@ -16,7 +16,7 @@ describe "SymbolsView", ->
     activationPromise = atom.packages.activatePackage("symbols-view")
 
     atom.workspaceView.attachToDom()
-    setArraySpy = spyOn(SymbolsView.prototype, 'setArray').andCallThrough()
+    setItemsSpy = spyOn(SymbolsView.prototype, 'setItems').andCallThrough()
 
   describe "when tags can be generated for a file", ->
     it "initially displays all JavaScript functions with line numbers", ->
@@ -31,7 +31,7 @@ describe "SymbolsView", ->
         expect(symbolsView.loading).toHaveText 'Generating symbols...'
 
       waitsFor ->
-        setArraySpy.callCount > 0
+        setItemsSpy.callCount > 0
 
       runs ->
         expect(symbolsView.loading).toBeEmpty()
@@ -54,28 +54,28 @@ describe "SymbolsView", ->
         symbolsView = atom.workspaceView.find('.symbols-view').view()
 
       waitsFor ->
-        setArraySpy.callCount > 0
+        setItemsSpy.callCount > 0
 
       runs ->
-        setArraySpy.reset()
+        setItemsSpy.reset()
         symbolsView.cancel()
         spyOn(symbolsView, 'generateTags').andCallThrough()
         atom.workspaceView.getActiveView().trigger "symbols-view:toggle-file-symbols"
 
       waitsFor ->
-        setArraySpy.callCount > 0
+        setItemsSpy.callCount > 0
 
       runs ->
         expect(symbolsView.loading).toBeEmpty()
         expect(symbolsView.list.children('li').length).toBe 2
         expect(symbolsView.generateTags).not.toHaveBeenCalled()
         editor.getBuffer().emit 'saved'
-        setArraySpy.reset()
+        setItemsSpy.reset()
         symbolsView.cancel()
         atom.workspaceView.getActiveView().trigger "symbols-view:toggle-file-symbols"
 
       waitsFor ->
-        setArraySpy.callCount > 0
+        setItemsSpy.callCount > 0
 
       runs ->
         expect(symbolsView.loading).toBeEmpty()
@@ -95,10 +95,10 @@ describe "SymbolsView", ->
         symbolsView = atom.workspaceView.find('.symbols-view').view()
 
       waitsFor ->
-        setArraySpy.callCount > 0
+        setItemsSpy.callCount > 0
 
       runs ->
-        symbolsView.miniEditor.setText("nothing will match this")
+        symbolsView.filterEditorView.setText("nothing will match this")
         window.advanceClock(symbolsView.inputThrottle)
 
         expect(atom.workspaceView.find('.symbols-view')).toExist()
@@ -107,7 +107,7 @@ describe "SymbolsView", ->
         expect(symbolsView.error.text().length).toBeGreaterThan 0
 
         # Should remove error
-        symbolsView.miniEditor.setText("")
+        symbolsView.filterEditorView.setText("")
         window.advanceClock(symbolsView.inputThrottle)
 
         expect(symbolsView.list.children('li').length).toBe 2
@@ -147,7 +147,7 @@ describe "SymbolsView", ->
       expect(atom.workspaceView.getActivePaneItem().getCursorBufferPosition()).toEqual [0,0]
       expect(atom.workspaceView.find('.symbols-view')).not.toExist()
       symbolsView = SymbolsView.activate()
-      symbolsView.setArray(tags)
+      symbolsView.setItems(tags)
       symbolsView.attach()
       expect(atom.workspaceView.find('.symbols-view')).toExist()
       symbolsView.confirmed(tags[1])
@@ -221,7 +221,7 @@ describe "SymbolsView", ->
         expect(symbolsView.list.children('li').length).toBe 2
         expect(symbolsView).toBeVisible()
         spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
-        symbolsView.confirmed(symbolsView.array[0])
+        symbolsView.confirmed(symbolsView.items[0])
 
       waitsFor ->
         SymbolsView.prototype.moveToPosition.callCount == 1
@@ -260,7 +260,7 @@ describe "SymbolsView", ->
         expect(symbolsView.loading).toHaveText 'Loading symbols...'
 
       waitsFor ->
-        setArraySpy.callCount > 0
+        setItemsSpy.callCount > 0
 
       runs ->
         expect(symbolsView.loading).toBeEmpty()
@@ -287,7 +287,7 @@ describe "SymbolsView", ->
             symbolsView = atom.workspaceView.find('.symbols-view').view()
 
           waitsFor ->
-            setArraySpy.callCount > 0
+            setItemsSpy.callCount > 0
 
           runs ->
             spyOn(atom.workspaceView, 'open').andCallThrough()
