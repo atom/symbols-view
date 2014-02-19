@@ -6,17 +6,14 @@ SymbolsView = require '../lib/symbols-view'
 TagGenerator = require '../lib/tag-generator'
 
 describe "SymbolsView", ->
-  [symbolsView, setItemsSpy, setErrorSpy, activationPromise] = []
+  [symbolsView, activationPromise] = []
 
   beforeEach ->
     atom.workspaceView = new WorkspaceView
     atom.project.setPath(temp.mkdirSync('atom-symbols-view-'))
     fs.copySync(path.join(__dirname, 'fixtures'), atom.project.getPath())
-
     activationPromise = atom.packages.activatePackage("symbols-view")
-
     atom.workspaceView.attachToDom()
-    setItemsSpy = spyOn(SymbolsView.prototype, 'setItems').andCallThrough()
 
   describe "when tags can be generated for a file", ->
     it "initially displays all JavaScript functions with line numbers", ->
@@ -31,7 +28,7 @@ describe "SymbolsView", ->
         expect(symbolsView.loading).toHaveText 'Generating symbols...'
 
       waitsFor ->
-        setItemsSpy.callCount > 0
+        symbolsView.list.children('li').length > 0
 
       runs ->
         expect(symbolsView.loading).toBeEmpty()
@@ -54,28 +51,26 @@ describe "SymbolsView", ->
         symbolsView = atom.workspaceView.find('.symbols-view').view()
 
       waitsFor ->
-        setItemsSpy.callCount > 0
+        symbolsView.list.children('li').length > 0
 
       runs ->
-        setItemsSpy.reset()
         symbolsView.cancel()
         spyOn(symbolsView, 'generateTags').andCallThrough()
         atom.workspaceView.getActiveView().trigger "symbols-view:toggle-file-symbols"
 
       waitsFor ->
-        setItemsSpy.callCount > 0
+        symbolsView.list.children('li').length > 0
 
       runs ->
         expect(symbolsView.loading).toBeEmpty()
         expect(symbolsView.list.children('li').length).toBe 2
         expect(symbolsView.generateTags).not.toHaveBeenCalled()
         editor.getBuffer().emit 'saved'
-        setItemsSpy.reset()
         symbolsView.cancel()
         atom.workspaceView.getActiveView().trigger "symbols-view:toggle-file-symbols"
 
       waitsFor ->
-        setItemsSpy.callCount > 0
+        symbolsView.list.children('li').length > 0
 
       runs ->
         expect(symbolsView.loading).toBeEmpty()
@@ -95,7 +90,7 @@ describe "SymbolsView", ->
         symbolsView = atom.workspaceView.find('.symbols-view').view()
 
       waitsFor ->
-        setItemsSpy.callCount > 0
+        symbolsView.list.children('li').length > 0
 
       runs ->
         symbolsView.filterEditorView.setText("nothing will match this")
@@ -123,10 +118,9 @@ describe "SymbolsView", ->
 
       runs ->
         symbolsView = atom.workspaceView.find('.symbols-view').view()
-        setErrorSpy = spyOn(symbolsView, "setError").andCallThrough()
 
       waitsFor ->
-        setErrorSpy.callCount > 0
+        symbolsView.error.isVisible()
 
       runs ->
         expect(symbolsView).toExist()
@@ -260,7 +254,7 @@ describe "SymbolsView", ->
         expect(symbolsView.loading).toHaveText 'Loading symbols...'
 
       waitsFor ->
-        setItemsSpy.callCount > 0
+        symbolsView.list.children('li').length > 0
 
       runs ->
         expect(symbolsView.loading).toBeEmpty()
@@ -287,7 +281,7 @@ describe "SymbolsView", ->
             symbolsView = atom.workspaceView.find('.symbols-view').view()
 
           waitsFor ->
-            setItemsSpy.callCount > 0
+            symbolsView.list.children('li').length > 0
 
           runs ->
             spyOn(atom.workspaceView, 'open').andCallThrough()
