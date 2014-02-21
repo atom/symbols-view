@@ -234,6 +234,7 @@ describe "SymbolsView", ->
 
   describe "project symbols", ->
     it "displays all tags", ->
+      jasmine.unspy(window, 'setTimeout')
       atom.workspaceView.openSync("tagged.js")
       expect(atom.workspaceView.find('.symbols-view')).not.toExist()
       atom.workspaceView.trigger "symbols-view:toggle-project-symbols"
@@ -257,6 +258,21 @@ describe "SymbolsView", ->
         expect(symbolsView.list.children('li:last').find('.primary-line')).toHaveText 'thisIsCrazy'
         expect(symbolsView.list.children('li:last').find('.secondary-line')).toHaveText 'tagged.js'
         expect(symbolsView.error).not.toBeVisible()
+        atom.workspaceView.trigger "symbols-view:toggle-project-symbols"
+
+        fs.removeSync(atom.project.resolve('tags'))
+
+      waitsFor ->
+        symbolsView.reloadTags
+
+      runs ->
+        atom.workspaceView.trigger "symbols-view:toggle-project-symbols"
+
+      waitsFor ->
+        symbolsView.error.isVisible()
+
+      runs ->
+        expect(symbolsView.list.children('li').length).toBe 0
 
     describe "when selecting a tag", ->
       describe "when the file doesn't exist", ->

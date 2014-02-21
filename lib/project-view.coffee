@@ -1,3 +1,4 @@
+{File} = require 'pathwatcher'
 humanize = require 'humanize-plus'
 SymbolsView = require './symbols-view'
 TagReader = require './tag-reader'
@@ -10,7 +11,8 @@ class ProjectView extends SymbolsView
     @maxItems = 10
 
   beforeRemove: ->
-    @loadTagsTask?.terminate()
+    @stopTask()
+    @unwatchTagsFile()
 
   toggle: ->
     if @hasParent()
@@ -31,8 +33,7 @@ class ProjectView extends SymbolsView
 
     if @reloadTags
       @reloadTags = false
-      @loadTagsTask?.terminate()
-      @loadTagsTask = TagReader.getAllTags (@tags) => @populate()
+      @startTask()
 
       if @tags
         @setLoading("Reloading project symbols\u2026")
@@ -43,3 +44,27 @@ class ProjectView extends SymbolsView
         @loadTagsTask.on 'tags', (tags) =>
           tagsRead += tags.length
           @loadingBadge.text(humanize.intComma(tagsRead))
+
+  stopTask: ->
+    @loadTagsTask?.terminate()
+
+  startTask: ->
+    @stopTask()
+
+    @loadTagsTask = TagReader.getAllTags (@tags) =>
+      @reloadTags = @tags.length is 0
+      @setItems(@tags)
+
+    @watchTagsFile()
+
+  watchTagsFile: ->
+    @unwatchTagsFile()
+
+    if tagsFilePath = TagReader.getTagsFile()
+      @tagsFile = new File(tagsFilePath)
+      @tagsFile.on 'moved removed contents-changed', =>
+        @reloadTags = true
+        @watchTagsFile()
+
+  unwatchTagsFile: ->
+    @tagsFile?.off()
