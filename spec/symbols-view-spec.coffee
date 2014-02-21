@@ -25,7 +25,7 @@ describe "SymbolsView", ->
 
       runs ->
         symbolsView = atom.workspaceView.find('.symbols-view').view()
-        expect(symbolsView.loading).toHaveText 'Generating symbols...'
+        expect(symbolsView.loading).toBeVisible()
 
       waitsFor ->
         symbolsView.list.children('li').length > 0
@@ -130,21 +130,16 @@ describe "SymbolsView", ->
         expect(symbolsView.loadingArea).not.toBeVisible()
 
   it "moves the cursor to the selected function", ->
-    tags = []
+    atom.workspaceView.openSync('sample.js')
+    expect(atom.workspaceView.getActivePaneItem().getCursorBufferPosition()).toEqual [0,0]
+    expect(atom.workspaceView.find('.symbols-view')).not.toExist()
+    atom.workspaceView.getActiveView().trigger "symbols-view:toggle-file-symbols"
 
-    waitsForPromise ->
-      sampleJsPath = atom.project.resolve('sample.js')
-      new TagGenerator(sampleJsPath).generate().then (o) -> tags = o
+    waitsFor ->
+      atom.workspaceView.find('.symbols-view').find('li').length
 
     runs ->
-      atom.workspaceView.openSync('sample.js')
-      expect(atom.workspaceView.getActivePaneItem().getCursorBufferPosition()).toEqual [0,0]
-      expect(atom.workspaceView.find('.symbols-view')).not.toExist()
-      symbolsView = SymbolsView.activate()
-      symbolsView.setItems(tags)
-      symbolsView.attach()
-      expect(atom.workspaceView.find('.symbols-view')).toExist()
-      symbolsView.confirmed(tags[1])
+      atom.workspaceView.find('.symbols-view').find('li:eq(1)').mousedown().mouseup()
       expect(atom.workspaceView.getActivePaneItem().getCursorBufferPosition()).toEqual [1,2]
 
   describe "TagGenerator", ->
@@ -192,9 +187,6 @@ describe "SymbolsView", ->
       spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
       atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
 
-      waitsForPromise ->
-        activationPromise
-
       waitsFor ->
         SymbolsView.prototype.moveToPosition.callCount == 1
 
@@ -207,8 +199,8 @@ describe "SymbolsView", ->
       editor.setCursorBufferPosition([8,14])
       atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
 
-      waitsForPromise ->
-        activationPromise
+      waitsFor ->
+        atom.workspaceView.find('.symbols-view').find('li').length > 0
 
       runs ->
         symbolsView = atom.workspaceView.find('.symbols-view').view()
@@ -232,8 +224,8 @@ describe "SymbolsView", ->
         editor.setCursorBufferPosition([8,14])
         atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
 
-        waitsForPromise ->
-          activationPromise
+        waitsFor ->
+            atom.workspaceView.find('.symbols-view').find('li').length > 0
 
         runs ->
           symbolsView = atom.workspaceView.find('.symbols-view').view()
@@ -251,7 +243,7 @@ describe "SymbolsView", ->
 
       runs ->
         symbolsView = atom.workspaceView.find('.symbols-view').view()
-        expect(symbolsView.loading).toHaveText 'Loading symbols...'
+        expect(symbolsView.loading).toBeVisible()
 
       waitsFor ->
         symbolsView.list.children('li').length > 0

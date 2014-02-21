@@ -1,8 +1,6 @@
 path = require 'path'
 {$$, Point, SelectListView} = require 'atom'
 fs = require 'fs-plus'
-TagGenerator = require './tag-generator'
-TagReader = require './tag-reader'
 
 module.exports =
 class SymbolsView extends SelectListView
@@ -13,16 +11,9 @@ class SymbolsView extends SelectListView
     super
     @addClass('symbols-view overlay from-top')
 
-    @cachedTags = {}
-    atom.project.eachBuffer (buffer) =>
-      @subscribe buffer, 'reloaded saved destroyed path-changed', =>
-        delete @cachedTags[buffer.getPath()]
-      @subscribe buffer, 'destroyed', =>
-        @unsubscribe(buffer)
-
-    atom.workspaceView.command 'symbols-view:toggle-file-symbols', => @toggleFileSymbols()
-    atom.workspaceView.command 'symbols-view:toggle-project-symbols', => @toggleProjectSymbols()
-    atom.workspaceView.command 'symbols-view:go-to-declaration', => @goToDeclaration()
+  destroy: ->
+    @cancel()
+    @remove()
 
   getFilterKey: -> 'name'
 
@@ -41,44 +32,6 @@ class SymbolsView extends SelectListView
       'No symbols found'
     else
       super
-
-  toggleFileSymbols: ->
-    if @hasParent()
-      @cancel()
-    else if filePath = @getPath()
-      @populateFileSymbols(filePath)
-      @attach()
-
-  getPath: -> atom.workspaceView.getActivePaneItem()?.getPath?()
-
-  populateFileSymbols: (filePath) ->
-    @list.empty()
-    @setLoading("Generating symbols...")
-    if tags = @cachedTags[filePath]
-      @maxItem = Infinity
-      @setItems(tags)
-    else
-      @generateTags(filePath)
-
-  generateTags: (filePath) ->
-    new TagGenerator(filePath).generate().done (tags) =>
-      @cachedTags[filePath] = tags
-      @maxItem = Infinity
-      @setItems(tags)
-
-  toggleProjectSymbols: ->
-    if @hasParent()
-      @cancel()
-    else
-      @populateProjectSymbols()
-      @attach()
-
-  populateProjectSymbols: ->
-    @list.empty()
-    @setLoading("Loading symbols...")
-    TagReader.getAllTags(atom.project).done (tags) =>
-      @maxItems = 10
-      @setItems(tags)
 
   confirmed : (tag) ->
     if tag.file and not fs.isFileSync(atom.project.resolve(tag.file))
@@ -118,23 +71,3 @@ class SymbolsView extends SelectListView
     return unless fs.isFileSync(file)
     for line, index in fs.readFileSync(file, 'utf8').split('\n')
       return new Point(index, 0) if pattern is line.trim()
-
-  goToDeclaration: ->
-    editor = atom.workspaceView.getActivePaneItem()
-    matches = TagReader.find(editor)
-    return unless matches.length
-
-    if matches.length is 1
-      position = @getTagLine(matches[0])
-      @openTag(file: matches[0].file, position: position) if position
-    else
-      tags = []
-      for match in matches
-        position = @getTagLine(match)
-        continue unless position
-        tags.push
-          file: match.file
-          name: path.basename(match.file)
-          position: position
-      @setItems(tags)
-      @attach()
