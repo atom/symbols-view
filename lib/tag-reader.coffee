@@ -1,30 +1,28 @@
 {Task} = require 'atom'
 ctags = require 'ctags'
 fs = require 'fs-plus'
-Q = require 'q'
 
 handlerPath = require.resolve('./load-tags-handler')
 
 module.exports =
-getTagsFile: (project) ->
-  tagsFile = project.resolve("tags") or project.resolve("TAGS")
-  return tagsFile if fs.isFileSync(tagsFile)
+  getTagsFile: ->
+    tagsFile = atom.project.resolve("tags")
+    return tagsFile if fs.isFileSync(tagsFile)
 
-find: (editor) ->
-  word = editor.getTextInRange(editor.getCursor().getCurrentWordBufferRange())
-  return [] unless word.length > 0
+    tagsFile = atom.project.resolve("TAGS")
+    return tagsFile if fs.isFileSync(tagsFile)
 
-  tagsFile = @getTagsFile(atom.project)
-  return [] unless tagsFile
+  find: (editor, callback) ->
+    word = editor?.getTextInRange(editor?.getCursor().getCurrentWordBufferRange())
+    tagsFile = @getTagsFile()
 
-  ctags.findTags(tagsFile, word)
+    if word.length > 0 and tagsFile
+      ctags.findTags(tagsFile, word, callback)
+    else
+      process.nextTick -> callback(null, [])
 
-getAllTags: (project, callback) ->
-  deferred = Q.defer()
-
-  task = new Task(handlerPath)
-  task.start project.getPath(), (tags) ->
-    deferred.resolve(tags)
-    task.terminate()
-
-  deferred.promise
+  getAllTags: (callback) ->
+    projectTags = []
+    task = Task.once handlerPath, atom.project.getPath(), -> callback(projectTags)
+    task.on 'tags', (paths) -> projectTags.push(paths...)
+    task

@@ -12,6 +12,10 @@ getTagsFile = (directoryPath) ->
 module.exports = (directoryPath) ->
   tagsFilePath = getTagsFile(directoryPath)
   if tagsFilePath
-    ctags.getTags(tagsFilePath)
+    callback = @async()
+    stream = ctags.createReadStream(tagsFilePath)
+    stream.on 'data', (tags) -> emit('tags', tags)
+    stream.on('end', callback)
+    stream.on('error', callback)
   else
     []

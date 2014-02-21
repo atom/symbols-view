@@ -1,7 +1,7 @@
 {
   "name": "symbols-view",
   "version": "0.36.0",
-  "main": "./lib/symbols-view",
+  "main": "./lib/main",
   "description": "Jump to a function or method in the current editor with `meta-j`.",
   "activationEvents": {
     "symbols-view:toggle-file-symbols": ".editor",
@@ -9,9 +9,11 @@
     "symbols-view:go-to-declaration": ".editor"
   },
   "dependencies": {
-    "ctags": "~0.8.0",
+    "ctags": "~0.10.0",
     "fs-plus": "2.x",
-    "q": "~0.9.7",
+    "humanize-plus": "1.4.2",
+    "pathwatcher": "0.16.0",
+    "q": "~1.0.0",
     "temp": "~0.6.0"
   },
   "repository": "https://github.com/atom/symbols-view",
