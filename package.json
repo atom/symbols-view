@@ -11,7 +11,7 @@
   "dependencies": {
     "ctags": "~0.8.0",
     "fs-plus": "2.x",
-    "q": "~0.9.7",
+    "q": "~1.0.0",
     "temp": "~0.6.0"
   },
   "repository": "https://github.com/atom/symbols-view",
