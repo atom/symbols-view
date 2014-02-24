@@ -3,6 +3,7 @@
   "version": "0.37.0",
   "main": "./lib/main",
   "description": "Jump to a function or method in the current editor with `meta-j`.",
+  "license": "MIT",
   "activationEvents": {
     "symbols-view:toggle-file-symbols": ".editor",
     "symbols-view:toggle-project-symbols": null,
