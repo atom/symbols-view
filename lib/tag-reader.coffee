@@ -13,10 +13,10 @@ module.exports =
     return tagsFile if fs.isFileSync(tagsFile)
 
   find: (editor, callback) ->
-    word = editor?.getTextInRange(editor?.getCursor().getCurrentWordBufferRange())
+    word = editor.getTextInRange(editor.getCursor().getCurrentWordBufferRange())
     tagsFile = @getTagsFile()
 
-    if word.length > 0 and tagsFile
+    if word?.length > 0 and tagsFile
       ctags.findTags(tagsFile, word, callback)
     else
       process.nextTick -> callback(null, [])

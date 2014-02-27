@@ -14,17 +14,19 @@ class GoToView extends SymbolsView
   beforeRemove: ->
     @deferredFind?.resolve([])
 
-  findTag: ->
+  findTag: (editor) ->
     @deferredFind?.resolve([])
 
     deferred = Q.defer()
-    editor = atom.workspaceView.getActivePaneItem()
     TagReader.find editor, (error, matches=[]) -> deferred.resolve(matches)
     @deferredFind = deferred
     @deferredFind.promise
 
   populate: ->
-    @findTag().then (matches) =>
+    editor = atom.workspace.getActiveEditor()
+    return unless editor?
+
+    @findTag(editor).then (matches) =>
       if matches.length is 1
         position = @getTagLine(matches[0])
         @openTag(file: matches[0].file, position: position) if position

@@ -10,6 +10,7 @@ describe "SymbolsView", ->
 
   beforeEach ->
     atom.workspaceView = new WorkspaceView
+    atom.workspace = atom.workspaceView.model
     atom.project.setPath(temp.mkdirSync('atom-symbols-view-'))
     fs.copySync(path.join(__dirname, 'fixtures'), atom.project.getPath())
     activationPromise = atom.packages.activatePackage("symbols-view")
