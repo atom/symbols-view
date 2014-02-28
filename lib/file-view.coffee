@@ -2,7 +2,7 @@ SymbolsView = require './symbols-view'
 TagGenerator = require './tag-generator'
 
 module.exports =
-class FileSymbolsView extends SymbolsView
+class FileView extends SymbolsView
   initialize: ->
     super
 
@@ -20,7 +20,7 @@ class FileSymbolsView extends SymbolsView
       @populate(filePath)
       @attach()
 
-  getPath: -> atom.workspaceView.getActivePaneItem()?.getPath?()
+  getPath: -> atom.workspace.getActiveEditor()?.getPath()
 
   populate: (filePath) ->
     @list.empty()

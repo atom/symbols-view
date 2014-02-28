@@ -52,10 +52,10 @@ class SymbolsView extends SelectListView
 
   moveToPosition: (position) ->
     editorView = atom.workspaceView.getActiveView()
-    editor = editorView.getEditor()
-    editorView.scrollToBufferPosition(position, center: true)
-    editor.setCursorBufferPosition(position)
-    editor.moveCursorToFirstCharacterOfLine()
+    if editor = editorView.getEditor?()
+      editorView.scrollToBufferPosition(position, center: true)
+      editor.setCursorBufferPosition(position)
+      editor.moveCursorToFirstCharacterOfLine()
 
   attach: ->
     @storeFocusedElement()
