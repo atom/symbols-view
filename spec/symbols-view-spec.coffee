@@ -80,7 +80,7 @@ describe "SymbolsView", ->
         editor.destroy()
         expect(symbolsView.cachedTags).toEqual {}
 
-    it "displays error when no tags match text in mini-editor", ->
+    it "displays an error when no tags match text in mini-editor", ->
       atom.workspaceView.openSync('sample.js')
       atom.workspaceView.getActiveView().trigger "symbols-view:toggle-file-symbols"
 
@@ -297,3 +297,40 @@ describe "SymbolsView", ->
             symbolsView.list.children('li:first').mousedown().mouseup()
             expect(atom.workspaceView.open).not.toHaveBeenCalled()
             expect(symbolsView.error.text().length).toBeGreaterThan 0
+
+  describe "when useEditorGrammarAsCtagsLanguage is set to true", ->
+    it "uses the language associated with the editor's grammar", ->
+      atom.config.set('symbols-view.useEditorGrammarAsCtagsLanguage', true)
+
+      waitsForPromise ->
+        atom.packages.activatePackage('language-javascript')
+
+      waitsForPromise ->
+        atom.workspace.open('sample.javascript')
+
+      runs ->
+        atom.workspace.getActiveEditor().setText("var test = function() {}")
+        atom.workspace.getActiveEditor().save()
+        atom.workspaceView.getActiveView().trigger "symbols-view:toggle-file-symbols"
+
+      waitsForPromise ->
+        activationPromise
+
+      waitsFor ->
+        atom.workspaceView.find('.symbols-view').view().error.isVisible()
+
+      runs ->
+        atom.workspaceView.getActiveView().trigger "symbols-view:toggle-file-symbols"
+        atom.workspace.getActiveEditor().setGrammar(atom.syntax.grammarForScopeName('source.js'))
+        atom.workspaceView.getActiveView().trigger "symbols-view:toggle-file-symbols"
+        symbolsView = atom.workspaceView.find('.symbols-view').view()
+        expect(symbolsView.loading).toBeVisible()
+
+      waitsFor ->
+        symbolsView.list.children('li').length is 1
+
+      runs ->
+        expect(symbolsView.loading).toBeEmpty()
+        expect(atom.workspaceView.find('.symbols-view')).toExist()
+        expect(symbolsView.list.children('li:first').find('.primary-line')).toHaveText 'test'
+        expect(symbolsView.list.children('li:first').find('.secondary-line')).toHaveText 'Line 1'

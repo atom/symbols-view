@@ -7,11 +7,20 @@ class FileView extends SymbolsView
     super
 
     @cachedTags = {}
-    atom.project.eachBuffer (buffer) =>
+
+    @subscribe atom.project.eachBuffer (buffer) =>
       @subscribe buffer, 'reloaded saved destroyed path-changed', =>
         delete @cachedTags[buffer.getPath()]
+
       @subscribe buffer, 'destroyed', =>
         @unsubscribe(buffer)
+
+    @subscribe atom.workspace.eachEditor (editor) =>
+      @subscribe editor, 'grammar-changed', =>
+        delete @cachedTags[editor.getPath()]
+
+      @subscribe editor, 'destroyed', =>
+        @unsubscribe(editor)
 
   toggle: ->
     if @hasParent()
@@ -21,6 +30,8 @@ class FileView extends SymbolsView
       @attach()
 
   getPath: -> atom.workspace.getActiveEditor()?.getPath()
+
+  getScopeName: -> atom.workspace.getActiveEditor()?.getGrammar()?.scopeName
 
   populate: (filePath) ->
     @list.empty()
@@ -32,7 +43,7 @@ class FileView extends SymbolsView
       @generateTags(filePath)
 
   generateTags: (filePath) ->
-    new TagGenerator(filePath).generate().done (tags) =>
+    new TagGenerator(filePath, @getScopeName()).generate().done (tags) =>
       @cachedTags[filePath] = tags
       @maxItem = Infinity
       @setItems(tags)

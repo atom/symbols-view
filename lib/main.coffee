@@ -1,4 +1,7 @@
 module.exports =
+  configDefaults:
+    useEditorGrammarAsCtagsLanguage: true
+
   activate: ->
     atom.workspaceView.command 'symbols-view:toggle-file-symbols', =>
       @createFileView().toggle()
