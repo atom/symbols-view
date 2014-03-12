@@ -42,7 +42,6 @@ class TagGenerator
     defaultCtagsFile = require.resolve('./.ctags')
     args = ["--options=#{defaultCtagsFile}", '--fields=+KS']
 
-
     if atom.config.get('symbols-view.useEditorGrammarAsCtagsLanguage')
       if language = @getLanguage()
         args.push("--language-force=#{language}")
