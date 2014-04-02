@@ -2,12 +2,12 @@
   'cmd-r': 'symbols-view:toggle-file-symbols'
   'cmd-alt-down': 'symbols-view:go-to-declaration'
 
-'.platform-win32 .editor':
+'.platform-win32 .editor, .platform-linux .editor':
   'ctrl-r': 'symbols-view:toggle-file-symbols'
   'ctrl-alt-down': 'symbols-view:go-to-declaration'
 
 '.platform-darwin':
   'cmd-R': 'symbols-view:toggle-project-symbols'
 
-'.platform-win32':
+'.platform-win32, .platform-linux':
   'ctrl-R': 'symbols-view:toggle-project-symbols'
