@@ -15,7 +15,7 @@ class TagGenerator
       null
 
   getLanguage: ->
-    return 'Cson' if path.extname(@path) is '.cson'
+    return 'Cson' if path.extname(@path) in ['.cson', '.gyp']
 
     switch @scopeName
       when 'source.c'        then 'C'
@@ -33,6 +33,7 @@ class TagGenerator
       when 'source.makefile' then 'Make'
       when 'source.objc'     then 'C'
       when 'source.objc++'   then 'C++'
+      when 'source.python'   then 'Python'
       when 'source.ruby'     then 'Ruby'
       when 'source.sass'     then 'CSS'
       when 'text.html'       then 'Html'
