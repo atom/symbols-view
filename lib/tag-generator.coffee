@@ -15,6 +15,8 @@ class TagGenerator
       null
 
   getLanguage: ->
+    return 'Cson' if path.extname(@path) is '.cson'
+
     switch @scopeName
       when 'source.c'        then 'C'
       when 'source.c++'      then 'C++'
