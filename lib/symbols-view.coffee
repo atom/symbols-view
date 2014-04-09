@@ -42,6 +42,11 @@ class SymbolsView extends SelectListView
       @openTag(tag)
 
   openTag: (tag) ->
+    editor = atom.workspace.getActiveEditor()
+    previous =
+      position: editor.getCursorBufferPosition()
+      file: editor.getUri()
+
     position = tag.position
     position = @getTagLine(tag) unless position
     if tag.file
@@ -50,12 +55,14 @@ class SymbolsView extends SelectListView
     else if position
       @moveToPosition(position)
 
-  moveToPosition: (position) ->
+    @afterTagOpen?(previous)
+
+  moveToPosition: (position, beginningOfLine=true) ->
     editorView = atom.workspaceView.getActiveView()
     if editor = editorView.getEditor?()
       editorView.scrollToBufferPosition(position, center: true)
       editor.setCursorBufferPosition(position)
-      editor.moveCursorToFirstCharacterOfLine()
+      editor.moveCursorToFirstCharacterOfLine() if beginningOfLine
 
   attach: ->
     @storeFocusedElement()

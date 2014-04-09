@@ -3,6 +3,8 @@ module.exports =
     useEditorGrammarAsCtagsLanguage: true
 
   activate: ->
+    @stack = []
+
     atom.workspaceView.command 'symbols-view:toggle-file-symbols', =>
       @createFileView().toggle()
 
@@ -11,6 +13,9 @@ module.exports =
 
     atom.workspaceView.command 'symbols-view:go-to-declaration', =>
       @createGoToView().toggle()
+
+    atom.workspaceView.command 'symbols-view:return-from-declaration', =>
+      @createGoBackView().toggle()
 
   deactivate: ->
     if @fileView?
@@ -24,6 +29,10 @@ module.exports =
     if @goToView?
       @goToView.destroy()
       @goToView = null
+
+    if @goBackView?
+      @goBackView.destroy()
+      @goBackView = null
 
   createFileView: ->
     unless @fileView?
@@ -40,5 +49,11 @@ module.exports =
   createGoToView: ->
     unless @goToView?
       GoToView = require './go-to-view'
-      @goToView = new GoToView()
+      @goToView = new GoToView(@stack)
     @goToView
+
+  createGoBackView: ->
+    unless @goBackView?
+      GoBackView = require './go-back-view'
+      @goBackView = new GoBackView(@stack)
+    @goBackView;
