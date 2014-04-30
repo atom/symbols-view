@@ -1,4 +1,4 @@
-# Symbols View package
+# Symbols View package [![Build Status](https://travis-ci.org/atom/symbols-view.svg?branch=master)](https://travis-ci.org/atom/symbols-view)
 
 Display the list of functions/methods in the editor via `cmd-r` in Atom.
 
