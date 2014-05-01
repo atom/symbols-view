@@ -217,6 +217,34 @@ describe "SymbolsView", ->
         expect(atom.workspaceView.getActivePaneItem().getPath()).toBe atom.project.resolve("tagged-duplicate.js")
         expect(atom.workspaceView.getActivePaneItem().getCursorBufferPosition()).toEqual [0,4]
 
+    describe "return from declaration", ->
+      it "doesn't do anything when no go-to have been triggered", ->
+        atom.workspaceView.openSync("tagged.js")
+        editor = atom.workspaceView.getActivePaneItem()
+        editor.setCursorBufferPosition([6,0])
+        atom.workspaceView.getActiveView().trigger 'symbols-view:return-from-declaration'
+        expect(editor.getCursorBufferPosition()).toEqual [6,0]
+
+      it "returns to previous row and column", ->
+        atom.workspaceView.openSync("tagged.js")
+        editor = atom.workspaceView.getActivePaneItem()
+        editor.setCursorBufferPosition([6,24])
+        spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
+        atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
+
+        waitsFor ->
+          SymbolsView.prototype.moveToPosition.callCount == 1
+
+        runs ->
+          expect(editor.getCursorBufferPosition()).toEqual [2,0]
+          atom.workspaceView.getActiveView().trigger 'symbols-view:return-from-declaration'
+
+        waitsFor ->
+          SymbolsView.prototype.moveToPosition.callCount == 2
+
+        runs ->
+          expect(editor.getCursorBufferPosition()).toEqual [6,24]
+
     describe "when the tag is in a file that doesn't exist", ->
       it "doesn't display the tag", ->
         fs.removeSync(atom.project.resolve("tagged-duplicate.js"))

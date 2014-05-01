@@ -5,6 +5,9 @@ TagReader = require './tag-reader'
 
 module.exports =
 class GoToView extends SymbolsView
+  constructor: (@stack) ->
+    super
+
   toggle: ->
     if @hasParent()
       @cancel()
@@ -41,3 +44,6 @@ class GoToView extends SymbolsView
             position: position
         @setItems(tags)
         @attach()
+
+   afterTagOpen: (previous) ->
+     @stack.push previous
