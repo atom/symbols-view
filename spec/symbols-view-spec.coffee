@@ -189,7 +189,7 @@ describe "SymbolsView", ->
       atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
 
       waitsFor ->
-        SymbolsView.prototype.moveToPosition.callCount == 1
+        SymbolsView::moveToPosition.callCount is 1
 
       runs ->
         expect(editor.getCursorBufferPosition()).toEqual [2,0]
@@ -211,7 +211,7 @@ describe "SymbolsView", ->
         symbolsView.confirmed(symbolsView.items[0])
 
       waitsFor ->
-        SymbolsView.prototype.moveToPosition.callCount == 1
+        SymbolsView::moveToPosition.callCount is 1
 
       runs ->
         expect(atom.workspaceView.getActivePaneItem().getPath()).toBe atom.project.resolve("tagged-duplicate.js")
@@ -233,14 +233,14 @@ describe "SymbolsView", ->
         atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
 
         waitsFor ->
-          SymbolsView.prototype.moveToPosition.callCount == 1
+          SymbolsView::moveToPosition.callCount is 1
 
         runs ->
           expect(editor.getCursorBufferPosition()).toEqual [2,0]
           atom.workspaceView.getActiveView().trigger 'symbols-view:return-from-declaration'
 
         waitsFor ->
-          SymbolsView.prototype.moveToPosition.callCount == 2
+          SymbolsView::moveToPosition.callCount is 2
 
         runs ->
           expect(editor.getCursorBufferPosition()).toEqual [6,24]
