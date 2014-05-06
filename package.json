@@ -10,7 +10,7 @@
     "symbols-view:go-to-declaration": ".editor"
   },
   "dependencies": {
-    "ctags": "~0.10.0",
+    "ctags": "~0.12.0",
     "fs-plus": "2.x",
     "humanize-plus": "1.4.2",
     "pathwatcher": "^1.0",
