@@ -15,14 +15,14 @@ class SymbolsView extends SelectListView
     @cancel()
     @remove()
 
-  getFilterKey: -> 'file'
+  getFilterKey: -> 'name'
 
   viewForItem: ({position, name, file}) ->
     $$ ->
       @li class: 'two-lines', =>
         @div name, class: 'primary-line'
         if position
-          text = "#{file}:#{position.row + 1}"
+          text = "Line #{position.row + 1}"
         else
           text = path.basename(file)
         @div text, class: 'secondary-line'

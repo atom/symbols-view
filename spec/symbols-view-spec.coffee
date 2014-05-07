@@ -36,9 +36,9 @@ describe "SymbolsView", ->
         expect(atom.workspaceView.find('.symbols-view')).toExist()
         expect(symbolsView.list.children('li').length).toBe 2
         expect(symbolsView.list.children('li:first').find('.primary-line')).toHaveText 'quicksort'
-        expect(symbolsView.list.children('li:first').find('.secondary-line')).toHaveText 'undefined:1'
+        expect(symbolsView.list.children('li:first').find('.secondary-line')).toHaveText 'Line 1'
         expect(symbolsView.list.children('li:last').find('.primary-line')).toHaveText 'quicksort.sort'
-        expect(symbolsView.list.children('li:last').find('.secondary-line')).toHaveText 'undefined:2'
+        expect(symbolsView.list.children('li:last').find('.secondary-line')).toHaveText 'Line 2'
         expect(symbolsView.error).not.toBeVisible()
 
     it "caches tags until the buffer changes", ->
@@ -361,4 +361,4 @@ describe "SymbolsView", ->
         expect(symbolsView.loading).toBeEmpty()
         expect(atom.workspaceView.find('.symbols-view')).toExist()
         expect(symbolsView.list.children('li:first').find('.primary-line')).toHaveText 'test'
-        expect(symbolsView.list.children('li:first').find('.secondary-line')).toHaveText 'undefined:1'
+        expect(symbolsView.list.children('li:first').find('.secondary-line')).toHaveText 'Line 1'
