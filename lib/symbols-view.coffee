@@ -47,7 +47,7 @@ class SymbolsView extends SelectListView
         position: editor.getCursorBufferPosition()
         file: editor.getUri()
 
-    position = tag.position
+    {position} = tag
     position = @getTagLine(tag) unless position
     if tag.file
       atom.workspaceView.open(tag.file).done =>
