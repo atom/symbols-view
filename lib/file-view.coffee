@@ -3,6 +3,8 @@ TagGenerator = require './tag-generator'
 
 module.exports =
 class FileView extends SymbolsView
+  constructor: (@stack) ->
+    super
   initialize: ->
     super
 
@@ -47,3 +49,6 @@ class FileView extends SymbolsView
       @cachedTags[filePath] = tags
       @maxItem = Infinity
       @setItems(tags)
+
+  afterTagOpen: (previous) ->
+    @stack.push previous
