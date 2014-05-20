@@ -2,9 +2,9 @@ SymbolsView = require './symbols-view'
 
 module.exports =
 class GoBackView extends SymbolsView
-  toggle: =>
-    return if @stack.length is 0
+  toggle: ->
+    previousTag = @stack.pop()
+    return unless previousTag?
 
-    top = @stack.pop()
-    atom.workspaceView.open(top.file).done =>
-      @moveToPosition(top.position, false) if top.position
+    atom.workspaceView.open(previousTag.file).done =>
+      @moveToPosition(previousTag.position, false) if previousTag.position
