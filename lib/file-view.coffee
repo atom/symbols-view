@@ -3,8 +3,6 @@ TagGenerator = require './tag-generator'
 
 module.exports =
 class FileView extends SymbolsView
-  constructor: (@stack) ->
-    super
   initialize: ->
     super
 
