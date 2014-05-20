@@ -181,7 +181,7 @@ describe "SymbolsView", ->
       runs ->
         expect(editor.getCursorBufferPosition()).toEqual [0,2]
 
-    it "moves the cursor to the declaration", ->
+    it "moves the cursor to the declaration there is a single matching declaration", ->
       atom.workspaceView.openSync("tagged.js")
       editor = atom.workspaceView.getActivePaneItem()
       editor.setCursorBufferPosition([6,24])
@@ -251,15 +251,14 @@ describe "SymbolsView", ->
         atom.workspaceView.openSync("tagged.js")
         editor = atom.workspaceView.getActivePaneItem()
         editor.setCursorBufferPosition([8,14])
+        spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
         atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
 
         waitsFor ->
-            atom.workspaceView.find('.symbols-view').find('li').length > 0
+          SymbolsView::moveToPosition.callCount is 1
 
         runs ->
-          symbolsView = atom.workspaceView.find('.symbols-view').view()
-          expect(symbolsView.list.children('li').length).toBe 1
-          expect(symbolsView.list.children('li:first').find('.primary-line')).toHaveText 'tagged.js:9'
+          expect(editor.getCursorBufferPosition()).toEqual [8,0]
 
   describe "project symbols", ->
     it "displays all tags", ->
