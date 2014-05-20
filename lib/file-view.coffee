@@ -54,6 +54,3 @@ class FileView extends SymbolsView
       @cachedTags[filePath] = tags
       @maxItem = Infinity
       @setItems(tags)
-
-  afterTagOpen: (previous) ->
-    @stack.push previous

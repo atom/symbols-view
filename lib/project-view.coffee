@@ -68,6 +68,3 @@ class ProjectView extends SymbolsView
 
   unwatchTagsFile: ->
     @tagsFile?.off()
-
-  afterTagOpen: (previous) ->
-    @stack.push previous

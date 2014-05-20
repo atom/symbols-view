@@ -54,7 +54,7 @@ class SymbolsView extends SelectListView
     else if position
       @moveToPosition(position)
 
-    @afterTagOpen?(previous) if previous?
+    @stack.push(previous)
 
   moveToPosition: (position, beginningOfLine=true) ->
     editorView = atom.workspaceView.getActiveView()

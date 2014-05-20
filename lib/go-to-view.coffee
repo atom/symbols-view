@@ -41,6 +41,3 @@ class GoToView extends SymbolsView
             position: position
         @setItems(tags)
         @attach()
-
-  afterTagOpen: (previous) ->
-    @stack.push previous
