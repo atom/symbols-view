@@ -53,5 +53,5 @@ class GoToView extends SymbolsView
         @setItems(tags)
         @attach()
 
-   afterTagOpen: (previous) ->
-     @stack.push previous
+  afterTagOpen: (previous) ->
+    @stack.push previous
