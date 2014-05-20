@@ -37,13 +37,13 @@ module.exports =
   createFileView: ->
     unless @fileView?
       FileView  = require './file-view'
-      @fileView = new FileView()
+      @fileView = new FileView(@stack)
     @fileView
 
   createProjectView:  ->
     unless @projectView?
       ProjectView  = require './project-view'
-      @projectView = new ProjectView()
+      @projectView = new ProjectView(@stack)
     @projectView
 
   createGoToView: ->
