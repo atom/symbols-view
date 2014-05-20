@@ -7,7 +7,7 @@ class SymbolsView extends SelectListView
   @activate: ->
     new SymbolsView
 
-  initialize: ->
+  initialize: (@stack) ->
     super
     @addClass('symbols-view overlay from-top')
 

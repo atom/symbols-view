@@ -5,8 +5,6 @@ TagReader = require './tag-reader'
 
 module.exports =
 class ProjectView extends SymbolsView
-  constructor: (@stack) ->
-    super
   initialize: ->
     super
     @reloadTags = true

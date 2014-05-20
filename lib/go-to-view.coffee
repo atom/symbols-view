@@ -6,9 +6,6 @@ TagReader = require './tag-reader'
 
 module.exports =
 class GoToView extends SymbolsView
-  constructor: (@stack) ->
-    super
-
   viewForItem: ({position, name, file}) ->
     $$ ->
       @li class: 'two-lines', =>
