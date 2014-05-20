@@ -1,3 +1,4 @@
+{$$} = require 'atom'
 SymbolsView = require './symbols-view'
 TagGenerator = require './tag-generator'
 
@@ -21,6 +22,12 @@ class FileView extends SymbolsView
 
       @subscribe editor, 'destroyed', =>
         @unsubscribe(editor)
+
+  viewForItem: ({position, name}) ->
+    $$ ->
+      @li class: 'two-lines', =>
+        @div name, class: 'primary-line'
+        @div "Line #{position.row + 1}", class: 'secondary-line'
 
   toggle: ->
     if @hasParent()

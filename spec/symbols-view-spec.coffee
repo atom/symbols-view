@@ -259,7 +259,7 @@ describe "SymbolsView", ->
         runs ->
           symbolsView = atom.workspaceView.find('.symbols-view').view()
           expect(symbolsView.list.children('li').length).toBe 1
-          expect(symbolsView.list.children('li:first').find('.primary-line')).toHaveText 'tagged.js'
+          expect(symbolsView.list.children('li:first').find('.primary-line')).toHaveText 'tagged.js:9'
 
   describe "project symbols", ->
     it "displays all tags", ->

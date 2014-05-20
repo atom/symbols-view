@@ -20,12 +20,11 @@ class SymbolsView extends SelectListView
   viewForItem: ({position, name, file}) ->
     $$ ->
       @li class: 'two-lines', =>
-        @div name, class: 'primary-line'
-        if position
-          text = "Line #{position.row + 1}"
+        if position?
+          @div "#{name}:#{position.row + 1}", class: 'primary-line'
         else
-          text = path.basename(file)
-        @div text, class: 'secondary-line'
+          @div name, class: 'primary-line'
+        @div file, class: 'secondary-line'
 
   getEmptyMessage: (itemCount) ->
     if itemCount is 0
