@@ -2,11 +2,22 @@ path = require 'path'
 Q = require 'q'
 SymbolsView = require './symbols-view'
 TagReader = require './tag-reader'
+{$$, Point, SelectListView} = require 'atom'
 
 module.exports =
 class GoToView extends SymbolsView
   constructor: (@stack) ->
     super
+
+  viewForItem: ({position, name, file}) ->
+    $$ ->
+      @li class: 'two-lines', =>
+        @div name, class: 'primary-line'
+        if position
+          text = "#{file}:#{position.row + 1}"
+        else
+          text = path.basename(file)
+        @div text, class: 'secondary-line'
 
   toggle: ->
     if @hasParent()
