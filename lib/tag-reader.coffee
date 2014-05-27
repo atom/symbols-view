@@ -9,6 +9,9 @@ module.exports =
     tagsFile = atom.project.resolve("tags")
     return tagsFile if fs.isFileSync(tagsFile)
 
+    tagsFile = atom.project.resolve(".tags")
+    return tagsFile if fs.isFileSync(tagsFile)
+
     tagsFile = atom.project.resolve("TAGS")
     return tagsFile if fs.isFileSync(tagsFile)
 

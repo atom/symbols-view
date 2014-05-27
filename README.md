@@ -2,7 +2,7 @@
 
 Display the list of functions/methods in the editor via `cmd-r` in Atom.
 
-If your project has a `tags`/`TAGS` file at the root then following are
+If your project has a `tags`/`.tags`/`TAGS` file at the root then following are
 supported:
 
   * `cmd-shift-r` to view all function/methods in the project
