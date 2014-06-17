@@ -152,7 +152,7 @@ describe "SymbolsView", ->
       atom.workspace.open('sample.js')
 
     runs ->
-      expect(atom.workspaceView.getActivePaneItem().getCursorBufferPosition()).toEqual [0,0]
+      expect(atom.workspace.getActiveEditor().getCursorBufferPosition()).toEqual [0,0]
       expect(atom.workspaceView.find('.symbols-view')).not.toExist()
       atom.workspaceView.getActiveView().trigger "symbols-view:toggle-file-symbols"
 
@@ -161,7 +161,7 @@ describe "SymbolsView", ->
 
     runs ->
       atom.workspaceView.find('.symbols-view').find('li:eq(1)').mousedown().mouseup()
-      expect(atom.workspaceView.getActivePaneItem().getCursorBufferPosition()).toEqual [1,2]
+      expect(atom.workspace.getActiveEditor().getCursorBufferPosition()).toEqual [1,2]
 
   describe "TagGenerator", ->
     it "generates tags for all JavaScript functions", ->
@@ -194,7 +194,7 @@ describe "SymbolsView", ->
         atom.workspace.open("tagged.js")
 
       runs ->
-        editor = atom.workspaceView.getActivePaneItem()
+        editor = atom.workspace.getActiveEditor()
         editor.setCursorBufferPosition([0,2])
         atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
 
@@ -209,7 +209,7 @@ describe "SymbolsView", ->
         atom.workspace.open("tagged.js")
 
       runs ->
-        editor = atom.workspaceView.getActivePaneItem()
+        editor = atom.workspace.getActiveEditor()
         editor.setCursorBufferPosition([6,24])
         spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
         atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
@@ -225,7 +225,7 @@ describe "SymbolsView", ->
         atom.workspace.open("tagged.js")
 
       runs ->
-        editor = atom.workspaceView.getActivePaneItem()
+        editor = atom.workspace.getActiveEditor()
         editor.setCursorBufferPosition([8,14])
         atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
 
@@ -243,8 +243,8 @@ describe "SymbolsView", ->
         SymbolsView::moveToPosition.callCount is 1
 
       runs ->
-        expect(atom.workspaceView.getActivePaneItem().getPath()).toBe atom.project.resolve("tagged-duplicate.js")
-        expect(atom.workspaceView.getActivePaneItem().getCursorBufferPosition()).toEqual [0,4]
+        expect(atom.workspace.getActiveEditor().getPath()).toBe atom.project.resolve("tagged-duplicate.js")
+        expect(atom.workspace.getActiveEditor().getCursorBufferPosition()).toEqual [0,4]
 
     it "includes ? and ! characters in ruby symbols", ->
       atom.project.setPath(path.join(atom.project.getPath(), 'ruby'))
@@ -287,7 +287,7 @@ describe "SymbolsView", ->
           atom.workspace.open("tagged.js")
 
         runs ->
-          editor = atom.workspaceView.getActivePaneItem()
+          editor = atom.workspace.getActiveEditor()
           editor.setCursorBufferPosition([6,0])
           atom.workspaceView.getActiveView().trigger 'symbols-view:return-from-declaration'
           expect(editor.getCursorBufferPosition()).toEqual [6,0]
@@ -297,7 +297,7 @@ describe "SymbolsView", ->
           atom.workspace.open("tagged.js")
 
         runs ->
-          editor = atom.workspaceView.getActivePaneItem()
+          editor = atom.workspace.getActiveEditor()
           editor.setCursorBufferPosition([6,24])
           spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
           atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
@@ -323,7 +323,7 @@ describe "SymbolsView", ->
           atom.workspace.open("tagged.js")
 
         runs ->
-          editor = atom.workspaceView.getActivePaneItem()
+          editor = atom.workspace.getActiveEditor()
           editor.setCursorBufferPosition([8,14])
           spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
           atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
