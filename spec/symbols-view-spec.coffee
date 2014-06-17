@@ -6,7 +6,7 @@ SymbolsView = require '../lib/symbols-view'
 TagGenerator = require '../lib/tag-generator'
 
 describe "SymbolsView", ->
-  [symbolsView, activationPromise] = []
+  [symbolsView, activationPromise, editor] = []
 
   beforeEach ->
     atom.workspaceView = new WorkspaceView
@@ -22,8 +22,11 @@ describe "SymbolsView", ->
 
   describe "when tags can be generated for a file", ->
     it "initially displays all JavaScript functions with line numbers", ->
-      atom.workspaceView.openSync('sample.js')
-      atom.workspaceView.getActiveView().trigger "symbols-view:toggle-file-symbols"
+      waitsForPromise ->
+        atom.workspace.open('sample.js')
+
+      runs ->
+        atom.workspaceView.getActiveView().trigger "symbols-view:toggle-file-symbols"
 
       waitsForPromise ->
         activationPromise
@@ -46,8 +49,12 @@ describe "SymbolsView", ->
         expect(symbolsView.error).not.toBeVisible()
 
     it "caches tags until the buffer changes", ->
-      editor = atom.workspaceView.openSync('sample.js')
-      atom.workspaceView.getActiveView().trigger "symbols-view:toggle-file-symbols"
+      waitsForPromise ->
+        atom.workspace.open('sample.js')
+
+      runs ->
+        editor = atom.workspace.getActiveEditor()
+        atom.workspaceView.getActiveView().trigger "symbols-view:toggle-file-symbols"
 
       waitsForPromise ->
         activationPromise
@@ -85,8 +92,11 @@ describe "SymbolsView", ->
         expect(symbolsView.cachedTags).toEqual {}
 
     it "displays an error when no tags match text in mini-editor", ->
-      atom.workspaceView.openSync('sample.js')
-      atom.workspaceView.getActiveView().trigger "symbols-view:toggle-file-symbols"
+      waitsForPromise ->
+        atom.workspace.open('sample.js')
+
+      runs ->
+        atom.workspaceView.getActiveView().trigger "symbols-view:toggle-file-symbols"
 
       waitsForPromise ->
         activationPromise
@@ -115,8 +125,11 @@ describe "SymbolsView", ->
 
   describe "when tags can't be generated for a file", ->
     it "shows an error message when no matching tags are found", ->
-      atom.workspaceView.openSync('sample.txt')
-      atom.workspaceView.getActiveView().trigger "symbols-view:toggle-file-symbols"
+      waitsForPromise ->
+        atom.workspace.open('sample.txt')
+
+      runs ->
+        atom.workspaceView.getActiveView().trigger "symbols-view:toggle-file-symbols"
 
       waitsForPromise ->
         activationPromise
@@ -135,10 +148,13 @@ describe "SymbolsView", ->
         expect(symbolsView.loadingArea).not.toBeVisible()
 
   it "moves the cursor to the selected function", ->
-    atom.workspaceView.openSync('sample.js')
-    expect(atom.workspaceView.getActivePaneItem().getCursorBufferPosition()).toEqual [0,0]
-    expect(atom.workspaceView.find('.symbols-view')).not.toExist()
-    atom.workspaceView.getActiveView().trigger "symbols-view:toggle-file-symbols"
+    waitsForPromise ->
+      atom.workspace.open('sample.js')
+
+    runs ->
+      expect(atom.workspaceView.getActivePaneItem().getCursorBufferPosition()).toEqual [0,0]
+      expect(atom.workspaceView.find('.symbols-view')).not.toExist()
+      atom.workspaceView.getActiveView().trigger "symbols-view:toggle-file-symbols"
 
     waitsFor ->
       atom.workspaceView.find('.symbols-view').find('li').length
@@ -174,10 +190,13 @@ describe "SymbolsView", ->
 
   describe "go to declaration", ->
     it "doesn't move the cursor when no declaration is found", ->
-      atom.workspaceView.openSync("tagged.js")
-      editor = atom.workspaceView.getActivePaneItem()
-      editor.setCursorBufferPosition([0,2])
-      atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
+      waitsForPromise ->
+        atom.workspace.open("tagged.js")
+
+      runs ->
+        editor = atom.workspaceView.getActivePaneItem()
+        editor.setCursorBufferPosition([0,2])
+        atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
 
       waitsForPromise ->
         activationPromise
@@ -186,11 +205,14 @@ describe "SymbolsView", ->
         expect(editor.getCursorBufferPosition()).toEqual [0,2]
 
     it "moves the cursor to the declaration there is a single matching declaration", ->
-      atom.workspaceView.openSync("tagged.js")
-      editor = atom.workspaceView.getActivePaneItem()
-      editor.setCursorBufferPosition([6,24])
-      spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
-      atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
+      waitsForPromise ->
+        atom.workspace.open("tagged.js")
+
+      runs ->
+        editor = atom.workspaceView.getActivePaneItem()
+        editor.setCursorBufferPosition([6,24])
+        spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
+        atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
 
       waitsFor ->
         SymbolsView::moveToPosition.callCount is 1
@@ -199,10 +221,13 @@ describe "SymbolsView", ->
         expect(editor.getCursorBufferPosition()).toEqual [2,0]
 
     it "displays matches when more than one exists and opens the selected match", ->
-      atom.workspaceView.openSync("tagged.js")
-      editor = atom.workspaceView.getActivePaneItem()
-      editor.setCursorBufferPosition([8,14])
-      atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
+      waitsForPromise ->
+        atom.workspace.open("tagged.js")
+
+      runs ->
+        editor = atom.workspaceView.getActivePaneItem()
+        editor.setCursorBufferPosition([8,14])
+        atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
 
       waitsFor ->
         atom.workspaceView.find('.symbols-view').find('li').length > 0
@@ -258,18 +283,24 @@ describe "SymbolsView", ->
 
     describe "return from declaration", ->
       it "doesn't do anything when no go-to have been triggered", ->
-        atom.workspaceView.openSync("tagged.js")
-        editor = atom.workspaceView.getActivePaneItem()
-        editor.setCursorBufferPosition([6,0])
-        atom.workspaceView.getActiveView().trigger 'symbols-view:return-from-declaration'
-        expect(editor.getCursorBufferPosition()).toEqual [6,0]
+        waitsForPromise ->
+          atom.workspace.open("tagged.js")
+
+        runs ->
+          editor = atom.workspaceView.getActivePaneItem()
+          editor.setCursorBufferPosition([6,0])
+          atom.workspaceView.getActiveView().trigger 'symbols-view:return-from-declaration'
+          expect(editor.getCursorBufferPosition()).toEqual [6,0]
 
       it "returns to previous row and column", ->
-        atom.workspaceView.openSync("tagged.js")
-        editor = atom.workspaceView.getActivePaneItem()
-        editor.setCursorBufferPosition([6,24])
-        spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
-        atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
+        waitsForPromise ->
+          atom.workspace.open("tagged.js")
+
+        runs ->
+          editor = atom.workspaceView.getActivePaneItem()
+          editor.setCursorBufferPosition([6,24])
+          spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
+          atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
 
         waitsFor ->
           SymbolsView::moveToPosition.callCount is 1
@@ -287,11 +318,15 @@ describe "SymbolsView", ->
     describe "when the tag is in a file that doesn't exist", ->
       it "doesn't display the tag", ->
         fs.removeSync(atom.project.resolve("tagged-duplicate.js"))
-        atom.workspaceView.openSync("tagged.js")
-        editor = atom.workspaceView.getActivePaneItem()
-        editor.setCursorBufferPosition([8,14])
-        spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
-        atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
+
+        waitsForPromise ->
+          atom.workspace.open("tagged.js")
+
+        runs ->
+          editor = atom.workspaceView.getActivePaneItem()
+          editor.setCursorBufferPosition([8,14])
+          spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
+          atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
 
         waitsFor ->
           SymbolsView::moveToPosition.callCount is 1
@@ -302,9 +337,13 @@ describe "SymbolsView", ->
   describe "project symbols", ->
     it "displays all tags", ->
       jasmine.unspy(window, 'setTimeout')
-      atom.workspaceView.openSync("tagged.js")
-      expect(atom.workspaceView.find('.symbols-view')).not.toExist()
-      atom.workspaceView.trigger "symbols-view:toggle-project-symbols"
+
+      waitsForPromise ->
+        atom.workspace.open("tagged.js")
+
+      runs ->
+        expect(atom.workspaceView.find('.symbols-view')).not.toExist()
+        atom.workspaceView.trigger "symbols-view:toggle-project-symbols"
 
       waitsForPromise ->
         activationPromise
