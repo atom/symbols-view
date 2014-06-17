@@ -16,8 +16,12 @@ module.exports =
     return tagsFile if fs.isFileSync(tagsFile)
 
   find: (editor, callback) ->
-    range = editor.getCursor().getCurrentWordBufferRange()
-    symbol = getSymbolFromRange(editor, range)
+    if editor.getCursor().getScopes().indexOf('source.ruby') isnt -1
+      # Include ! and ? in word regular expression for ruby files
+      range = editor.getCursor().getCurrentWordBufferRange(wordRegex: /[\w!?]*/g)
+    else
+      range = editor.getCursor().getCurrentWordBufferRange()
+    symbol = editor.getTextInRange(range)
 
     tagsFile = @getTagsFile()
 
@@ -31,15 +35,3 @@ module.exports =
     task = Task.once handlerPath, atom.project.getPath(), -> callback(projectTags)
     task.on 'tags', (paths) -> projectTags.push(paths...)
     task
-
-getSymbolFromRange = (editor, range) ->
-  word = editor.getTextInRange(range)
-  charAfterWord = getCharAfterWord(editor, range)
-
-  if charAfterWord == "?" or charAfterWord == "!"
-    return word + charAfterWord
-  else
-    return word
-
-getCharAfterWord = (editor, range) ->
-  return editor.getTextInRange([[range.end.row, range.end.column], [range.end.row, range.end.column + 1]])

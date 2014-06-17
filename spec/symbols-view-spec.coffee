@@ -13,8 +13,12 @@ describe "SymbolsView", ->
     atom.workspace = atom.workspaceView.model
     atom.project.setPath(temp.mkdirSync('atom-symbols-view-'))
     fs.copySync(path.join(__dirname, 'fixtures'), atom.project.getPath())
+
     activationPromise = atom.packages.activatePackage("symbols-view")
     atom.workspaceView.attachToDom()
+
+    waitsForPromise ->
+      atom.packages.activatePackage('language-ruby')
 
   describe "when tags can be generated for a file", ->
     it "initially displays all JavaScript functions with line numbers", ->
@@ -216,6 +220,41 @@ describe "SymbolsView", ->
       runs ->
         expect(atom.workspaceView.getActivePaneItem().getPath()).toBe atom.project.resolve("tagged-duplicate.js")
         expect(atom.workspaceView.getActivePaneItem().getCursorBufferPosition()).toEqual [0,4]
+
+    it "includes ? and ! characters in ruby symbols", ->
+      atom.project.setPath(path.join(atom.project.getPath(), 'ruby'))
+
+      waitsForPromise ->
+        atom.workspace.open 'file1.rb'
+
+      runs ->
+        spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
+        atom.workspace.getActiveEditor().setCursorBufferPosition([13,4])
+        atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
+
+      waitsFor ->
+        SymbolsView::moveToPosition.callCount is 1
+
+      runs ->
+        expect(atom.workspace.getActiveEditor().getCursorBufferPosition()).toEqual [5,2]
+        SymbolsView::moveToPosition.reset()
+        atom.workspace.getActiveEditor().setCursorBufferPosition([14,2])
+        atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
+
+      waitsFor ->
+        SymbolsView::moveToPosition.callCount is 1
+
+      runs ->
+        expect(atom.workspace.getActiveEditor().getCursorBufferPosition()).toEqual [9,2]
+        SymbolsView::moveToPosition.reset()
+        atom.workspace.getActiveEditor().setCursorBufferPosition([15,5])
+        atom.workspaceView.getActiveView().trigger 'symbols-view:go-to-declaration'
+
+      waitsFor ->
+        SymbolsView::moveToPosition.callCount is 1
+
+      runs ->
+        expect(atom.workspace.getActiveEditor().getCursorBufferPosition()).toEqual [1,2]
 
     describe "return from declaration", ->
       it "doesn't do anything when no go-to have been triggered", ->
