@@ -35,7 +35,7 @@ class TagGenerator
       when 'source.objc++'   then 'C++'
       when 'source.python'   then 'Python'
       when 'source.ruby'     then 'Ruby'
-      when 'source.sass'     then 'CSS'
+      when 'source.sass'     then 'Sass'
       when 'text.html'       then 'Html'
       when 'text.html.php'   then 'Php'
 
