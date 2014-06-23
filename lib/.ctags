@@ -19,7 +19,6 @@
 --langdef=Css
 --langmap=Css:.css
 --langmap=Css:+.less
---langmap=Css:+.sass
 --langmap=Css:+.scss
 --regex-Css=/^[ \t]*(.+)[ \t]*\{/\1/f,function/
 --regex-Css=/^[ \t]*(.+)[ \t]*,[ \t]*$/\1/f,function/
