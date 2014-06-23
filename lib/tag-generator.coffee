@@ -36,6 +36,7 @@ class TagGenerator
       when 'source.python'   then 'Python'
       when 'source.ruby'     then 'Ruby'
       when 'source.sass'     then 'Sass'
+      when 'source.yaml'     then 'Yaml'
       when 'text.html'       then 'Html'
       when 'text.html.php'   then 'Php'
 
