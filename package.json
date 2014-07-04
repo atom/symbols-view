@@ -6,8 +6,8 @@
   "license": "MIT",
   "dependencies": {
     "fs-plus": "2.x",
-    "autocomplete-plus": ">=0.20.0",
     "q": "~1.0.1",
+    "minimatch": "~0.3.0"
   },
   "repository": "https://github.com/yongkangchen/atom-ctags",
   "engines": {
