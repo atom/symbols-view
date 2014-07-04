@@ -16,6 +16,7 @@ and fork from [symbols-view](https://github.com/atom/symbols-view)
 
 #Install
 make sure [autocomplete-plus](https://github.com/saschagehlich/autocomplete-plus) already installed.
+And disable [symbols-view](https://github.com/atom/symbols-view) if you have installed.
 
 #TODO
 * submit to atom package center
