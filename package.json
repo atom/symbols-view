@@ -1,21 +1,12 @@
 {
-  "name": "symbols-view",
+  "name": "symbols-view-plus",
   "version": "0.59.0",
   "main": "./lib/main",
   "description": "Jump to a function/method in the current editor with `cmd-r`.",
   "license": "MIT",
-  "activationEvents": {
-    "symbols-view:toggle-file-symbols": ".editor",
-    "symbols-view:toggle-project-symbols": null,
-    "symbols-view:go-to-declaration": ".editor"
-  },
   "dependencies": {
-    "ctags": "~0.12.0",
     "fs-plus": "2.x",
-    "humanize-plus": "1.4.2",
-    "pathwatcher": "^1.0",
-    "q": "~1.0.1",
-    "temp": "~0.6.0"
+    "autocomplete-plus": ">=0.20.0"
   },
   "repository": "https://github.com/atom/symbols-view",
   "engines": {

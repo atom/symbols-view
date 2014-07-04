@@ -1,21 +1,32 @@
 module.exports =
   configDefaults:
     useEditorGrammarAsCtagsLanguage: true
+    autoBuildTagsWhenActive: false
+    fileBlacklist: ".*, *.so, *.os, Makefile, README, *.png, *.o, *.a, *.command, *.json, *.sh, *.gif, *.1, *.md"
 
   activate: ->
     @stack = []
 
+    @ctagsCache = require "./ctags-cache"
+    @ctagsCache.activate(atom.config.get('symbols-view.autoBuildTagsWhenActive'))
+
+    @ctagsComplete = require "./ctags-complete"
+    @ctagsComplete.activate(@ctagsCache)
+
+    @createFileView()
+
+    atom.workspaceView.command 'symbols-view:rebuild', =>
+      @ctagsCache.rebuild()
+
     atom.workspaceView.command 'symbols-view:toggle-file-symbols', =>
       @createFileView().toggle()
 
-    atom.workspaceView.command 'symbols-view:toggle-project-symbols', =>
-      @createProjectView().toggle()
-
     atom.workspaceView.command 'symbols-view:go-to-declaration', =>
-      @createGoToView().toggle()
+      @createFileView().goto()
 
     atom.workspaceView.command 'symbols-view:return-from-declaration', =>
       @createGoBackView().toggle()
+
 
   deactivate: ->
     if @fileView?
@@ -34,23 +45,15 @@ module.exports =
       @goBackView.destroy()
       @goBackView = null
 
+    @ctagsComplete.deactivate()
+    @ctagsCache.deactivate()
+
   createFileView: ->
     unless @fileView?
       FileView  = require './file-view'
       @fileView = new FileView(@stack)
+      @fileView.ctagsCache = @ctagsCache
     @fileView
-
-  createProjectView:  ->
-    unless @projectView?
-      ProjectView  = require './project-view'
-      @projectView = new ProjectView(@stack)
-    @projectView
-
-  createGoToView: ->
-    unless @goToView?
-      GoToView = require './go-to-view'
-      @goToView = new GoToView(@stack)
-    @goToView
 
   createGoBackView: ->
     unless @goBackView?

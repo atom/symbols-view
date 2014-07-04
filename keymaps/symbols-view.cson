@@ -10,9 +10,3 @@
   'ctrl-r': 'symbols-view:toggle-file-symbols'
   'ctrl-alt-down': 'symbols-view:go-to-declaration'
   'ctrl-alt-up': 'symbols-view:return-from-declaration'
-
-'.platform-darwin':
-  'cmd-R': 'symbols-view:toggle-project-symbols'
-
-'.platform-win32, .platform-linux':
-  'ctrl-R': 'symbols-view:toggle-project-symbols'

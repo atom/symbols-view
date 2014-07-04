@@ -1,5 +1,5 @@
 path = require 'path'
-{$$, Point, SelectListView} = require 'atom'
+{$$, SelectListView} = require 'atom'
 fs = require 'fs-plus'
 
 module.exports =
@@ -47,7 +47,6 @@ class SymbolsView extends SelectListView
         file: editor.getUri()
 
     {position} = tag
-    position = @getTagLine(tag) unless position
     if tag.file
       atom.workspaceView.open(tag.file).done =>
         @moveToPosition(position) if position
@@ -67,13 +66,3 @@ class SymbolsView extends SelectListView
     @storeFocusedElement()
     atom.workspaceView.appendToTop(this)
     @focusFilterEditor()
-
-  getTagLine: (tag) ->
-    # Remove leading /^ and trailing $/
-    pattern = tag.pattern?.replace(/(^^\/\^)|(\$\/$)/g, '').trim()
-
-    return unless pattern
-    file = atom.project.resolve(tag.file)
-    return unless fs.isFileSync(file)
-    for line, index in fs.readFileSync(file, 'utf8').split('\n')
-      return new Point(index, 0) if pattern is line.trim()

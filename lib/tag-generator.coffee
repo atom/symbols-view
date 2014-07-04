@@ -7,12 +7,26 @@ class TagGenerator
   constructor: (@path, @scopeName) ->
 
   parseTagLine: (line) ->
-    sections = line.split('\t')
+    sections = line.split("\t")
     if sections.length > 3
-      position: new Point(parseInt(sections[2]) - 1)
-      name: sections[0]
+      tag = {
+        name: sections.shift()
+        file: sections.shift()
+      }
+      pattern = sections.join("\t")
+
+      #match /^ and trailing $/;
+      tag.pattern = pattern.match(/^\/\^(.*)(\$\/;")/)?[1]
+      if not tag.pattern
+        tag.pattern = pattern.match(/^\/\^(.*)(\/;")/)?[1]
+
+      if tag.pattern
+        tag.pattern = tag.pattern.replace(/\\\\/g, "\\")
+        tag.pattern = tag.pattern.replace(/\\\//g, "/")
+
+      return tag
     else
-      null
+      return null
 
   getLanguage: ->
     return 'Cson' if path.extname(@path) in ['.cson', '.gyp']
@@ -44,14 +58,13 @@ class TagGenerator
     deferred = Q.defer()
     tags = []
     command = path.resolve(__dirname, '..', 'vendor', "ctags-#{process.platform}")
-    defaultCtagsFile = require.resolve('./.ctags')
-    args = ["--options=#{defaultCtagsFile}", '--fields=+KS']
+    args = ['--fields=+KS']
 
     if atom.config.get('symbols-view.useEditorGrammarAsCtagsLanguage')
       if language = @getLanguage()
         args.push("--language-force=#{language}")
 
-    args.push('-nf', '-', @path)
+    args.push('-f', '-', @path)
 
     stdout = (lines) =>
       for line in lines.split('\n')
