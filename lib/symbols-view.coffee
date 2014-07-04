@@ -9,7 +9,7 @@ class SymbolsView extends SelectListView
 
   initialize: (@stack) ->
     super
-    @addClass('symbols-view overlay from-top')
+    @addClass('atom-ctags overlay from-top')
 
   destroy: ->
     @cancel()

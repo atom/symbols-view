@@ -4,7 +4,7 @@
     'submenu': [
       'label': 'Symbols'
       'submenu': [
-        { 'label': 'File Symbols', 'command': 'symbols-view:toggle-file-symbols' }
+        { 'label': 'File Symbols', 'command': 'atom-ctags:toggle-file-symbols' }
       ]
     ]
   }
@@ -12,5 +12,5 @@
 
 'context-menu':
   '.overlayer':
-    'Go to Declaration': 'symbols-view:go-to-declaration',
-    'Rebuild ctags': 'symbols-view:rebuild'
+    'Go to Declaration': 'atom-ctags:go-to-declaration',
+    'Rebuild ctags': 'atom-ctags:rebuild'

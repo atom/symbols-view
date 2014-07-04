@@ -8,23 +8,23 @@ module.exports =
     @stack = []
 
     @ctagsCache = require "./ctags-cache"
-    @ctagsCache.activate(atom.config.get('symbols-view.autoBuildTagsWhenActive'))
+    @ctagsCache.activate(atom.config.get('atom-ctags.autoBuildTagsWhenActive'))
 
     @ctagsComplete = require "./ctags-complete"
     @ctagsComplete.activate(@ctagsCache)
 
     @createFileView()
 
-    atom.workspaceView.command 'symbols-view:rebuild', =>
+    atom.workspaceView.command 'atom-ctags:rebuild', =>
       @ctagsCache.rebuild()
 
-    atom.workspaceView.command 'symbols-view:toggle-file-symbols', =>
+    atom.workspaceView.command 'atom-ctags:toggle-file-symbols', =>
       @createFileView().toggle()
 
-    atom.workspaceView.command 'symbols-view:go-to-declaration', =>
+    atom.workspaceView.command 'atom-ctags:go-to-declaration', =>
       @createFileView().goto()
 
-    atom.workspaceView.command 'symbols-view:return-from-declaration', =>
+    atom.workspaceView.command 'atom-ctags:return-from-declaration', =>
       @createGoBackView().toggle()
 
 

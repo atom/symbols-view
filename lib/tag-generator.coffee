@@ -60,7 +60,7 @@ class TagGenerator
     command = path.resolve(__dirname, '..', 'vendor', "ctags-#{process.platform}")
     args = ['--fields=+KS']
 
-    if atom.config.get('symbols-view.useEditorGrammarAsCtagsLanguage')
+    if atom.config.get('atom-ctags.useEditorGrammarAsCtagsLanguage')
       if language = @getLanguage()
         args.push("--language-force=#{language}")
 

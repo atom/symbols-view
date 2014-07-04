@@ -37,7 +37,7 @@ module.exports =
     return false
 
   listTreeSync: (rootPath) ->
-    blacklist = (atom.config.get("symbols-view.fileBlacklist") or "")
+    blacklist = (atom.config.get("atom-ctags.fileBlacklist") or "")
       .split ","
       .map (s) -> s.trim()
 
