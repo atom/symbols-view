@@ -1,15 +1,26 @@
-# Symbols View package [![Build Status](https://travis-ci.org/atom/symbols-view.svg?branch=master)](https://travis-ci.org/atom/symbols-view)
+# Atom Ctags Package
 
-Display the list of functions/methods in the editor via `cmd-r` in Atom.
+This package uses：
+[ctags](http://ctags.sourceforge.net),
+[autocomplete-plus](https://github.com/saschagehlich/autocomplete-plus)
+and fork from [symbols-view](https://github.com/atom/symbols-view)
 
-If your project has a `tags`/`.tags`/`TAGS` file at the root then following are
-supported:
+#Features
+* "Rebuild Ctags" in context-menu
+* AutoComplete with ctags
+* "Auto Build Tags When Active" in Settings, default: false
+* Auto Update the file's tags data when saved
+* go-to-declaration and return-from-declaration
+* toggle-file-symbols
 
-  * `cmd-shift-r` to view all function/methods in the project
 
-  * `ctrl-alt-down` to jump to the declaration of the method/function under
-    the cursor
+#Install
+make sure [autocomplete-plus](https://github.com/saschagehlich/autocomplete-plus) already installed.
 
-This package uses [ctags](http://ctags.sourceforge.net).
-
-![](https://f.cloud.github.com/assets/671378/2241860/30ef0b2e-9ce8-11e3-86e2-2c17c0885fa4.png)
+#TODO
+* submit to atom package center
+* modify package name
+* performance optimization
+* disk file cache
+* release when deactivate
+* appearance improve
