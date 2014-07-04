@@ -26,3 +26,5 @@ And disable [symbols-view](https://github.com/atom/symbols-view) if you have ins
 * release when deactivate
 * appearance improve
 * writing Tests
+
+![atom-ctags](https://cloud.githubusercontent.com/assets/704762/3483867/e0bac2ee-0397-11e4-89c1-70689f6b8ff3.gif)
