@@ -13,6 +13,7 @@ and fork from [symbols-view](https://github.com/atom/symbols-view)
 * go-to-declaration and return-from-declaration
 * toggle-file-symbols
 
+![atom-ctags](https://cloud.githubusercontent.com/assets/704762/3483867/e0bac2ee-0397-11e4-89c1-70689f6b8ff3.gif)
 
 #Install
 make sure [autocomplete-plus](https://github.com/saschagehlich/autocomplete-plus) already installed.
