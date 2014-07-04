@@ -1,4 +1,4 @@
-# Atom Ctags Package
+# Atom Ctags Package (Beta version, not statable)
 
 This package uses：
 [ctags](http://ctags.sourceforge.net),
