@@ -24,3 +24,4 @@ make sure [autocomplete-plus](https://github.com/saschagehlich/autocomplete-plus
 * disk file cache
 * release when deactivate
 * appearance improve
+* writing Tests

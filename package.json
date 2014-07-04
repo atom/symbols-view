@@ -1,15 +1,15 @@
 {
-  "name": "symbols-view-plus",
-  "version": "0.59.0",
+  "name": "atom-ctags",
+  "version": "0.1.0",
   "main": "./lib/main",
-  "description": "Jump to a function/method in the current editor with `cmd-r`.",
+  "description": "better autocomplete for atom",
   "license": "MIT",
   "dependencies": {
     "fs-plus": "2.x",
     "autocomplete-plus": ">=0.20.0"
   },
-  "repository": "https://github.com/atom/symbols-view",
+  "repository": "https://github.com/yongkangchen/atom-ctags",
   "engines": {
-    "atom": "*"
+    "atom": ">=0.107.0"
   }
 }
