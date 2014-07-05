@@ -6,19 +6,20 @@ This package uses：
 and fork from [symbols-view](https://github.com/atom/symbols-view)
 
 #Features
-* "Rebuild Ctags" in context-menu
-* AutoComplete with ctags
-* "Auto Build Tags When Active" in Settings, default: false
-* Auto Update the file's tags data when saved
+* **AutoComplete with ctags**
+* **Auto Update the file's tags data when saved**
 * go-to-declaration and return-from-declaration
 * toggle-file-symbols
+* "Rebuild Ctags" in context-menu
+* "Auto Build Tags When Active" in Settings, default: false
 
 ![atom-ctags](https://cloud.githubusercontent.com/assets/704762/3483867/e0bac2ee-0397-11e4-89c1-70689f6b8ff3.gif)
 
 #Install
-make sure [autocomplete-plus](https://github.com/saschagehlich/autocomplete-plus) already installed.
-And disable [symbols-view](https://github.com/atom/symbols-view)
-You can install atom-ctags using the Preferences pane.
+**You can install atom-ctags using the Preferences pane.**
+
+autocomplete with ctags dependent on [autocomplete-plus](https://github.com/saschagehlich/autocomplete-plus) already installed.
+
 
 #TODO
 * ~~Submit to atom package center~~
