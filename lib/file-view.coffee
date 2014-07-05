@@ -52,13 +52,16 @@ class FileView extends SymbolsView
 
   rebuild: ->
     projectPath = atom.project.getPath()
+    if not projectPath
+      console.error "[atom-ctags:rebuild] cancel rebuild, invalid projectPath: #{projectPath}"
+      return
     startTime = Date.now()
 
-    console.log "[atom-ctags:getTagLine] start rebuild @{#projectPath}@ tags..."
+    console.log "[atom-ctags:rebuild] start @{#projectPath}@ tags..."
 
     @ctagsCache.generateTags projectPath
 
-    console.log "[atom-ctags:getTagLine] end rebuild @{#projectPath}@ tags. cost: #{Date.now() - startTime}ms"
+    console.log "[atom-ctags:rebuild] end @{#projectPath}@ tags. cost: #{Date.now() - startTime}ms"
 
   goto: ->
     symbol = @getCurSymbol()
