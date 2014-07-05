@@ -17,13 +17,16 @@ and fork from [symbols-view](https://github.com/atom/symbols-view)
 
 #Install
 make sure [autocomplete-plus](https://github.com/saschagehlich/autocomplete-plus) already installed.
-And disable [symbols-view](https://github.com/atom/symbols-view) if you have installed.
+And disable [symbols-view](https://github.com/atom/symbols-view)
+You can install atom-ctags using the Preferences pane.
 
 #TODO
-* submit to atom package center
-* modify package name
-* performance optimization
-* disk file cache
-* release when deactivate
-* appearance improve
-* writing Tests
+* ~~Submit to atom package center~~
+* ~~Modify package name~~
+* Performance optimization
+* Disk file cache
+* Release memory when deactivate
+* Appearance improve
+* Writing Tests
+* Auto check package of autocomplete-plus installed
+* Auto disable package of symbols-view
