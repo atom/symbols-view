@@ -13,7 +13,7 @@ module.exports =
     @ctagsComplete.activate(@ctagsCache)
 
     if atom.config.get('atom-ctags.autoBuildTagsWhenActive')
-      @createFileView().rebuild()
+      setTimeout((=> @createFileView().rebuild()), 2000)
 
     atom.workspaceView.command 'atom-ctags:rebuild', =>
       @createFileView().rebuild()

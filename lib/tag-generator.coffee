@@ -86,7 +86,7 @@ class TagGenerator
              command: @#{command} #{args.join(' ')}@
           """
     stderr = (lines) =>
-      alert """
+      console.error """
       [atom-ctags:TagGenerator]
        please create a new issue:
          failed to excute command: @#{command} #{args.join(' ')}@
