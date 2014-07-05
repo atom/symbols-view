@@ -1,11 +1,12 @@
 
 module.exports =
 ProviderClass: (Provider, Suggestion, ctagsCache)  ->
-  options = { partialMatch: true }
+  #maxItems = autocomplete-plus:SimpleSelectListView.maxItems
+  options = { partialMatch: true, maxItems: 10 }
   basepath = atom.project.getPath()+"/"
+
   class CtagsProvider extends Provider
     buildSuggestions: ->
-      console.error("buildSuggestions")
 
       selection = @editor.getSelection()
       prefix = @prefixOfSelection selection

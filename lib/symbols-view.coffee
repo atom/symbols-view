@@ -1,11 +1,8 @@
-path = require 'path'
 {$$, SelectListView} = require 'atom'
 fs = require 'fs-plus'
 
 module.exports =
 class SymbolsView extends SelectListView
-  @activate: ->
-    new SymbolsView
 
   initialize: (@stack) ->
     super
@@ -14,8 +11,6 @@ class SymbolsView extends SelectListView
   destroy: ->
     @cancel()
     @remove()
-
-  getFilterKey: -> 'name'
 
   viewForItem: ({position, name, file}) ->
     $$ ->
@@ -55,12 +50,11 @@ class SymbolsView extends SelectListView
 
     @stack.push(previous)
 
-  moveToPosition: (position, beginningOfLine=true) ->
+  moveToPosition: (position) ->
     editorView = atom.workspaceView.getActiveView()
     if editor = editorView.getEditor?()
       editorView.scrollToBufferPosition(position, center: true)
       editor.setCursorBufferPosition(position)
-      editor.moveCursorToFirstCharacterOfLine() if beginningOfLine
 
   attach: ->
     @storeFocusedElement()

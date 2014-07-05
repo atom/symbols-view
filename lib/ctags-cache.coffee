@@ -1,93 +1,66 @@
 
 TagGenerator = require './tag-generator'
 fs = require 'fs-plus'
-minimatch = require "minimatch"
 
-{Point} = require "atom"
+matchOpt = {matchBase: true}
 
 module.exports =
-  activate: (build) ->
+  activate: () ->
     @cachedTags = {}
-
-    if build
-      @rebuild()
 
   deactivate: ->
     @cachedTags = null
 
-  #options = { partialMatch: true }
+  #options = { partialMatch: true, maxItems }
   findTags: (prefix, options) ->
     tags = []
+    empty = true
     for key, value of @cachedTags
-      tags.push (value.filter (x) ->
-        if options and options.partialMatch == true
-          return x.name.indexOf(prefix) == 0
-        else
-         return x.name == prefix
-      )...
+      empty = false
+      for tag in value
+        if options?.partialMatch and tag.name.indexOf(prefix) == 0
+            tags.push tag
+        else if tag.name == prefix
+          tags.push tag
+        return tags if options?.maxItems and tags.length == options.maxItems
+
+    #TODO: prompt in editor
+    console.warn("[atom-ctags:findTags] tags empty, did you RebuildTags?") if empty
     return tags
 
-  # Private: Checks whether the file is blacklisted
-  #
-  # Returns {Boolean} that defines whether the file is blacklisted
-  FileBlacklisted: (blacklist, f, opt) ->
-    for blacklistGlob in blacklist
-      if minimatch(f, blacklistGlob, opt)
-        return true
-    return false
-
-  listTreeSync: (rootPath) ->
-    blacklist = (atom.config.get("atom-ctags.fileBlacklist") or "")
-      .split ","
-      .map (s) -> s.trim()
-
-    opt = {matchBase: true}
-    paths = []
-
-    onPath = (filePath) =>
-      if @FileBlacklisted(blacklist, filePath, opt)
-        return false
-      paths.push(filePath)
-      return true
-
-    onDirectory = (dirPath) =>
-      return not @FileBlacklisted(blacklist, dirPath, opt)
-
-    fs.traverseTreeSync(rootPath, onPath, onDirectory)
-    return paths
-
-  rebuild: ->
-    
-    list = @listTreeSync(atom.project.getPath())
-    @generateTags(f) for f in list
-
-  getScopeName: -> atom.workspace.getActiveEditor()?.getGrammar()?.scopeName
-
   getTagLine: (tag) ->
-    return unless tag.pattern
     file = atom.project.resolve(tag.file)
-    return unless fs.isFileSync(file)
+    if not fs.isFileSync(file)
+      console.error "[atom-ctags:getTagLine] @#{tag.file}@ not exist?"
+      return
+
     debug = []
     for line, index in fs.readFileSync(file, 'utf8').split('\n')
       if line.indexOf(tag.pattern) == 0
-        return new Point(index, 0)
+        tag.position.row = index
+        return true
 
-  generateTags:(filePath, callback) ->
-    new TagGenerator(filePath, @getScopeName()).generate().done (matches) =>
-      tags = []
-      for match in matches
-        match.position = @getTagLine(match)
-        if match.position
-          tags.push(match)
+    console.error "[atom-ctags:getTagLine] @#{tag.pattern}@ not find in @#{tag.file}@?"
+    return true
 
-      @cachedTags[filePath] = tags
-      if callback
-        callback(tags)
+  generateTags:(path, callback) ->
+    delete @cachedTags[path]
+
+    scopeName = atom.workspace.getActiveEditor()?.getGrammar()?.scopeName
+    new TagGenerator(path, scopeName).generate().done (tags) =>
+      ret = [] if callback
+      for tag in tags
+        if @getTagLine(tag)
+            ret.push tag if callback
+          data = @cachedTags[tag.file]
+          if not data
+            data = []
+            @cachedTags[tag.file] = data
+          data.push tag
+
+      callback?(ret)
 
   getOrCreateTags: (filePath, callback) ->
     tags = @cachedTags[filePath]
-    if tags
-      if callback
-        callback(tags)
-      return
-    generateTags(filePath, callback)
+    return callback?(tags) if tags
+    @generateTags(filePath, callback)

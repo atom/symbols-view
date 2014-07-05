@@ -1,6 +1,7 @@
 {BufferedProcess, Point} = require 'atom'
 Q = require 'q'
 path = require 'path'
+{Point} = require "atom"
 
 module.exports =
 class TagGenerator
@@ -21,9 +22,9 @@ class TagGenerator
         tag.pattern = pattern.match(/^\/\^(.*)(\/;")/)?[1]
 
       if tag.pattern
-        tag.pattern = tag.pattern.replace(/\\\\/g, "\\")
-        tag.pattern = tag.pattern.replace(/\\\//g, "/")
-
+        tag.position = new Point(0, tag.pattern.indexOf(tag.name))
+      else
+        return null
       return tag
     else
       return null
@@ -64,15 +65,37 @@ class TagGenerator
       if language = @getLanguage()
         args.push("--language-force=#{language}")
 
-    args.push('-f', '-', @path)
+    args.push('-R', '-f', '-', @path)
 
     stdout = (lines) =>
-      for line in lines.split('\n')
+      lines = lines.replace(/\\\\/g, "\\")
+      lines = lines.replace(/\\\//g, "/")
+
+      lines = lines.split('\n')
+      if lines[lines.length-1] == ""
+        lines.pop()
+
+      for line in lines
         tag = @parseTagLine(line)
-        tags.push(tag) if tag
+        if tag
+          tags.push(tag)
+        else
+          console.error """
+          [atom-ctags:TagGenerator] please create a new issue:
+             failed to parseTagLine, @#{line}@
+             command: @#{command} #{args.join(' ')}@
+          """
+    stderr = (lines) =>
+      alert """
+      [atom-ctags:TagGenerator]
+       please create a new issue:
+         failed to excute command: @#{command} #{args.join(' ')}@
+         lines: @#{lines}@
+      """
+
     exit = ->
       deferred.resolve(tags)
 
-    new BufferedProcess({command, args, stdout, exit})
+    new BufferedProcess({command, args, stdout, stderr, exit})
 
     deferred.promise
