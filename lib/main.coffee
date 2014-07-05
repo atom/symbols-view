@@ -7,10 +7,11 @@ module.exports =
     @stack = []
 
     @ctagsCache = require "./ctags-cache"
+
     @ctagsCache.activate()
 
     @ctagsComplete = require "./ctags-complete"
-    @ctagsComplete.activate(@ctagsCache)
+    setTimeout((=> @ctagsComplete.activate(@ctagsCache)), 2000)
 
     if atom.config.get('atom-ctags.autoBuildTagsWhenActive')
       setTimeout((=> @createFileView().rebuild()), 2000)
@@ -29,10 +30,9 @@ module.exports =
 
     if not atom.packages.isPackageDisabled("symbols-view")
       atom.packages.disablePackage("symbols-view")
-      alert """Warning from atom-ctags+:
-        atom-ctags is for replace and enhance symbols-view package.
-        Therefore, symbols-view has been disabled.
-        """
+      alert "Warning from atom-ctags:
+              atom-ctags is for replace and enhance symbols-view package.
+              Therefore, symbols-view has been disabled."
 
   deactivate: ->
     if @fileView?

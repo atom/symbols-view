@@ -1,7 +1,6 @@
 {BufferedProcess, Point} = require 'atom'
 Q = require 'q'
 path = require 'path'
-{Point} = require "atom"
 
 module.exports =
 class TagGenerator

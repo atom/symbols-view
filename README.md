@@ -31,7 +31,7 @@ autocomplete with ctags dependent on [autocomplete-plus](https://github.com/sasc
 * Writing Tests
 * Auto check package of autocomplete-plus installed
 * ~~Auto disable package of symbols-view~~
-* use Activation Events to speed up load time
+* ~~use Activation Events to speed up load time~~
 * ~~use ctags command args -R~~
 
 

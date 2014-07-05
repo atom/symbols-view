@@ -1,7 +1,4 @@
 
-TagGenerator = require './tag-generator'
-fs = require 'fs-plus'
-
 matchOpt = {matchBase: true}
 
 module.exports =
@@ -30,6 +27,9 @@ module.exports =
 
   getTagLine: (tag) ->
     file = atom.project.resolve(tag.file)
+    if not fs
+      fs = require 'fs-plus'
+
     if not fs.isFileSync(file)
       console.error "[atom-ctags:getTagLine] @#{tag.file}@ not exist?"
       return
@@ -47,6 +47,9 @@ module.exports =
     delete @cachedTags[path]
 
     scopeName = atom.workspace.getActiveEditor()?.getGrammar()?.scopeName
+    if not TagGenerator
+      TagGenerator = require './tag-generator'
+
     new TagGenerator(path, scopeName).generate().done (tags) =>
       ret = [] if callback
       for tag in tags
