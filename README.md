@@ -29,4 +29,4 @@ You can install atom-ctags using the Preferences pane.
 * Appearance improve
 * Writing Tests
 * Auto check package of autocomplete-plus installed
-* Auto disable package of symbols-view
+* ~~Auto disable package of symbols-view~~
