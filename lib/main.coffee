@@ -27,6 +27,12 @@ module.exports =
     atom.workspaceView.command 'atom-ctags:return-from-declaration', =>
       @createGoBackView().toggle()
 
+    if not atom.packages.isPackageDisabled("symbols-view")
+      atom.packages.disablePackage("symbols-view")
+      alert """Warning from atom-ctags+:
+        atom-ctags is for replace and enhance symbols-view package.
+        Therefore, symbols-view has been disabled.
+        """
 
   deactivate: ->
     if @fileView?
