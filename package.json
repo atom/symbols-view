@@ -1,6 +1,6 @@
 {
   "name": "atom-ctags",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "main": "./lib/main",
   "description": "better autocomplete for atom",
   "license": "MIT",
