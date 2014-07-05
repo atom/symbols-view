@@ -39,7 +39,9 @@ class FileView extends SymbolsView
 
   getCurSymbol: ->
     editor = atom.workspace.getActiveEditor()
-    return unless editor?
+    if not editor
+      console.error "[atom-ctags:getCurSymbol] failed getActiveEditor "
+      return
 
     if editor.getCursor().getScopes().indexOf('source.ruby') isnt -1
       # Include ! and ? in word regular expression for ruby files
@@ -48,15 +50,27 @@ class FileView extends SymbolsView
       range = editor.getCursor().getCurrentWordBufferRange()
     return editor.getTextInRange(range)
 
+  rebuild: ->
+    projectPath = atom.project.getPath()
+    startTime = Date.now()
+
+    console.log "[atom-ctags:getTagLine] start rebuild @{#projectPath}@ tags..."
+
+    @ctagsCache.generateTags projectPath
+
+    console.log "[atom-ctags:getTagLine] end rebuild @{#projectPath}@ tags. cost: #{Date.now() - startTime}ms"
+
   goto: ->
     symbol = @getCurSymbol()
-
-    return unless symbol?.length > 0
+    if not symbol
+      console.error "[atom-ctags:goto] failed getCurSymbol"
+      return
 
     tags = @ctagsCache.findTags(symbol)
+
     if tags.length is 1
       @openTag(tags[0])
-    else if tags.length > 0
+    else
       @setItems(tags)
       @attach()
 

@@ -2,21 +2,21 @@ module.exports =
   configDefaults:
     useEditorGrammarAsCtagsLanguage: true
     autoBuildTagsWhenActive: false
-    fileBlacklist: ".*, *.so, *.os, Makefile, README, *.png, *.o, *.a, *.command, *.json, *.sh, *.gif, *.1, *.md"
 
   activate: ->
     @stack = []
 
     @ctagsCache = require "./ctags-cache"
-    @ctagsCache.activate(atom.config.get('atom-ctags.autoBuildTagsWhenActive'))
+    @ctagsCache.activate()
 
     @ctagsComplete = require "./ctags-complete"
     @ctagsComplete.activate(@ctagsCache)
 
-    @createFileView()
+    if atom.config.get('atom-ctags.autoBuildTagsWhenActive')
+      @createFileView().rebuild()
 
     atom.workspaceView.command 'atom-ctags:rebuild', =>
-      @ctagsCache.rebuild()
+      @createFileView().rebuild()
 
     atom.workspaceView.command 'atom-ctags:toggle-file-symbols', =>
       @createFileView().toggle()
