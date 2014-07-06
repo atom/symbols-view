@@ -2,6 +2,9 @@
 Q = require 'q'
 path = require 'path'
 
+TAG_LINE = "line:"
+TAG_LINE_LENGTH = TAG_LINE.length
+
 module.exports =
 class TagGenerator
   constructor: (@path, @scopeName) ->
@@ -13,6 +16,18 @@ class TagGenerator
         name: sections.shift()
         file: sections.shift()
       }
+
+      i = sections.length - 1
+
+      while i >= 0
+        row = sections[i]
+        if row.indexOf(TAG_LINE) == 0
+          row = row.substr(TAG_LINE_LENGTH) - 1
+          break
+        else
+          row = -1
+        --i
+
       pattern = sections.join("\t")
 
       #match /^ and trailing $/;
@@ -21,7 +36,7 @@ class TagGenerator
         tag.pattern = pattern.match(/^\/\^(.*)(\/;")/)?[1]
 
       if tag.pattern
-        tag.position = new Point(-1, tag.pattern.indexOf(tag.name))
+        tag.position = new Point(row, tag.pattern.indexOf(tag.name))
       else
         return null
       return tag
@@ -58,7 +73,7 @@ class TagGenerator
     deferred = Q.defer()
     tags = []
     command = path.resolve(__dirname, '..', 'vendor', "ctags-#{process.platform}")
-    args = ['--fields=+KS']
+    args = ['--fields=+KSn']
 
     if atom.config.get('atom-ctags.useEditorGrammarAsCtagsLanguage')
       if language = @getLanguage()

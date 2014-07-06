@@ -27,9 +27,8 @@ class FileView extends SymbolsView
           @span pattern, class: 'pull-right'
 
         @div class: 'secondary-line', =>
-          @span file, class: 'pull-left'
-          # @span "Line #{position.row + 1}", class: 'pull-left'
-          # @span file, class: 'pull-right'
+          @span "Line #{position.row + 1}", class: 'pull-left'
+          @span file, class: 'pull-right'
 
   toggle: ->
     if @hasParent()

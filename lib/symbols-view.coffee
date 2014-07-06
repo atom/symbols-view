@@ -1,5 +1,5 @@
 {$$, SelectListView} = require 'atom'
-fs = require 'fs-plus'
+fs = null
 
 module.exports =
 class SymbolsView extends SelectListView
@@ -28,6 +28,9 @@ class SymbolsView extends SelectListView
       super
 
   confirmed : (tag) ->
+    if fs == null
+        fs = require 'fs-plus'
+
     if tag.file and not fs.isFileSync(atom.project.resolve(tag.file))
       @setError('Selected file does not exist')
       setTimeout((=> @setError()), 2000)
@@ -45,12 +48,6 @@ class SymbolsView extends SelectListView
 
 
     atom.workspaceView.open(tag.file).done =>
-      if position.row == -1
-        regex = new RegExp(tag.pattern.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'))
-        atom.workspace.getActiveEditor().buffer.scan regex , (obj)=>
-          position.row = obj.range.start.row
-          obj.stop()
-          
       @moveToPosition(position) if position
 
     @stack.push(previous)
