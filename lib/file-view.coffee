@@ -27,8 +27,9 @@ class FileView extends SymbolsView
           @span pattern, class: 'pull-right'
 
         @div class: 'secondary-line', =>
-          @span "Line #{position.row + 1}", class: 'pull-left'
-          @span file, class: 'pull-right'
+          @span file, class: 'pull-left'
+          # @span "Line #{position.row + 1}", class: 'pull-left'
+          # @span file, class: 'pull-right'
 
   toggle: ->
     if @hasParent()
@@ -55,13 +56,8 @@ class FileView extends SymbolsView
     if not projectPath
       console.error "[atom-ctags:rebuild] cancel rebuild, invalid projectPath: #{projectPath}"
       return
-    startTime = Date.now()
-
-    console.log "[atom-ctags:rebuild] start @{#projectPath}@ tags..."
 
     @ctagsCache.generateTags projectPath
-
-    console.log "[atom-ctags:rebuild] end @{#projectPath}@ tags. cost: #{Date.now() - startTime}ms"
 
   goto: ->
     symbol = @getCurSymbol()

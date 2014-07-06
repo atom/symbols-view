@@ -21,7 +21,7 @@ class TagGenerator
         tag.pattern = pattern.match(/^\/\^(.*)(\/;")/)?[1]
 
       if tag.pattern
-        tag.position = new Point(0, tag.pattern.indexOf(tag.name))
+        tag.position = new Point(-1, tag.pattern.indexOf(tag.name))
       else
         return null
       return tag
