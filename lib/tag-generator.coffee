@@ -108,8 +108,14 @@ class TagGenerator
       """
 
     exit = ->
+      clearTimeout(t)
       deferred.resolve(tags)
 
-    new BufferedProcess({command, args, stdout, stderr, exit})
+    childProcess = new BufferedProcess({command, args, stdout, stderr, exit})
+
+    t = setTimeout =>
+      childProcess.kill()
+      console.error "[atom-ctags:TagGenerator] stoped. Build more than 5 seconds, check if #{@path} contain too many file"
+    , 5000
 
     deferred.promise
