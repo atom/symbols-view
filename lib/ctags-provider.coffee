@@ -11,12 +11,34 @@ ProviderClass: (Provider, Suggestion, ctagsCache)  ->
       selection = @editor.getSelection()
       prefix = @prefixOfSelection selection
 
+      options.partialMatch = true
+      if not prefix.length
+        #here to show pre symbol tag pattern
+        selectionRange = selection.getBufferRange()
+        selectionRange = selectionRange.add([0, -1])
+        prefix = @prefixOfSelection { getBufferRange: ()-> selectionRange }
+        options.partialMatch = false
+
       # No prefix? Don't autocomplete!
       return unless prefix.length
 
       matches = ctagsCache.findTags prefix, options
 
-      suggestions = (new Suggestion(this, word: i.name, label: i.pattern, prefix: prefix) for i in matches)
+      suggestions = []
+      if options.partialMatch
+        console.error matches
+        output = {}
+        k = 0
+        while k < matches.length
+          v = matches[k++]
+          continue if output[v.name]
+          output[v.name] = v
+          suggestions.push new Suggestion(this, word: v.name, prefix: prefix)
+        if suggestions.length == 1 and suggestions[0].word == prefix
+          return []
+      else
+        for i in matches
+          suggestions.push new Suggestion(this, word: i.name, prefix: prefix, label: i.pattern)
 
       # No suggestions? Don't autocomplete!
       return unless suggestions.length
