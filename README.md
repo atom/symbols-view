@@ -40,4 +40,3 @@ autocomplete with ctags dependent on [autocomplete-plus](https://github.com/sasc
 * Optimization for duplicate results [#3](https://github.com/yongkangchen/atom-ctags/issues/3)
 * [speed tag parse by use ctag command param to parse line number instead of fs-plus](https://github.com/yongkangchen/atom-ctags/commit/784160320309212d0acf865092133ba55980c605)
 * [`use -R instead of (fs-plus).traverseTreeSync` and `search tag limit max`](https://github.com/yongkangchen/atom-ctags/commit/4e4df478c2a00b83143e1887a8b6fd6c5067ce95)
-* 
