@@ -12,6 +12,8 @@ class SymbolsView extends SelectListView
     @cancel()
     @remove()
 
+  getFilterKey: -> 'name'
+
   viewForItem: ({position, name, file}) ->
     $$ ->
       @li class: 'two-lines', =>
