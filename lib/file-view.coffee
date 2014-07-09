@@ -55,7 +55,7 @@ class FileView extends SymbolsView
     if not projectPath
       console.error "[atom-ctags:rebuild] cancel rebuild, invalid projectPath: #{projectPath}"
       return
-
+    @ctagsCache.cachedTags = {}
     @ctagsCache.generateTags projectPath
 
   goto: ->
