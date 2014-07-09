@@ -26,7 +26,6 @@ ProviderClass: (Provider, Suggestion, ctagsCache)  ->
 
       suggestions = []
       if options.partialMatch
-        console.error matches
         output = {}
         k = 0
         while k < matches.length
