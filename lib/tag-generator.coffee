@@ -7,7 +7,7 @@ TAG_LINE_LENGTH = TAG_LINE.length
 
 module.exports =
 class TagGenerator
-  constructor: (@path, @scopeName) ->
+  constructor: (@path, @scopeName, @cmdArgs) ->
 
   parseTagLine: (line) ->
     sections = line.split("\t")
@@ -74,7 +74,11 @@ class TagGenerator
     tags = []
     command = path.resolve(__dirname, '..', 'vendor', "ctags-#{process.platform}")
     defaultCtagsFile = require.resolve('./.ctags')
-    args = ["--options=#{defaultCtagsFile}", '--fields=+KSn']
+
+    args = []
+    args.push @cmdArgs... if @cmdArgs
+
+    args.push("--options=#{defaultCtagsFile}", '--fields=+KSn')
 
     if atom.config.get('atom-ctags.useEditorGrammarAsCtagsLanguage')
       if language = @getLanguage()

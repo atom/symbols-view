@@ -14,10 +14,17 @@ module.exports =
     setTimeout((=> @ctagsComplete.activate(@ctagsCache)), 2000)
 
     if atom.config.get('atom-ctags.autoBuildTagsWhenActive')
-      setTimeout((=> @createFileView().rebuild()), 2000)
+      t = setTimeout((=>
+        @createFileView().rebuild()
+        t = null
+      ), 2000)
 
-    atom.workspaceView.command 'atom-ctags:rebuild', =>
+    atom.workspaceView.command 'atom-ctags:rebuild', (e, cmdArgs)=>
+      @ctagsCache.cmdArgs = cmdArgs if Array.isArray(cmdArgs)
       @createFileView().rebuild()
+      if t
+        clearTimeout(t)
+        t = null
 
     atom.workspaceView.command 'atom-ctags:toggle-file-symbols', =>
       @createFileView().toggle()

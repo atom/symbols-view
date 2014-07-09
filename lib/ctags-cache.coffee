@@ -35,7 +35,7 @@ module.exports =
 
     startTime = Date.now()
     console.log "[atom-ctags:rebuild] start @#{path}@ tags..."
-    new TagGenerator(path, scopeName).generate().done (tags) =>
+    new TagGenerator(path, scopeName, @cmdArgs).generate().done (tags) =>
       console.log "[atom-ctags:rebuild] command done @#{path}@ tags. cost: #{Date.now() - startTime}ms"
       startTime = Date.now()
 
