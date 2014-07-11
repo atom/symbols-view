@@ -7,7 +7,10 @@ class FileView extends SymbolsView
     super
     @subscribe atom.project.eachBuffer (buffer) =>
       @subscribe buffer, 'after-will-be-saved', =>
-        @ctagsCache.generateTags(buffer.getPath()) if buffer.isModified()
+        return unless buffer.isModified()
+        f = buffer.getPath()
+        return unless atom.project.contains(f)
+        @ctagsCache.generateTags(f)
 
       @subscribe buffer, 'destroyed', =>
         @unsubscribe(buffer)
