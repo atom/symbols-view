@@ -5,9 +5,8 @@
   "description": "better autocomplete for atom",
   "license": "MIT",
   "dependencies": {
-    "fs-plus": "2.x",
     "q": "~1.0.1",
-    "minimatch": "~0.3.0"
+    "atom-message-panel": "^1.1.1"
   },
   "repository": "https://github.com/yongkangchen/atom-ctags",
   "engines": {

@@ -30,12 +30,11 @@ module.exports =
 
     scopeName = atom.workspace.getActiveEditor()?.getGrammar()?.scopeName
     if not TagGenerator
-      console.error "require TagGenerator"
       TagGenerator = require './tag-generator'
 
     startTime = Date.now()
     console.log "[atom-ctags:rebuild] start @#{path}@ tags..."
-    new TagGenerator(path, scopeName, @cmdArgs).generate().done (tags) =>
+    new TagGenerator(path, scopeName, @cmdArgs || atom.config.get("atom-ctags.cmdArgs") ).generate().done (tags) =>
       console.log "[atom-ctags:rebuild] command done @#{path}@ tags. cost: #{Date.now() - startTime}ms"
       startTime = Date.now()
 

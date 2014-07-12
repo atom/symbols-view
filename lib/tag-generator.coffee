@@ -99,18 +99,13 @@ class TagGenerator
         if tag
           tags.push(tag)
         else
-          console.error """
-          [atom-ctags:TagGenerator] please create a new issue:
-             failed to parseTagLine, @#{line}@
-             command: @#{command} #{args.join(' ')}@
+          error """please create a new issue:<br>
+            failed to parseTagLine, @#{line}@ <br>
+            command: @#{command} #{args.join(' ')}@
           """
-    stderr = (lines) =>
-      console.error """
-      [atom-ctags:TagGenerator]
-       please create a new issue:
-         failed to excute command: @#{command} #{args.join(' ')}@
-         lines: @#{lines}@
-      """
+    stderr = (lines) ->
+      console.warn  """command: @#{command} #{args.join(' ')}@
+      err: @#{lines}@"""
 
     exit = ->
       clearTimeout(t)
@@ -118,9 +113,26 @@ class TagGenerator
 
     childProcess = new BufferedProcess({command, args, stdout, stderr, exit})
 
+    timeout = atom.config.get('atom-ctags.buildTimeout')
     t = setTimeout =>
       childProcess.kill()
-      console.error "[atom-ctags:TagGenerator] stoped. Build more than 5 seconds, check if #{@path} contain too many file"
-    , 5000
+      error """
+      stoped: Build more than #{timeout} seconds, check if #{@path} contain too many file.<br>
+              Suggest that add CmdArgs at atom-ctags package setting, example:<br>
+                  --exclude=some/path --exclude=some/other"""
+    ,timeout
 
     deferred.promise
+
+PlainMessageView = null
+panel = null
+error= (message, className) ->
+    if not panel
+      {MessagePanelView, PlainMessageView} = require "atom-message-panel"
+      panel = new MessagePanelView title: "Atom Ctags"
+
+    panel.attach()
+    panel.add new PlainMessageView
+      message: message
+      className: className || "text-error"
+      raw: true

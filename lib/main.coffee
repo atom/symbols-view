@@ -2,6 +2,8 @@ module.exports =
   configDefaults:
     useEditorGrammarAsCtagsLanguage: true
     autoBuildTagsWhenActive: false
+    buildTimeout: 5000
+    cmdArgs: ""
 
   activate: ->
     @stack = []
@@ -72,4 +74,4 @@ module.exports =
     unless @goBackView?
       GoBackView = require './go-back-view'
       @goBackView = new GoBackView(@stack)
-    @goBackView;
+    @goBackView

@@ -30,15 +30,8 @@ class SymbolsView extends SelectListView
       super
 
   confirmed : (tag) ->
-    if fs == null
-        fs = require 'fs-plus'
-
-    if tag.file and not fs.isFileSync(atom.project.resolve(tag.file))
-      @setError('Selected file does not exist')
-      setTimeout((=> @setError()), 2000)
-    else
-      @cancel()
-      @openTag(tag)
+    @cancel()
+    @openTag(tag)
 
   openTag: (tag) ->
     if editor = atom.workspace.getActiveEditor()
