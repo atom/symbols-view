@@ -4,6 +4,7 @@ path = require 'path'
 
 TAG_LINE = "line:"
 TAG_LINE_LENGTH = TAG_LINE.length
+fs = null
 
 module.exports =
 class TagGenerator
@@ -69,6 +70,36 @@ class TagGenerator
       when 'text.html'       then 'Html'
       when 'text.html.php'   then 'Php'
 
+  read: ->
+    deferred = Q.defer()
+    tags = []
+
+    fs = require "fs" if not fs
+    fs.readFile @path, 'utf-8', (err, lines) =>
+      if not err
+        lines = lines.replace(/\\\\/g, "\\")
+        lines = lines.replace(/\\\//g, "/")
+        lines = lines.split('\n')
+        if lines[lines.length-1] == ""
+          lines.pop()
+
+        err = []
+        for line in lines
+          continue if line.indexOf('!_TAG_') == 0
+          tag = @parseTagLine(line)
+          if tag
+            tags.push(tag)
+          else
+            err.push "failed to parseTagLine: @#{line}@"
+
+        error "please create a new issue:<br> path: #{@path} <br>" + err.join("<br>") if err.length > 0
+      else
+        error err
+
+      deferred.resolve(tags)
+
+    deferred.promise
+
   generate: ->
     deferred = Q.defer()
     tags = []
@@ -94,15 +125,14 @@ class TagGenerator
       if lines[lines.length-1] == ""
         lines.pop()
 
+      err = []
       for line in lines
         tag = @parseTagLine(line)
         if tag
           tags.push(tag)
         else
-          error """please create a new issue:<br>
-            failed to parseTagLine, @#{line}@ <br>
-            command: @#{command} #{args.join(' ')}@
-          """
+          err.push "failed to parseTagLine: @#{line}@"
+      error "please create a new issue:<br> command: @#{command} #{args.join(' ')}@" + err.join("<br>") if err.length > 0
     stderr = (lines) ->
       console.warn  """command: @#{command} #{args.join(' ')}@
       err: @#{lines}@"""

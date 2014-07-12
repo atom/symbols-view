@@ -4,6 +4,7 @@ module.exports =
     autoBuildTagsWhenActive: false
     buildTimeout: 5000
     cmdArgs: ""
+    extraTagFiles: ""
 
   activate: ->
     @stack = []
@@ -42,6 +43,16 @@ module.exports =
       alert "Warning from atom-ctags:
               atom-ctags is for replace and enhance symbols-view package.
               Therefore, symbols-view has been disabled."
+
+    initExtraTagsTime = null
+    atom.config.observe 'atom-ctags.extraTagFiles', =>
+      clearTimeout initExtraTagsTime if initExtraTagsTime
+      initExtraTagsTime = setTimeout((=>
+        @ctagsCache.initExtraTags(atom.config.get('atom-ctags.extraTagFiles').split(" "))
+        initExtraTagsTime = null
+      ), 1000)
+
+
 
   deactivate: ->
     if @fileView?
