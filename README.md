@@ -10,6 +10,7 @@ and fork from [symbols-view](https://github.com/atom/symbols-view)
 * **Auto Update the file's tags data when saved**
 * go-to-declaration and return-from-declaration
 * toggle-file-symbols
+* toggle-project-symbols
 * "Rebuild Ctags" in context-menu
 * "Auto Build Tags When Active" setting, default: false
 * 'extraTagFiles' setting, add specified tagFiles.(Make sure you tag file generate with --fields=+KSn)
