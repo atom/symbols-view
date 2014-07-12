@@ -39,6 +39,18 @@ class FileView extends SymbolsView
       @populate(filePath)
       @attach()
 
+  toggleAll: ->
+    if @hasParent()
+      @cancel()
+    else
+      @list.empty()
+      @maxItems = 10
+      tags = []
+      for key, val of @ctagsCache.cachedTags
+        tags.push val...
+      @setItems(tags)
+      @attach()
+
   getCurSymbol: ->
     editor = atom.workspace.getActiveEditor()
     if not editor

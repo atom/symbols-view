@@ -32,6 +32,9 @@ module.exports =
     atom.workspaceView.command 'atom-ctags:toggle-file-symbols', =>
       @createFileView().toggle()
 
+    atom.workspaceView.command 'atom-ctags:toggle-project-symbols', =>
+      @createFileView().toggleAll()
+
     atom.workspaceView.command 'atom-ctags:go-to-declaration', =>
       @createFileView().goto()
 
