@@ -8,7 +8,7 @@ class ProjectView extends SymbolsView
   initialize: ->
     super
     @reloadTags = true
-    @maxItems = 10
+    @setMaxItems(10)
 
   beforeRemove: ->
     @stopTask()

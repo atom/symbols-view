@@ -44,7 +44,7 @@ class FileView extends SymbolsView
     @list.empty()
     @setLoading('Generating symbols\u2026')
     if tags = @cachedTags[filePath]
-      @maxItems = Infinity
+      @setMaxItems(Infinity)
       @setItems(tags)
     else
       @generateTags(filePath)
@@ -52,5 +52,5 @@ class FileView extends SymbolsView
   generateTags: (filePath) ->
     new TagGenerator(filePath, @getScopeName()).generate().done (tags) =>
       @cachedTags[filePath] = tags
-      @maxItems = Infinity
+      @setMaxItems(Infinity)
       @setItems(tags)
