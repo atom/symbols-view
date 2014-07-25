@@ -32,8 +32,6 @@
 --langmap=Yaml:+.yml
 --regex-Yaml=/^[ \t]*([a-zA-Z_0-9 ]+)[ \t]*\:[ \t]*/\1/f,function/
 
---langdef=Html
---langmap=Html:.html
 --regex-Html=/^[ \t]*<([a-zA-Z]+)[ \t]*.*>/\1/f,function/
 
 --langdef=Markdown
