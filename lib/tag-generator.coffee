@@ -11,7 +11,7 @@ class TagGenerator
   constructor: (@path, @scopeName, @cmdArgs) ->
 
   parseTagLine: (line) ->
-    sections = line.split("\t")
+    sections = line.split(/\t+/)
     if sections.length > 3
       tag = {
         name: sections.shift()
