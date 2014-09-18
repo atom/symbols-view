@@ -67,17 +67,17 @@
 --regex-Go=/type[ \t]+([a-zA-Z_][a-zA-Z0-9_]*)/\1/t,type/
 
 --langmap=perl:+.pod
---regex-perl=/with\s+([^;]+)\s*?;/\1/w,role,roles/
---regex-perl=/extends\s+['"]([^'"]+)['"]\s*?;/\1/e,extends/
---regex-perl=/use\s+base\s+['"]([^'"]+)['"]\s*?;/\1/e,extends/
---regex-perl=/use\s+parent\s+['"]([^'"]+)['"]\s*?;/\1/e,extends/
---regex-perl=/Mojo::Base\s+['"]([^'"]+)['"]\s*?;/\1/e,extends/
---regex-perl=/^\s*?use\s+([^;]+)\s*?;/\1/u,use,uses/
---regex-perl=/^\s*?require\s+((\w|\:)+)/\1/r,require,requires/
---regex-perl=/^\s*?has\s+['"]?(\w+)['"]?/\1/a,attribute,attributes/
---regex-perl=/^\s*?\*(\w+)\s*?=/\1/a,alias,aliases/
---regex-perl=/->helper\(\s?['"]?(\w+)['"]?/\1/h,helper,helpers/
---regex-perl=/^\s*?our\s*?[\$@%](\w+)/\1/o,our,ours/
---regex-perl=/^\=head1\s+(.+)/\1/p,pod,Plain Old Documentation/
---regex-perl=/^\=head2\s+(.+)/-- \1/p,pod,Plain Old Documentation/
---regex-perl=/^\=head[3-5]\s+(.+)/---- \1/p,pod,Plain Old Documentation/
+--regex-perl=/with[ \t]+([^;]+)[ \t]*?;/\1/w,role,roles/
+--regex-perl=/extends[ \t]+['"]([^'"]+)['"][ \t]*?;/\1/e,extends/
+--regex-perl=/use[ \t]+base[ \t]+['"]([^'"]+)['"][ \t]*?;/\1/e,extends/
+--regex-perl=/use[ \t]+parent[ \t]+['"]([^'"]+)['"][ \t]*?;/\1/e,extends/
+--regex-perl=/Mojo::Base[ \t]+['"]([^'"]+)['"][ \t]*?;/\1/e,extends/
+--regex-perl=/^[ \t]*?use[ \t]+([^;]+)[ \t]*?;/\1/u,use,uses/
+--regex-perl=/^[ \t]*?require[ \t]+((\w|\:)+)/\1/r,require,requires/
+--regex-perl=/^[ \t]*?has[ \t]+['"]?(\w+)['"]?/\1/a,attribute,attributes/
+--regex-perl=/^[ \t]*?\*(\w+)[ \t]*?=/\1/a,alias,aliases/
+--regex-perl=/->helper\([ \t]?['"]?(\w+)['"]?/\1/h,helper,helpers/
+--regex-perl=/^[ \t]*?our[ \t]*?[\$@%](\w+)/\1/o,our,ours/
+--regex-perl=/^\=head1[ \t]+(.+)/\1/p,pod,Plain Old Documentation/
+--regex-perl=/^\=head2[ \t]+(.+)/-- \1/p,pod,Plain Old Documentation/
+--regex-perl=/^\=head[3-5][ \t]+(.+)/---- \1/p,pod,Plain Old Documentation/
