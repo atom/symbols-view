@@ -42,7 +42,7 @@ class TagGenerator
 
   generate: ->
     deferred = Q.defer()
-    tags = []
+    tags = {}
     command = path.resolve(__dirname, '..', 'vendor', "ctags-#{process.platform}")
     defaultCtagsFile = require.resolve('./.ctags')
     args = ["--options=#{defaultCtagsFile}", '--fields=+KS']
@@ -55,9 +55,10 @@ class TagGenerator
 
     stdout = (lines) =>
       for line in lines.split('\n')
-        tag = @parseTagLine(line)
-        tags.push(tag) if tag
+        if tag = @parseTagLine(line)
+          tags[tag.position.row] ?= tag
     exit = ->
+      tags = (tag for row, tag of tags)
       deferred.resolve(tags)
 
     new BufferedProcess({command, args, stdout, exit})
