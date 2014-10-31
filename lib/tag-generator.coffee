@@ -29,6 +29,8 @@ class TagGenerator
       when 'source.go'       then 'Go'
       when 'source.java'     then 'Java'
       when 'source.js'       then 'JavaScript'
+      when 'source.js.jsx'   then 'JavaScript'
+      when 'source.jsx'      then 'JavaScript'
       when 'source.json'     then 'Json'
       when 'source.makefile' then 'Make'
       when 'source.objc'     then 'C'
