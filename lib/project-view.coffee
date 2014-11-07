@@ -16,7 +16,7 @@ class ProjectView extends SymbolsView
 
   toggle: ->
     if @hasParent()
-      @cancel()
+      @exit()
     else
       @populate()
       @attach()

@@ -1,6 +1,7 @@
 module.exports =
   configDefaults:
     useEditorGrammarAsCtagsLanguage: true
+    stickOnRightSide: false
 
   activate: ->
     @stack = []
