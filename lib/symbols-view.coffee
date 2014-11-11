@@ -7,12 +7,21 @@ class SymbolsView extends SelectListView
   @activate: ->
     new SymbolsView
 
+  exiting: false
+
   initialize: (@stack) ->
     super
-    @addClass('symbols-view overlay from-top')
+
+  exit: ->
+    @exiting = true
+    @cancel()
+    @exiting = false
+
+  cancel: ->
+    super if @exiting or not atom.config.get('symbols-view.stickOnRightSide')
 
   destroy: ->
-    @cancel()
+    @exit()
     @remove()
 
   getFilterKey: -> 'name'
@@ -65,7 +74,14 @@ class SymbolsView extends SelectListView
 
   attach: ->
     @storeFocusedElement()
-    atom.workspaceView.appendToTop(this)
+    if atom.config.get('symbols-view.stickOnRightSide')
+      @removeClass('symbols-view overlay from-top')
+      @addClass('symbols-view-stick')
+      atom.workspaceView.appendToRight(this)
+    else
+      @removeClass('symbols-view-stick')
+      @addClass('symbols-view overlay from-top')
+      atom.workspaceView.appendToTop(this)
     @focusFilterEditor()
 
   getTagLine: (tag) ->

@@ -9,6 +9,9 @@ class FileView extends SymbolsView
 
     @cachedTags = {}
 
+    @subscribe atom.workspaceView, "pane-container:active-pane-item-changed", =>
+      @populate(@getPath())
+
     @subscribe atom.project.eachBuffer (buffer) =>
       @subscribe buffer, 'reloaded saved destroyed path-changed', =>
         delete @cachedTags[buffer.getPath()]
@@ -31,7 +34,7 @@ class FileView extends SymbolsView
 
   toggle: ->
     if @hasParent()
-      @cancel()
+      @exit()
     else if filePath = @getPath()
       @populate(filePath)
       @attach()
