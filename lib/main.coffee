@@ -5,17 +5,11 @@ module.exports =
   activate: ->
     @stack = []
 
-    atom.workspaceView.command 'symbols-view:toggle-file-symbols', =>
-      @createFileView().toggle()
-
-    atom.workspaceView.command 'symbols-view:toggle-project-symbols', =>
-      @createProjectView().toggle()
-
-    atom.workspaceView.command 'symbols-view:go-to-declaration', =>
-      @createGoToView().toggle()
-
-    atom.workspaceView.command 'symbols-view:return-from-declaration', =>
-      @createGoBackView().toggle()
+    atom.commands.add 'atom-workspace',
+      'symbols-view:toggle-file-symbols': => @createFileView().toggle()
+      'symbols-view:toggle-project-symbols': => @createProjectView().toggle()
+      'symbols-view:go-to-declaration': => @createGoToView().toggle()
+      'symbols-view:return-from-declaration': => @createGoBackView().toggle()
 
   deactivate: ->
     if @fileView?
