@@ -9,8 +9,9 @@
       "symbols-view:toggle-project-symbols"
     ],
     "atom-text-editor": [
-      "symbols-view:toggle-file-symbols",
-      "symbols-view:go-to-declaration"
+      "symbols-view:go-to-declaration",
+      "symbols-view:return-from-declaration",
+      "symbols-view:toggle-file-symbols"
     ]
   },
   "dependencies": {
