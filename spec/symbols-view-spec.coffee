@@ -8,12 +8,15 @@ TagGenerator = require '../lib/tag-generator'
 describe "SymbolsView", ->
   [symbolsView, activationPromise, editor] = []
 
+  getWorkspaceView = -> atom.views.getView(atom.workspace)
+  getEditorView = -> atom.views.getView(atom.workspace.getActiveTextEditor())
+
   beforeEach ->
     atom.project.setPath(temp.mkdirSync('atom-symbols-view-'))
     fs.copySync(path.join(__dirname, 'fixtures'), atom.project.getPath())
 
     activationPromise = atom.packages.activatePackage("symbols-view")
-    jasmine.attachToDOM(atom.views.getView(atom.workspace))
+    jasmine.attachToDOM(getWorkspaceView())
 
     waitsForPromise ->
       atom.packages.activatePackage('language-ruby')
@@ -24,13 +27,13 @@ describe "SymbolsView", ->
         atom.workspace.open('sample.js')
 
       runs ->
-        atom.commands.dispatch(atom.views.getView(atom.workspace.getActiveTextEditor()), "symbols-view:toggle-file-symbols")
+        atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
 
       waitsForPromise ->
         activationPromise
 
       runs ->
-        symbolsView = $(atom.views.getView(atom.workspace)).find('.symbols-view').view()
+        symbolsView = $(getWorkspaceView()).find('.symbols-view').view()
         expect(symbolsView.loading).toBeVisible()
 
       waitsFor ->
@@ -38,7 +41,7 @@ describe "SymbolsView", ->
 
       runs ->
         expect(symbolsView.loading).toBeEmpty()
-        expect($(atom.views.getView(atom.workspace)).find('.symbols-view')).toExist()
+        expect($(getWorkspaceView()).find('.symbols-view')).toExist()
         expect(symbolsView.list.children('li').length).toBe 2
         expect(symbolsView.list.children('li:first').find('.primary-line')).toHaveText 'quicksort'
         expect(symbolsView.list.children('li:first').find('.secondary-line')).toHaveText 'Line 1'
@@ -52,13 +55,13 @@ describe "SymbolsView", ->
 
       runs ->
         editor = atom.workspace.getActiveEditor()
-        atom.commands.dispatch(atom.views.getView(atom.workspace), "symbols-view:toggle-file-symbols")
+        atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
 
       waitsForPromise ->
         activationPromise
 
       runs ->
-        symbolsView = $(atom.views.getView(atom.workspace)).find('.symbols-view').view()
+        symbolsView = $(getWorkspaceView()).find('.symbols-view').view()
 
       waitsFor ->
         symbolsView.list.children('li').length > 0
@@ -66,7 +69,7 @@ describe "SymbolsView", ->
       runs ->
         symbolsView.cancel()
         spyOn(symbolsView, 'generateTags').andCallThrough()
-        atom.commands.dispatch(atom.views.getView(atom.workspace), "symbols-view:toggle-file-symbols")
+        atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
 
       waitsFor ->
         symbolsView.list.children('li').length > 0
@@ -77,7 +80,7 @@ describe "SymbolsView", ->
         expect(symbolsView.generateTags).not.toHaveBeenCalled()
         editor.getBuffer().emit 'saved'
         symbolsView.cancel()
-        atom.commands.dispatch(atom.views.getView(atom.workspace), "symbols-view:toggle-file-symbols")
+        atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
 
       waitsFor ->
         symbolsView.list.children('li').length > 0
@@ -94,13 +97,13 @@ describe "SymbolsView", ->
         atom.workspace.open('sample.js')
 
       runs ->
-        atom.commands.dispatch(atom.views.getView(atom.workspace), "symbols-view:toggle-file-symbols")
+        atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
 
       waitsForPromise ->
         activationPromise
 
       runs ->
-        symbolsView = $(atom.views.getView(atom.workspace)).find('.symbols-view').view()
+        symbolsView = $(getWorkspaceView()).find('.symbols-view').view()
 
       waitsFor ->
         symbolsView.list.children('li').length > 0
@@ -109,7 +112,7 @@ describe "SymbolsView", ->
         symbolsView.filterEditorView.setText("nothing will match this")
         window.advanceClock(symbolsView.inputThrottle)
 
-        expect($(atom.views.getView(atom.workspace)).find('.symbols-view')).toExist()
+        expect($(getWorkspaceView()).find('.symbols-view')).toExist()
         expect(symbolsView.list.children('li').length).toBe 0
         expect(symbolsView.error).toBeVisible()
         expect(symbolsView.error.text().length).toBeGreaterThan 0
@@ -127,13 +130,13 @@ describe "SymbolsView", ->
         atom.workspace.open('sample.txt')
 
       runs ->
-        atom.commands.dispatch(atom.views.getView(atom.workspace), "symbols-view:toggle-file-symbols")
+        atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
 
       waitsForPromise ->
         activationPromise
 
       runs ->
-        symbolsView = $(atom.views.getView(atom.workspace)).find('.symbols-view').view()
+        symbolsView = $(getWorkspaceView()).find('.symbols-view').view()
 
       waitsFor ->
         symbolsView.error.isVisible()
@@ -151,14 +154,14 @@ describe "SymbolsView", ->
 
     runs ->
       expect(atom.workspace.getActiveEditor().getCursorBufferPosition()).toEqual [0,0]
-      expect($(atom.views.getView(atom.workspace)).find('.symbols-view')).not.toExist()
-      atom.commands.dispatch(atom.views.getView(atom.workspace), "symbols-view:toggle-file-symbols")
+      expect($(getWorkspaceView()).find('.symbols-view')).not.toExist()
+      atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
 
     waitsFor ->
-      $(atom.views.getView(atom.workspace)).find('.symbols-view').find('li').length
+      $(getWorkspaceView()).find('.symbols-view').find('li').length
 
     runs ->
-      $(atom.views.getView(atom.workspace)).find('.symbols-view').find('li:eq(1)').mousedown().mouseup()
+      $(getWorkspaceView()).find('.symbols-view').find('li:eq(1)').mousedown().mouseup()
       expect(atom.workspace.getActiveEditor().getCursorBufferPosition()).toEqual [1,2]
 
   describe "TagGenerator", ->
@@ -194,7 +197,7 @@ describe "SymbolsView", ->
       runs ->
         editor = atom.workspace.getActiveEditor()
         editor.setCursorBufferPosition([0,2])
-        atom.commands.dispatch(atom.views.getView(atom.workspace), 'symbols-view:go-to-declaration')
+        atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
 
       waitsForPromise ->
         activationPromise
@@ -210,7 +213,7 @@ describe "SymbolsView", ->
         editor = atom.workspace.getActiveEditor()
         editor.setCursorBufferPosition([6,24])
         spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
-        atom.commands.dispatch(atom.views.getView(atom.workspace), 'symbols-view:go-to-declaration')
+        atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
 
       waitsFor ->
         SymbolsView::moveToPosition.callCount is 1
@@ -225,13 +228,13 @@ describe "SymbolsView", ->
       runs ->
         editor = atom.workspace.getActiveEditor()
         editor.setCursorBufferPosition([8,14])
-        atom.commands.dispatch(atom.views.getView(atom.workspace), 'symbols-view:go-to-declaration')
+        atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
 
       waitsFor ->
-        $(atom.views.getView(atom.workspace)).find('.symbols-view').find('li').length > 0
+        $(getWorkspaceView()).find('.symbols-view').find('li').length > 0
 
       runs ->
-        symbolsView = $(atom.views.getView(atom.workspace)).find('.symbols-view').view()
+        symbolsView = $(getWorkspaceView()).find('.symbols-view').view()
         expect(symbolsView.list.children('li').length).toBe 2
         expect(symbolsView).toBeVisible()
         spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
@@ -253,7 +256,7 @@ describe "SymbolsView", ->
       runs ->
         spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
         atom.workspace.getActiveEditor().setCursorBufferPosition([13,4])
-        atom.commands.dispatch(atom.views.getView(atom.workspace), 'symbols-view:go-to-declaration')
+        atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
 
       waitsFor ->
         SymbolsView::moveToPosition.callCount is 1
@@ -262,7 +265,7 @@ describe "SymbolsView", ->
         expect(atom.workspace.getActiveEditor().getCursorBufferPosition()).toEqual [5,2]
         SymbolsView::moveToPosition.reset()
         atom.workspace.getActiveEditor().setCursorBufferPosition([14,2])
-        atom.commands.dispatch(atom.views.getView(atom.workspace), 'symbols-view:go-to-declaration')
+        atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
 
       waitsFor ->
         SymbolsView::moveToPosition.callCount is 1
@@ -271,7 +274,7 @@ describe "SymbolsView", ->
         expect(atom.workspace.getActiveEditor().getCursorBufferPosition()).toEqual [9,2]
         SymbolsView::moveToPosition.reset()
         atom.workspace.getActiveEditor().setCursorBufferPosition([15,5])
-        atom.commands.dispatch(atom.views.getView(atom.workspace), 'symbols-view:go-to-declaration')
+        atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
 
       waitsFor ->
         SymbolsView::moveToPosition.callCount is 1
@@ -287,7 +290,7 @@ describe "SymbolsView", ->
         runs ->
           editor = atom.workspace.getActiveEditor()
           editor.setCursorBufferPosition([6,0])
-          atom.commands.dispatch(atom.views.getView(atom.workspace), 'symbols-view:return-from-declaration')
+          atom.commands.dispatch(getEditorView(), 'symbols-view:return-from-declaration')
           expect(editor.getCursorBufferPosition()).toEqual [6,0]
 
       it "returns to previous row and column", ->
@@ -298,14 +301,14 @@ describe "SymbolsView", ->
           editor = atom.workspace.getActiveEditor()
           editor.setCursorBufferPosition([6,24])
           spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
-          atom.commands.dispatch(atom.views.getView(atom.workspace), 'symbols-view:go-to-declaration')
+          atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
 
         waitsFor ->
           SymbolsView::moveToPosition.callCount is 1
 
         runs ->
           expect(editor.getCursorBufferPosition()).toEqual [2,0]
-          atom.commands.dispatch(atom.views.getView(atom.workspace), 'symbols-view:return-from-declaration')
+          atom.commands.dispatch(getEditorView(), 'symbols-view:return-from-declaration')
 
         waitsFor ->
           SymbolsView::moveToPosition.callCount is 2
@@ -324,7 +327,7 @@ describe "SymbolsView", ->
           editor = atom.workspace.getActiveEditor()
           editor.setCursorBufferPosition([8,14])
           spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
-          atom.commands.dispatch(atom.views.getView(atom.workspace), 'symbols-view:go-to-declaration')
+          atom.commands.dispatch(getWorkspaceView(), 'symbols-view:go-to-declaration')
 
         waitsFor ->
           SymbolsView::moveToPosition.callCount is 1
@@ -340,14 +343,14 @@ describe "SymbolsView", ->
         atom.workspace.open("tagged.js")
 
       runs ->
-        expect($(atom.views.getView(atom.workspace)).find('.symbols-view')).not.toExist()
-        atom.commands.dispatch(atom.views.getView(atom.workspace), "symbols-view:toggle-project-symbols")
+        expect($(getWorkspaceView()).find('.symbols-view')).not.toExist()
+        atom.commands.dispatch(getWorkspaceView(), "symbols-view:toggle-project-symbols")
 
       waitsForPromise ->
         activationPromise
 
       runs ->
-        symbolsView = $(atom.views.getView(atom.workspace)).find('.symbols-view').view()
+        symbolsView = $(getWorkspaceView()).find('.symbols-view').view()
         expect(symbolsView.loading).toBeVisible()
 
       waitsFor ->
@@ -355,14 +358,14 @@ describe "SymbolsView", ->
 
       runs ->
         expect(symbolsView.loading).toBeEmpty()
-        expect($(atom.views.getView(atom.workspace)).find('.symbols-view')).toExist()
+        expect($(getWorkspaceView()).find('.symbols-view')).toExist()
         expect(symbolsView.list.children('li').length).toBe 4
         expect(symbolsView.list.children('li:first').find('.primary-line')).toHaveText 'callMeMaybe'
         expect(symbolsView.list.children('li:first').find('.secondary-line')).toHaveText 'tagged.js'
         expect(symbolsView.list.children('li:last').find('.primary-line')).toHaveText 'thisIsCrazy'
         expect(symbolsView.list.children('li:last').find('.secondary-line')).toHaveText 'tagged.js'
         expect(symbolsView.error).not.toBeVisible()
-        atom.commands.dispatch(atom.views.getView(atom.workspace), "symbols-view:toggle-project-symbols")
+        atom.commands.dispatch(getWorkspaceView(), "symbols-view:toggle-project-symbols")
 
         fs.removeSync(atom.project.resolve('tags'))
 
@@ -370,10 +373,10 @@ describe "SymbolsView", ->
         symbolsView.reloadTags
 
       runs ->
-        atom.commands.dispatch(atom.views.getView(atom.workspace), "symbols-view:toggle-project-symbols")
+        atom.commands.dispatch(getWorkspaceView(), "symbols-view:toggle-project-symbols")
 
       waitsFor ->
-        symbolsView.error.isVisible()
+        symbolsView.error.text().length > 0
 
       runs ->
         expect(symbolsView.list.children('li').length).toBe 0
@@ -384,13 +387,13 @@ describe "SymbolsView", ->
           fs.removeSync(atom.project.resolve("tagged.js"))
 
         it "doesn't open the editor", ->
-          atom.commands.dispatch(atom.views.getView(atom.workspace), "symbols-view:toggle-project-symbols")
+          atom.commands.dispatch(getWorkspaceView(), "symbols-view:toggle-project-symbols")
 
           waitsForPromise ->
             activationPromise
 
           runs ->
-            symbolsView = $(atom.views.getView(atom.workspace)).find('.symbols-view').view()
+            symbolsView = $(getWorkspaceView()).find('.symbols-view').view()
 
           waitsFor ->
             symbolsView.list.children('li').length > 0
@@ -414,19 +417,19 @@ describe "SymbolsView", ->
       runs ->
         atom.workspace.getActiveEditor().setText("var test = function() {}")
         atom.workspace.getActiveEditor().save()
-        atom.commands.dispatch(atom.views.getView(atom.workspace), "symbols-view:toggle-file-symbols")
+        atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
 
       waitsForPromise ->
         activationPromise
 
       waitsFor ->
-        $(atom.views.getView(atom.workspace)).find('.symbols-view').view().error.isVisible()
+        $(getWorkspaceView()).find('.symbols-view').view().error.isVisible()
 
       runs ->
-        atom.commands.dispatch(atom.views.getView(atom.workspace), "symbols-view:toggle-file-symbols")
+        atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
         atom.workspace.getActiveEditor().setGrammar(atom.syntax.grammarForScopeName('source.js'))
-        atom.commands.dispatch(atom.views.getView(atom.workspace), "symbols-view:toggle-file-symbols")
-        symbolsView = $(atom.views.getView(atom.workspace)).find('.symbols-view').view()
+        atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
+        symbolsView = $(getWorkspaceView()).find('.symbols-view').view()
         expect(symbolsView.loading).toBeVisible()
 
       waitsFor ->
@@ -434,6 +437,6 @@ describe "SymbolsView", ->
 
       runs ->
         expect(symbolsView.loading).toBeEmpty()
-        expect($(atom.views.getView(atom.workspace)).find('.symbols-view')).toExist()
+        expect($(getWorkspaceView()).find('.symbols-view')).toExist()
         expect(symbolsView.list.children('li:first').find('.primary-line')).toHaveText 'test'
         expect(symbolsView.list.children('li:first').find('.secondary-line')).toHaveText 'Line 1'
