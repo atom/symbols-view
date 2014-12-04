@@ -6,7 +6,7 @@ TagReader = require './tag-reader'
 module.exports =
 class GoToView extends SymbolsView
   toggle: ->
-    if @hasParent()
+    if @panel.isVisible()
       @cancel()
     else
       @populate()

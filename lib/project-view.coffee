@@ -15,7 +15,7 @@ class ProjectView extends SymbolsView
     @unwatchTagsFile()
 
   toggle: ->
-    if @hasParent()
+    if @panel.isVisible()
       @cancel()
     else
       @populate()

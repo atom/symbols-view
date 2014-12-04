@@ -30,7 +30,7 @@ class FileView extends SymbolsView
         @div "Line #{position.row + 1}", class: 'secondary-line'
 
   toggle: ->
-    if @hasParent()
+    if @panel.isVisible()
       @cancel()
     else if filePath = @getPath()
       @populate(filePath)
