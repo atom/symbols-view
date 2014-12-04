@@ -32,6 +32,7 @@ module.exports =
 
   getAllTags: (callback) ->
     projectTags = []
-    task = Task.once handlerPath, atom.project.getPath(), -> callback(projectTags)
+    [projectPath] = atom.project.getPaths()
+    task = Task.once handlerPath, projectPath, -> callback(projectTags)
     task.on 'tags', (paths) -> projectTags.push(paths...)
     task
