@@ -12,7 +12,7 @@ describe "SymbolsView", ->
   getEditorView = -> atom.views.getView(atom.workspace.getActiveTextEditor())
 
   beforeEach ->
-    atom.project.setPath(temp.mkdirSync('atom-symbols-view-'))
+    atom.project.setPaths([temp.mkdirSync('atom-symbols-view-')])
     fs.copySync(path.join(__dirname, 'fixtures'), atom.project.getPath())
 
     activationPromise = atom.packages.activatePackage("symbols-view")
@@ -248,7 +248,7 @@ describe "SymbolsView", ->
         expect(atom.workspace.getActiveEditor().getCursorBufferPosition()).toEqual [0,4]
 
     it "includes ? and ! characters in ruby symbols", ->
-      atom.project.setPath(path.join(atom.project.getPath(), 'ruby'))
+      atom.project.setPaths([path.join(atom.project.getPath(), 'ruby')])
 
       waitsForPromise ->
         atom.workspace.open 'file1.rb'
