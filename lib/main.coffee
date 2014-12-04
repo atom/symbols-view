@@ -54,4 +54,4 @@ module.exports =
     unless @goBackView?
       GoBackView = require './go-back-view'
       @goBackView = new GoBackView(@stack)
-    @goBackView;
+    @goBackView
