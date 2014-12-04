@@ -9,7 +9,7 @@
       "symbols-view:toggle-project-symbols"
     ],
     "atom-text-editor": [
-      "symbols-view:toggle-file-symbols"
+      "symbols-view:toggle-file-symbols",
       "symbols-view:go-to-declaration"
     ]
   },
