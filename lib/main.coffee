@@ -1,6 +1,8 @@
 module.exports =
-  configDefaults:
-    useEditorGrammarAsCtagsLanguage: true
+  config:
+    useEditorGrammarAsCtagsLanguage:
+      default: true
+      type: 'boolean'
 
   activate: ->
     @stack = []
