@@ -9,7 +9,8 @@ class SymbolsView extends SelectListView
 
   initialize: (@stack) ->
     super
-    @addClass('symbols-view overlay from-top')
+    @panel = atom.workspace.addModalPanel(item: this, visible: false)
+    @addClass('symbols-view')
 
   destroy: ->
     @cancel()
@@ -31,6 +32,9 @@ class SymbolsView extends SelectListView
       'No symbols found'
     else
       super
+
+  cancelled: ->
+    @panel.hide()
 
   confirmed : (tag) ->
     if tag.file and not fs.isFileSync(atom.project.resolve(tag.file))
@@ -64,7 +68,7 @@ class SymbolsView extends SelectListView
 
   attach: ->
     @storeFocusedElement()
-    atom.workspaceView.appendToTop(this)
+    @panel.show()
     @focusFilterEditor()
 
   getTagLine: (tag) ->

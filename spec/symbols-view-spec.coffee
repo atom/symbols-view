@@ -19,7 +19,7 @@ describe "SymbolsView", ->
       atom.packages.activatePackage('language-ruby')
 
   describe "when tags can be generated for a file", ->
-    it "initially displays all JavaScript functions with line numbers", ->
+    fit "initially displays all JavaScript functions with line numbers", ->
       waitsForPromise ->
         atom.workspace.open('sample.js')
 
