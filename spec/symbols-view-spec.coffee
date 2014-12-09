@@ -1,5 +1,5 @@
 path = require 'path'
-{$} = require 'atom'
+{$} = require 'atom-space-pen-views'
 fs = require 'fs-plus'
 temp = require 'temp'
 SymbolsView = require '../lib/symbols-view'

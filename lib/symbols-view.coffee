@@ -1,5 +1,6 @@
 path = require 'path'
-{$$, Point, SelectListView} = require 'atom'
+{Point} = require 'atom'
+{$$, SelectListView} = require 'atom-space-pen-views'
 fs = require 'fs-plus'
 
 module.exports =

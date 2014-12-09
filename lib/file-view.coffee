@@ -1,4 +1,4 @@
-{$$} = require 'atom'
+{$$} = require 'atom-space-pen-views'
 SymbolsView = require './symbols-view'
 TagGenerator = require './tag-generator'
 
