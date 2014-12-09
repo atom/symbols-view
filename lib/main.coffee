@@ -7,10 +7,10 @@ module.exports =
   activate: ->
     @stack = []
 
-    atom.commands.add 'atom-workspace',
+    @workspaceSubscription = atom.commands.add 'atom-workspace',
       'symbols-view:toggle-project-symbols': => @createProjectView().toggle()
 
-    atom.commands.add 'atom-text-editor',
+    @editorSubscription = atom.commands.add 'atom-text-editor',
       'symbols-view:toggle-file-symbols': => @createFileView().toggle()
       'symbols-view:go-to-declaration': => @createGoToView().toggle()
       'symbols-view:return-from-declaration': => @createGoBackView().toggle()
@@ -31,6 +31,14 @@ module.exports =
     if @goBackView?
       @goBackView.destroy()
       @goBackView = null
+
+    if @workspaceSubscription?
+      @workspaceSubscription.dispose()
+      @workspaceSubscription = null
+
+    if @editorSubscription?
+      @editorSubscription.dispose()
+      @editorSubscription = null
 
   createFileView: ->
     unless @fileView?
