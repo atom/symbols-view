@@ -10,9 +10,10 @@ class ProjectView extends SymbolsView
     @reloadTags = true
     @setMaxItems(10)
 
-  beforeRemove: ->
+  destroy: ->
     @stopTask()
     @unwatchTagsFile()
+    super
 
   toggle: ->
     if @panel.isVisible()
