@@ -65,7 +65,7 @@ class SymbolsView extends SelectListView
     if editor = atom.workspace.getActiveTextEditor()
       editor.scrollToBufferPosition(position, center: true)
       editor.setCursorBufferPosition(position)
-      editor.moveCursorToFirstCharacterOfLine() if beginningOfLine
+      editor.moveToFirstCharacterOfLine() if beginningOfLine
 
   attach: ->
     @storeFocusedElement()
