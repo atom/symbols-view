@@ -1,5 +1,6 @@
 path = require 'path'
-{$$, Point, SelectListView} = require 'atom'
+{Point} = require 'atom'
+{$$, SelectListView} = require 'atom-space-pen-views'
 fs = require 'fs-plus'
 
 module.exports =
@@ -9,11 +10,12 @@ class SymbolsView extends SelectListView
 
   initialize: (@stack) ->
     super
-    @addClass('symbols-view overlay from-top')
+    @panel = atom.workspace.addModalPanel(item: this, visible: false)
+    @addClass('symbols-view')
 
   destroy: ->
     @cancel()
-    @remove()
+    @panel.destroy()
 
   getFilterKey: -> 'name'
 
@@ -32,6 +34,9 @@ class SymbolsView extends SelectListView
     else
       super
 
+  cancelled: ->
+    @panel.hide()
+
   confirmed : (tag) ->
     if tag.file and not fs.isFileSync(atom.project.resolve(tag.file))
       @setError('Selected file does not exist')
@@ -41,7 +46,7 @@ class SymbolsView extends SelectListView
       @openTag(tag)
 
   openTag: (tag) ->
-    if editor = atom.workspace.getActiveEditor()
+    if editor = atom.workspace.getActiveTextEditor()
       previous =
         position: editor.getCursorBufferPosition()
         file: editor.getUri()
@@ -49,7 +54,7 @@ class SymbolsView extends SelectListView
     {position} = tag
     position = @getTagLine(tag) unless position
     if tag.file
-      atom.workspaceView.open(tag.file).done =>
+      atom.workspace.open(tag.file).done =>
         @moveToPosition(position) if position
     else if position
       @moveToPosition(position)
@@ -57,15 +62,14 @@ class SymbolsView extends SelectListView
     @stack.push(previous)
 
   moveToPosition: (position, beginningOfLine=true) ->
-    editorView = atom.workspaceView.getActiveView()
-    if editor = editorView.getEditor?()
-      editorView.scrollToBufferPosition(position, center: true)
+    if editor = atom.workspace.getActiveTextEditor()
+      editor.scrollToBufferPosition(position, center: true)
       editor.setCursorBufferPosition(position)
-      editor.moveCursorToFirstCharacterOfLine() if beginningOfLine
+      editor.moveToFirstCharacterOfLine() if beginningOfLine
 
   attach: ->
     @storeFocusedElement()
-    atom.workspaceView.appendToTop(this)
+    @panel.show()
     @focusFilterEditor()
 
   getTagLine: (tag) ->

@@ -12,5 +12,6 @@
 ]
 
 'context-menu':
-  '.overlayer':
-    'Go to Declaration': 'symbols-view:go-to-declaration'
+  'atom-text-editor': [
+    { 'label': 'Go to Declaration', 'command': 'symbols-view:go-to-declaration' }
+  ]

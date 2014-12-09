@@ -4,12 +4,18 @@
   "main": "./lib/main",
   "description": "Jump to a function/method in the current editor with `cmd-r`.",
   "license": "MIT",
-  "activationEvents": {
-    "symbols-view:toggle-file-symbols": ".editor",
-    "symbols-view:toggle-project-symbols": null,
-    "symbols-view:go-to-declaration": ".editor"
+  "activationCommands": {
+    "atom-workspace": [
+      "symbols-view:toggle-project-symbols"
+    ],
+    "atom-text-editor": [
+      "symbols-view:go-to-declaration",
+      "symbols-view:return-from-declaration",
+      "symbols-view:toggle-file-symbols"
+    ]
   },
   "dependencies": {
+    "atom-space-pen-views": "^0.20.0",
     "ctags": "~1.0.1",
     "fs-plus": "2.x",
     "humanize-plus": "1.4.2",

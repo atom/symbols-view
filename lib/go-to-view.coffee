@@ -6,7 +6,7 @@ TagReader = require './tag-reader'
 module.exports =
 class GoToView extends SymbolsView
   toggle: ->
-    if @hasParent()
+    if @panel.isVisible()
       @cancel()
     else
       @populate()
@@ -23,7 +23,7 @@ class GoToView extends SymbolsView
     @deferredFind.promise
 
   populate: ->
-    editor = atom.workspace.getActiveEditor()
+    editor = atom.workspace.getActiveTextEditor()
     return unless editor?
 
     @findTag(editor).then (matches) =>

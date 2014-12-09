@@ -1,4 +1,5 @@
-{$$} = require 'atom'
+{$$} = require 'atom-space-pen-views'
+{CompositeDisposable} = require 'atom'
 SymbolsView = require './symbols-view'
 TagGenerator = require './tag-generator'
 
@@ -9,19 +10,19 @@ class FileView extends SymbolsView
 
     @cachedTags = {}
 
-    @subscribe atom.project.eachBuffer (buffer) =>
-      @subscribe buffer, 'reloaded saved destroyed path-changed', =>
-        delete @cachedTags[buffer.getPath()]
+    @editorsSubscription = atom.workspace.observeTextEditors (editor) =>
+      removeFromCache = => delete @cachedTags[editor.getPath()]
+      editorSubscriptions = new CompositeDisposable()
+      editorSubscriptions.add(editor.onDidChangeGrammar(removeFromCache))
+      editorSubscriptions.add(editor.onDidSave(removeFromCache))
+      editorSubscriptions.add(editor.onDidChangePath(removeFromCache))
+      editorSubscriptions.add(editor.getBuffer().onDidReload(removeFromCache))
+      editorSubscriptions.add(editor.getBuffer().onDidDestroy(removeFromCache))
+      editor.onDidDestroy => editorSubscriptions.dispose()
 
-      @subscribe buffer, 'destroyed', =>
-        @unsubscribe(buffer)
-
-    @subscribe atom.workspace.eachEditor (editor) =>
-      @subscribe editor, 'grammar-changed', =>
-        delete @cachedTags[editor.getPath()]
-
-      @subscribe editor, 'destroyed', =>
-        @unsubscribe(editor)
+  destroy: ->
+    @editorsSubscription.dispose()
+    super
 
   viewForItem: ({position, name}) ->
     $$ ->
@@ -30,15 +31,15 @@ class FileView extends SymbolsView
         @div "Line #{position.row + 1}", class: 'secondary-line'
 
   toggle: ->
-    if @hasParent()
+    if @panel.isVisible()
       @cancel()
     else if filePath = @getPath()
       @populate(filePath)
       @attach()
 
-  getPath: -> atom.workspace.getActiveEditor()?.getPath()
+  getPath: -> atom.workspace.getActiveTextEditor()?.getPath()
 
-  getScopeName: -> atom.workspace.getActiveEditor()?.getGrammar()?.scopeName
+  getScopeName: -> atom.workspace.getActiveTextEditor()?.getGrammar()?.scopeName
 
   populate: (filePath) ->
     @list.empty()

@@ -1,21 +1,19 @@
 module.exports =
-  configDefaults:
-    useEditorGrammarAsCtagsLanguage: true
+  config:
+    useEditorGrammarAsCtagsLanguage:
+      default: true
+      type: 'boolean'
 
   activate: ->
     @stack = []
 
-    atom.workspaceView.command 'symbols-view:toggle-file-symbols', =>
-      @createFileView().toggle()
+    @workspaceSubscription = atom.commands.add 'atom-workspace',
+      'symbols-view:toggle-project-symbols': => @createProjectView().toggle()
 
-    atom.workspaceView.command 'symbols-view:toggle-project-symbols', =>
-      @createProjectView().toggle()
-
-    atom.workspaceView.command 'symbols-view:go-to-declaration', =>
-      @createGoToView().toggle()
-
-    atom.workspaceView.command 'symbols-view:return-from-declaration', =>
-      @createGoBackView().toggle()
+    @editorSubscription = atom.commands.add 'atom-text-editor',
+      'symbols-view:toggle-file-symbols': => @createFileView().toggle()
+      'symbols-view:go-to-declaration': => @createGoToView().toggle()
+      'symbols-view:return-from-declaration': => @createGoBackView().toggle()
 
   deactivate: ->
     if @fileView?
@@ -33,6 +31,14 @@ module.exports =
     if @goBackView?
       @goBackView.destroy()
       @goBackView = null
+
+    if @workspaceSubscription?
+      @workspaceSubscription.dispose()
+      @workspaceSubscription = null
+
+    if @editorSubscription?
+      @editorSubscription.dispose()
+      @editorSubscription = null
 
   createFileView: ->
     unless @fileView?
@@ -56,4 +62,4 @@ module.exports =
     unless @goBackView?
       GoBackView = require './go-back-view'
       @goBackView = new GoBackView(@stack)
-    @goBackView;
+    @goBackView
