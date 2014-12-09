@@ -1,4 +1,5 @@
 {$$} = require 'atom-space-pen-views'
+{CompositeDisposable} = require 'atom'
 SymbolsView = require './symbols-view'
 TagGenerator = require './tag-generator'
 
@@ -9,19 +10,17 @@ class FileView extends SymbolsView
 
     @cachedTags = {}
 
-    @subscribe atom.project.eachBuffer (buffer) =>
-      @subscribe buffer, 'reloaded saved destroyed path-changed', =>
-        delete @cachedTags[buffer.getPath()]
+    @editorsSubscription = atom.workspace.observeTextEditors (editor) =>
+      removeFromCache = => delete @cachedTags[editor.getPath()]
+      editorSubscriptions = new CompositeDisposable()
+      editorSubscriptions.add(editor.onDidChangeGrammar(removeFromCache))
+      editorSubscriptions.add(editor.onDidStopChanging(removeFromCache))
+      editorSubscriptions.add(editor.onDidSave(removeFromCache))
+      editorSubscriptions.add(editor.onDidChangePath(removeFromCache))
+      editor.onDidDestroy => editorSubscriptions.dispose()
 
-      @subscribe buffer, 'destroyed', =>
-        @unsubscribe(buffer)
-
-    @subscribe atom.workspace.eachEditor (editor) =>
-      @subscribe editor, 'grammar-changed', =>
-        delete @cachedTags[editor.getPath()]
-
-      @subscribe editor, 'destroyed', =>
-        @unsubscribe(editor)
+  beforeRemove: ->
+    @editorsSubscription.dispose()
 
   viewForItem: ({position, name}) ->
     $$ ->
