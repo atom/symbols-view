@@ -258,6 +258,9 @@ describe "SymbolsView", ->
         atom.workspace.getActiveTextEditor().setCursorBufferPosition([13,4])
         atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
 
+      waitsForPromise ->
+        activationPromise
+
       waitsFor ->
         SymbolsView::moveToPosition.callCount is 1
 
@@ -291,6 +294,11 @@ describe "SymbolsView", ->
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition([6,0])
           atom.commands.dispatch(getEditorView(), 'symbols-view:return-from-declaration')
+
+        waitsForPromise ->
+          activationPromise
+
+        runs ->
           expect(editor.getCursorBufferPosition()).toEqual [6,0]
 
       it "returns to previous row and column", ->
@@ -302,6 +310,9 @@ describe "SymbolsView", ->
           editor.setCursorBufferPosition([6,24])
           spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
           atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
+
+        waitsForPromise ->
+          activationPromise
 
         waitsFor ->
           SymbolsView::moveToPosition.callCount is 1
