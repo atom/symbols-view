@@ -15,7 +15,7 @@ class SymbolsView extends SelectListView
 
   destroy: ->
     @cancel()
-    @remove()
+    @panel.destroy()
 
   getFilterKey: -> 'name'
 
