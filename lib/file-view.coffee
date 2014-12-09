@@ -17,6 +17,7 @@ class FileView extends SymbolsView
       editorSubscriptions.add(editor.onDidStopChanging(removeFromCache))
       editorSubscriptions.add(editor.onDidSave(removeFromCache))
       editorSubscriptions.add(editor.onDidChangePath(removeFromCache))
+      editorSubscriptions.add(editor.getBuffer().onDidDestroy(removeFromCache))
       editor.onDidDestroy => editorSubscriptions.dispose()
 
   beforeRemove: ->

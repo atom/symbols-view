@@ -49,7 +49,7 @@ describe "SymbolsView", ->
         expect(symbolsView.list.children('li:last').find('.secondary-line')).toHaveText 'Line 2'
         expect(symbolsView.error).not.toBeVisible()
 
-    it "caches tags until the buffer changes", ->
+    it "caches tags until the editor changes", ->
       waitsForPromise ->
         atom.workspace.open('sample.js')
 
@@ -78,7 +78,7 @@ describe "SymbolsView", ->
         expect(symbolsView.loading).toBeEmpty()
         expect(symbolsView.list.children('li').length).toBe 2
         expect(symbolsView.generateTags).not.toHaveBeenCalled()
-        editor.getBuffer().emit 'saved'
+        editor.save()
         symbolsView.cancel()
         atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
 
