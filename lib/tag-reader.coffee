@@ -16,7 +16,7 @@ module.exports =
     return tagsFile if fs.isFileSync(tagsFile)
 
   find: (editor, callback) ->
-    if editor.getLastCursor().getScopes().indexOf('source.ruby') isnt -1
+    if editor.getLastCursor().getScopeDescriptor().getScopesArray().indexOf('source.ruby') isnt -1
       # Include ! and ? in word regular expression for ruby files
       range = editor.getLastCursor().getCurrentWordBufferRange(wordRegex: /[\w!?]*/g)
     else
