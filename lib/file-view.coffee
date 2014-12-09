@@ -14,9 +14,9 @@ class FileView extends SymbolsView
       removeFromCache = => delete @cachedTags[editor.getPath()]
       editorSubscriptions = new CompositeDisposable()
       editorSubscriptions.add(editor.onDidChangeGrammar(removeFromCache))
-      editorSubscriptions.add(editor.onDidStopChanging(removeFromCache))
       editorSubscriptions.add(editor.onDidSave(removeFromCache))
       editorSubscriptions.add(editor.onDidChangePath(removeFromCache))
+      editorSubscriptions.add(editor.getBuffer().onDidReload(removeFromCache))
       editorSubscriptions.add(editor.getBuffer().onDidDestroy(removeFromCache))
       editor.onDidDestroy => editorSubscriptions.dispose()
 
