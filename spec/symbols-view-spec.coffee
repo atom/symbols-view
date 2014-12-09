@@ -327,7 +327,7 @@ describe "SymbolsView", ->
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition([8,14])
           spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
-          atom.commands.dispatch(getWorkspaceView(), 'symbols-view:go-to-declaration')
+          atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
 
         waitsFor ->
           SymbolsView::moveToPosition.callCount is 1
