@@ -23,7 +23,7 @@ class GoToView extends SymbolsView
     @deferredFind.promise
 
   populate: ->
-    editor = atom.workspace.getActiveEditor()
+    editor = atom.workspace.getActiveTextEditor()
     return unless editor?
 
     @findTag(editor).then (matches) =>

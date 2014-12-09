@@ -46,7 +46,7 @@ class SymbolsView extends SelectListView
       @openTag(tag)
 
   openTag: (tag) ->
-    if editor = atom.workspace.getActiveEditor()
+    if editor = atom.workspace.getActiveTextEditor()
       previous =
         position: editor.getCursorBufferPosition()
         file: editor.getUri()

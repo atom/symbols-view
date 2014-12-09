@@ -35,9 +35,9 @@ class FileView extends SymbolsView
       @populate(filePath)
       @attach()
 
-  getPath: -> atom.workspace.getActiveEditor()?.getPath()
+  getPath: -> atom.workspace.getActiveTextEditor()?.getPath()
 
-  getScopeName: -> atom.workspace.getActiveEditor()?.getGrammar()?.scopeName
+  getScopeName: -> atom.workspace.getActiveTextEditor()?.getGrammar()?.scopeName
 
   populate: (filePath) ->
     @list.empty()
