@@ -427,7 +427,7 @@ describe "SymbolsView", ->
 
       runs ->
         atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
-        atom.workspace.getActiveTextEditor().setGrammar(atom.syntax.grammarForScopeName('source.js'))
+        atom.workspace.getActiveTextEditor().setGrammar(atom.grammars.grammarForScopeName('source.js'))
         atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
         symbolsView = $(getWorkspaceView()).find('.symbols-view').view()
         expect(symbolsView.loading).toBeVisible()
