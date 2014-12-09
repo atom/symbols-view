@@ -20,8 +20,9 @@ class FileView extends SymbolsView
       editorSubscriptions.add(editor.getBuffer().onDidDestroy(removeFromCache))
       editor.onDidDestroy => editorSubscriptions.dispose()
 
-  beforeRemove: ->
+  destroy: ->
     @editorsSubscription.dispose()
+    super
 
   viewForItem: ({position, name}) ->
     $$ ->
