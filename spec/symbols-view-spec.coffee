@@ -13,7 +13,7 @@ describe "SymbolsView", ->
 
   beforeEach ->
     atom.project.setPaths([temp.mkdirSync('atom-symbols-view-')])
-    fs.copySync(path.join(__dirname, 'fixtures'), atom.project.getPath())
+    fs.copySync(path.join(__dirname, 'fixtures'), atom.project.getPaths()[0])
 
     activationPromise = atom.packages.activatePackage("symbols-view")
     jasmine.attachToDOM(getWorkspaceView())
@@ -248,7 +248,7 @@ describe "SymbolsView", ->
         expect(atom.workspace.getActiveEditor().getCursorBufferPosition()).toEqual [0,4]
 
     it "includes ? and ! characters in ruby symbols", ->
-      atom.project.setPaths([path.join(atom.project.getPath(), 'ruby')])
+      atom.project.setPaths([path.join(atom.project.getPaths()[0], 'ruby')])
 
       waitsForPromise ->
         atom.workspace.open 'file1.rb'
