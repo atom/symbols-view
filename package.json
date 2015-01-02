@@ -17,9 +17,9 @@
   "dependencies": {
     "atom-space-pen-views": "^0.20.0",
     "ctags": "~1.0.1",
-    "fs-plus": "2.x",
+    "fs-plus": "^2.0.0",
     "humanize-plus": "1.4.2",
-    "pathwatcher": "2.x",
+    "pathwatcher": "^2.0.0",
     "q": "~1.0.1",
     "temp": "~0.6.0"
   },
