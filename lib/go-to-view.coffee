@@ -11,7 +11,7 @@ class GoToView extends SymbolsView
     else
       @populate()
 
-  beforeRemove: ->
+  detached: ->
     @deferredFind?.resolve([])
 
   findTag: (editor) ->
