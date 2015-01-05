@@ -15,7 +15,7 @@
     ]
   },
   "dependencies": {
-    "atom-space-pen-views": "^1.0.0",
+    "atom-space-pen-views": "^2.0.0",
     "ctags": "~1.0.1",
     "fs-plus": "^2.0.0",
     "humanize-plus": "1.4.2",
