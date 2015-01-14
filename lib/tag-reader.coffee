@@ -6,13 +6,14 @@ handlerPath = require.resolve('./load-tags-handler')
 
 module.exports =
   getTagsFile: ->
-    tagsFile = atom.project.resolve("tags")
+    directory = atom.project.getDirectories()[0]
+    tagsFile = directory?.resolve("tags")
     return tagsFile if fs.isFileSync(tagsFile)
 
-    tagsFile = atom.project.resolve(".tags")
+    tagsFile = directory?.resolve(".tags")
     return tagsFile if fs.isFileSync(tagsFile)
 
-    tagsFile = atom.project.resolve("TAGS")
+    tagsFile = directory?.resolve("TAGS")
     return tagsFile if fs.isFileSync(tagsFile)
 
   find: (editor, callback) ->

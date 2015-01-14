@@ -6,13 +6,14 @@ SymbolsView = require '../lib/symbols-view'
 TagGenerator = require '../lib/tag-generator'
 
 describe "SymbolsView", ->
-  [symbolsView, activationPromise, editor] = []
+  [symbolsView, activationPromise, editor, directory] = []
 
   getWorkspaceView = -> atom.views.getView(atom.workspace)
   getEditorView = -> atom.views.getView(atom.workspace.getActiveTextEditor())
 
   beforeEach ->
     atom.project.setPaths([temp.mkdirSync('atom-symbols-view-')])
+    directory = atom.project.getDirectories()[0]
     fs.copySync(path.join(__dirname, 'fixtures'), atom.project.getPaths()[0])
 
     activationPromise = atom.packages.activatePackage("symbols-view")
@@ -169,7 +170,7 @@ describe "SymbolsView", ->
       tags = []
 
       waitsForPromise ->
-        sampleJsPath = atom.project.resolve('sample.js')
+        sampleJsPath = directory.resolve('sample.js')
         new TagGenerator(sampleJsPath).generate().then (o) -> tags = o
 
       runs ->
@@ -183,7 +184,7 @@ describe "SymbolsView", ->
       tags = []
 
       waitsForPromise ->
-        sampleJsPath = atom.project.resolve('sample.txt')
+        sampleJsPath = directory.resolve('sample.txt')
         new TagGenerator(sampleJsPath).generate().then (o) -> tags = o
 
       runs ->
@@ -244,7 +245,7 @@ describe "SymbolsView", ->
         SymbolsView::moveToPosition.callCount is 1
 
       runs ->
-        expect(atom.workspace.getActiveTextEditor().getPath()).toBe atom.project.resolve("tagged-duplicate.js")
+        expect(atom.workspace.getActiveTextEditor().getPath()).toBe directory.resolve("tagged-duplicate.js")
         expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [0,4]
 
     it "includes ? and ! characters in ruby symbols", ->
@@ -329,7 +330,7 @@ describe "SymbolsView", ->
 
     describe "when the tag is in a file that doesn't exist", ->
       it "doesn't display the tag", ->
-        fs.removeSync(atom.project.resolve("tagged-duplicate.js"))
+        fs.removeSync(directory.resolve("tagged-duplicate.js"))
 
         waitsForPromise ->
           atom.workspace.open("tagged.js")
@@ -378,7 +379,7 @@ describe "SymbolsView", ->
         expect(symbolsView.error).not.toBeVisible()
         atom.commands.dispatch(getWorkspaceView(), "symbols-view:toggle-project-symbols")
 
-        fs.removeSync(atom.project.resolve('tags'))
+        fs.removeSync(directory.resolve('tags'))
 
       waitsFor ->
         symbolsView.reloadTags
@@ -395,7 +396,7 @@ describe "SymbolsView", ->
     describe "when selecting a tag", ->
       describe "when the file doesn't exist", ->
         beforeEach ->
-          fs.removeSync(atom.project.resolve("tagged.js"))
+          fs.removeSync(directory.resolve("tagged.js"))
 
         it "doesn't open the editor", ->
           atom.commands.dispatch(getWorkspaceView(), "symbols-view:toggle-project-symbols")

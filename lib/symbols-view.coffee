@@ -38,7 +38,7 @@ class SymbolsView extends SelectListView
     @panel.hide()
 
   confirmed : (tag) ->
-    if tag.file and not fs.isFileSync(atom.project.resolve(tag.file))
+    if tag.file and not fs.isFileSync(atom.project.getDirectories()[0]?.resolve(tag.file))
       @setError('Selected file does not exist')
       setTimeout((=> @setError()), 2000)
     else
@@ -49,7 +49,7 @@ class SymbolsView extends SelectListView
     if editor = atom.workspace.getActiveTextEditor()
       previous =
         position: editor.getCursorBufferPosition()
-        file: editor.getUri()
+        file: editor.getURI()
 
     {position} = tag
     position = @getTagLine(tag) unless position
@@ -77,7 +77,7 @@ class SymbolsView extends SelectListView
     pattern = tag.pattern?.replace(/(^^\/\^)|(\$\/$)/g, '').trim()
 
     return unless pattern
-    file = atom.project.resolve(tag.file)
+    file = atom.project.getDirectories()[0]?.resolve(tag.file)
     return unless fs.isFileSync(file)
     for line, index in fs.readFileSync(file, 'utf8').split('\n')
       return new Point(index, 0) if pattern is line.trim()
