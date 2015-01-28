@@ -1,6 +1,6 @@
 {
   "name": "symbols-view",
-  "version": "0.80.0",
+  "version": "0.81.0",
   "main": "./lib/main",
   "description": "Jump to a function/method in the current editor with `cmd-r`.",
   "license": "MIT",
