@@ -30,10 +30,22 @@ class FileView extends SymbolsView
         @div name, class: 'primary-line'
         @div "Line #{position.row + 1}", class: 'secondary-line'
 
+  selectItemView: ->
+    super
+    item = @getSelectedItem()
+    @openTag(item) if item?
+
+  cancelled: ->
+    super
+    if @initialPosition?
+      @moveToPosition(@initialPosition)
+
   toggle: ->
     if @panel.isVisible()
       @cancel()
     else if filePath = @getPath()
+      if editor = atom.workspace.getActiveTextEditor()
+        @initialPosition = editor.getCursorBufferPosition()
       @populate(filePath)
       @attach()
 
