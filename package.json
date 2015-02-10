@@ -20,7 +20,7 @@
     "fs-plus": "^2.0.0",
     "humanize-plus": "1.4.2",
     "pathwatcher": "^3.0.0",
-    "q": "~1.0.1",
+    "q": "^1.1.2",
     "temp": "~0.6.0"
   },
   "repository": "https://github.com/atom/symbols-view",
