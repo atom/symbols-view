@@ -187,7 +187,7 @@ describe "SymbolsView", ->
       atom.workspace.open('sample.js')
 
     runs ->
-      expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [0,0]
+      atom.workspace.getActiveTextEditor().setCursorBufferPosition([0,3])
       expect($(getWorkspaceView()).find('.symbols-view')).not.toExist()
       atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
 
@@ -196,11 +196,10 @@ describe "SymbolsView", ->
 
     runs ->
       symbolsView = $(getWorkspaceView()).find('.symbols-view').view()
-      expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [0,0]
       symbolsView.selectNextItemView()
       expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [1,2]
       symbolsView.cancel()
-      expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [0,0]
+      expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [0,3]
 
   describe "TagGenerator", ->
     it "generates tags for all JavaScript functions", ->

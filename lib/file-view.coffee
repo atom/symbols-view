@@ -38,7 +38,7 @@ class FileView extends SymbolsView
   cancelled: ->
     super
     if @initialPosition?
-      @moveToPosition(@initialPosition)
+      @moveToPosition(@initialPosition, false)
 
   toggle: ->
     if @panel.isVisible()
