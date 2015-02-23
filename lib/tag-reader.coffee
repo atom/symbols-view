@@ -2,21 +2,23 @@
 ctags = require 'ctags'
 fs = require 'fs-plus'
 
-handlerPath = require.resolve('./load-tags-handler')
+handlerPath = require.resolve './load-tags-handler'
 
 module.exports =
   getTagsFile: ->
-    directory = atom.project.getDirectories()[0]
-    tagsFile = directory?.resolve("tags")
+    [directory] = atom.project.getDirectories()
+    return unless directory?
+
+    tagsFile = directory.resolve("tags")
     return tagsFile if fs.isFileSync(tagsFile)
 
-    tagsFile = directory?.resolve("TAGS")
+    tagsFile = directory.resolve("TAGS")
     return tagsFile if fs.isFileSync(tagsFile)
 
-    tagsFile = directory?.resolve(".tags")
+    tagsFile = directory.resolve(".tags")
     return tagsFile if fs.isFileSync(tagsFile)
 
-    tagsFile = directory?.resolve(".TAGS")
+    tagsFile = directory.resolve(".TAGS")
     return tagsFile if fs.isFileSync(tagsFile)
 
   find: (editor, callback) ->
