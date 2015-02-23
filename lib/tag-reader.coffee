@@ -10,10 +10,13 @@ module.exports =
     tagsFile = directory?.resolve("tags")
     return tagsFile if fs.isFileSync(tagsFile)
 
+    tagsFile = directory?.resolve("TAGS")
+    return tagsFile if fs.isFileSync(tagsFile)
+
     tagsFile = directory?.resolve(".tags")
     return tagsFile if fs.isFileSync(tagsFile)
 
-    tagsFile = directory?.resolve("TAGS")
+    tagsFile = directory?.resolve(".TAGS")
     return tagsFile if fs.isFileSync(tagsFile)
 
   find: (editor, callback) ->
