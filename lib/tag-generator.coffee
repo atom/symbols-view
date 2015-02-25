@@ -18,11 +18,6 @@ class TagGenerator
     return 'Cson' if path.extname(@path) in ['.cson', '.gyp']
 
     switch @scopeName
-      # TODO: remove once the language-c and language-objective-c packages
-      # with the new `.cpp` scope names are released
-      when 'source.c++'      then 'C++'
-      when 'source.objc++'   then 'C++'
-
       when 'source.c'        then 'C'
       when 'source.cpp'      then 'C++'
       when 'source.clojure'  then 'Lisp'
