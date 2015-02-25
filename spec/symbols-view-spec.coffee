@@ -19,9 +19,6 @@ describe "SymbolsView", ->
     activationPromise = atom.packages.activatePackage("symbols-view")
     jasmine.attachToDOM(getWorkspaceView())
 
-    waitsForPromise ->
-      atom.packages.activatePackage('language-ruby')
-
   describe "when tags can be generated for a file", ->
     it "initially displays all JavaScript functions with line numbers", ->
       waitsForPromise ->
@@ -251,6 +248,9 @@ describe "SymbolsView", ->
     it "includes ? and ! characters in ruby symbols", ->
       atom.project.setPaths([temp.mkdirSync("atom-symbols-view-ruby-")])
       fs.copySync(path.join(__dirname, 'fixtures', 'ruby'), atom.project.getPaths()[0])
+
+      waitsForPromise ->
+        atom.packages.activatePackage('language-ruby')
 
       waitsForPromise ->
         atom.workspace.open 'file1.rb'
