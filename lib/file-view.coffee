@@ -37,17 +37,28 @@ class FileView extends SymbolsView
 
   cancelled: ->
     super
-    if @initialPosition?
-      @moveToPosition(@initialPosition, false)
+    if @initialState?
+      @deserializeEditorState(@initialState)
 
   toggle: ->
     if @panel.isVisible()
       @cancel()
     else if filePath = @getPath()
       if editor = atom.workspace.getActiveTextEditor()
-        @initialPosition = editor.getCursorBufferPosition()
+        @initialState = @serializeEditorState()
       @populate(filePath)
       @attach()
+
+  serializeEditorState: ->
+    editor = atom.workspace.getActiveTextEditor()
+    bufferRanges: editor?.getSelectedBufferRanges()
+    scrollTop: editor?.getScrollTop()
+
+  deserializeEditorState: (state) ->
+    {bufferRanges, scrollTop} = state
+    editor = atom.workspace.getActiveTextEditor()
+    editor?.setSelectedBufferRanges(bufferRanges)
+    editor?.setScrollTop(scrollTop)
 
   getPath: -> atom.workspace.getActiveTextEditor()?.getPath()
 
