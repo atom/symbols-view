@@ -20,10 +20,11 @@ describe "SymbolsView", ->
     jasmine.attachToDOM(getWorkspaceView())
 
   describe "when tags can be generated for a file", ->
-    it "initially displays all JavaScript functions with line numbers", ->
+    beforeEach ->
       waitsForPromise ->
         atom.workspace.open('sample.js')
 
+    it "initially displays all JavaScript functions with line numbers", ->
       runs ->
         atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
 
@@ -48,9 +49,6 @@ describe "SymbolsView", ->
         expect(symbolsView.error).not.toBeVisible()
 
     it "caches tags until the editor changes", ->
-      waitsForPromise ->
-        atom.workspace.open('sample.js')
-
       runs ->
         editor = atom.workspace.getActiveTextEditor()
         atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
@@ -91,9 +89,6 @@ describe "SymbolsView", ->
         expect(symbolsView.cachedTags).toEqual {}
 
     it "displays an error when no tags match text in mini-editor", ->
-      waitsForPromise ->
-        atom.workspace.open('sample.js')
-
       runs ->
         atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
 
@@ -122,11 +117,25 @@ describe "SymbolsView", ->
         expect(symbolsView.list.children('li').length).toBe 2
         expect(symbolsView.error).not.toBeVisible()
 
+    it "moves the cursor to the selected function", ->
+      runs ->
+        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [0,0]
+        expect($(getWorkspaceView()).find('.symbols-view')).not.toExist()
+        atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
+
+      waitsFor ->
+        $(getWorkspaceView()).find('.symbols-view').find('li').length
+
+      runs ->
+        $(getWorkspaceView()).find('.symbols-view').find('li:eq(1)').mousedown().mouseup()
+        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [1,2]
+
   describe "when tags can't be generated for a file", ->
-    it "shows an error message when no matching tags are found", ->
+    beforeEach ->
       waitsForPromise ->
         atom.workspace.open('sample.txt')
 
+    it "shows an error message when no matching tags are found", ->
       runs ->
         atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
 
@@ -145,22 +154,6 @@ describe "SymbolsView", ->
         expect(symbolsView.error).toBeVisible()
         expect(symbolsView.error.text().length).toBeGreaterThan 0
         expect(symbolsView.loadingArea).not.toBeVisible()
-
-  it "moves the cursor to the selected function", ->
-    waitsForPromise ->
-      atom.workspace.open('sample.js')
-
-    runs ->
-      expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [0,0]
-      expect($(getWorkspaceView()).find('.symbols-view')).not.toExist()
-      atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
-
-    waitsFor ->
-      $(getWorkspaceView()).find('.symbols-view').find('li').length
-
-    runs ->
-      $(getWorkspaceView()).find('.symbols-view').find('li:eq(1)').mousedown().mouseup()
-      expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [1,2]
 
   describe "TagGenerator", ->
     it "generates tags for all JavaScript functions", ->
