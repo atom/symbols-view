@@ -8,11 +8,12 @@ class ProjectView extends SymbolsView
   initialize: ->
     super
     @reloadTags = true
+    @tagsFiles = []
     @setMaxItems(10)
 
   destroy: ->
     @stopTask()
-    @unwatchTagsFile()
+    @unwatchTagsFiles()
     super
 
   toggle: ->
@@ -56,16 +57,20 @@ class ProjectView extends SymbolsView
       @reloadTags = @tags.length is 0
       @setItems(@tags)
 
-    @watchTagsFile()
+    @watchTagsFiles()
 
-  watchTagsFile: ->
-    @unwatchTagsFile()
+  watchTagsFiles: ->
+    @unwatchTagsFiles()
 
-    if tagsFilePath = TagReader.getTagsFile()
-      @tagsFile = new File(tagsFilePath)
-      @tagsFile.on 'moved removed contents-changed', =>
-        @reloadTags = true
-        @watchTagsFile()
+    @tagsFiles = []
+    for projectPath in atom.project.getPaths()
+      if tagsFilePath = TagReader.getTagsFile(projectPath)
+        tagsFile = new File(tagsFilePath)
+        tagsFile.on 'moved removed contents-changed', =>
+          @reloadTags = true
+          @watchTagsFiles()
+        @tagsFiles.push(tagsFile)
 
-  unwatchTagsFile: ->
-    @tagsFile?.off()
+  unwatchTagsFiles: ->
+    tagsFile.off() for tagsFile in @tagsFiles
+    @tagsFiles = []

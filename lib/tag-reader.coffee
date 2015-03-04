@@ -1,24 +1,25 @@
 {Task} = require 'atom'
 ctags = require 'ctags'
 fs = require 'fs-plus'
+path = require 'path'
+async = require "async"
 
 handlerPath = require.resolve './load-tags-handler'
 
 module.exports =
-  getTagsFile: ->
-    [directory] = atom.project.getDirectories()
-    return unless directory?
+  getTagsFile: (directoryPath) ->
+    return unless directoryPath?
 
-    tagsFile = directory.resolve("tags")
+    tagsFile = path.join(directoryPath, "tags")
     return tagsFile if fs.isFileSync(tagsFile)
 
-    tagsFile = directory.resolve("TAGS")
+    tagsFile = path.join(directoryPath, "TAGS")
     return tagsFile if fs.isFileSync(tagsFile)
 
-    tagsFile = directory.resolve(".tags")
+    tagsFile = path.join(directoryPath, ".tags")
     return tagsFile if fs.isFileSync(tagsFile)
 
-    tagsFile = directory.resolve(".TAGS")
+    tagsFile = path.join(directoryPath, ".TAGS")
     return tagsFile if fs.isFileSync(tagsFile)
 
   find: (editor, callback) ->
@@ -27,18 +28,28 @@ module.exports =
       range = editor.getLastCursor().getCurrentWordBufferRange(wordRegex: /[\w!?]*/g)
     else
       range = editor.getLastCursor().getCurrentWordBufferRange()
+
     symbol = editor.getTextInRange(range)
 
-    tagsFile = @getTagsFile()
+    unless symbol?.length > 0
+      return process.nextTick -> callback(null, [])
 
-    if symbol?.length > 0 and tagsFile
-      ctags.findTags(tagsFile, symbol, callback)
-    else
-      process.nextTick -> callback(null, [])
+    allTags = []
+
+    async.each(
+      atom.project.getPaths(),
+      (projectPath, done) =>
+        tagsFile = @getTagsFile(projectPath)
+        return done() unless tagsFile?
+        ctags.findTags tagsFile, symbol, (err, tags=[]) ->
+          tag.directory = projectPath for tag in tags
+          allTags.push(tags...)
+          done(err)
+      (err) -> callback(err, allTags)
+    )
 
   getAllTags: (callback) ->
     projectTags = []
-    [projectPath] = atom.project.getPaths()
-    task = Task.once handlerPath, projectPath, -> callback(projectTags)
-    task.on 'tags', (paths) -> projectTags.push(paths...)
+    task = Task.once handlerPath, atom.project.getPaths(), -> callback(projectTags)
+    task.on 'tags', (tags) -> projectTags.push(tags...)
     task
