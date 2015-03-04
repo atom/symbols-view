@@ -2,6 +2,7 @@
 humanize = require 'humanize-plus'
 SymbolsView = require './symbols-view'
 TagReader = require './tag-reader'
+getTagsFile = require './get-tags-file'
 
 module.exports =
 class ProjectView extends SymbolsView
@@ -64,7 +65,7 @@ class ProjectView extends SymbolsView
 
     @tagsFiles = []
     for projectPath in atom.project.getPaths()
-      if tagsFilePath = TagReader.getTagsFile(projectPath)
+      if tagsFilePath = getTagsFile(projectPath)
         tagsFile = new File(tagsFilePath)
         tagsFile.on 'moved removed contents-changed', =>
           @reloadTags = true
