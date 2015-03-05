@@ -1,3 +1,4 @@
+{CompositeDisposable} = require 'atom'
 {File} = require 'pathwatcher'
 humanize = require 'humanize-plus'
 SymbolsView = require './symbols-view'
@@ -9,7 +10,6 @@ class ProjectView extends SymbolsView
   initialize: ->
     super
     @reloadTags = true
-    @tagsFiles = []
     @setMaxItems(10)
 
   destroy: ->
@@ -63,15 +63,20 @@ class ProjectView extends SymbolsView
   watchTagsFiles: ->
     @unwatchTagsFiles()
 
-    @tagsFiles = []
+    @tagsFileSubscriptions = new CompositeDisposable()
+    reloadTags = =>
+      @reloadTags = true
+      @watchTagsFiles()
+
     for projectPath in atom.project.getPaths()
       if tagsFilePath = getTagsFile(projectPath)
         tagsFile = new File(tagsFilePath)
-        tagsFile.on 'moved removed contents-changed', =>
-          @reloadTags = true
-          @watchTagsFiles()
-        @tagsFiles.push(tagsFile)
+        @tagsFileSubscriptions.add(tagsFile.onDidChange(reloadTags))
+        @tagsFileSubscriptions.add(tagsFile.onDidDelete(reloadTags))
+        @tagsFileSubscriptions.add(tagsFile.onDidRename(reloadTags))
+
+    return
 
   unwatchTagsFiles: ->
-    tagsFile.off() for tagsFile in @tagsFiles
-    @tagsFiles = []
+    @tagFileSubscriptions?.dispose()
+    @tagFileSubscriptions = null
