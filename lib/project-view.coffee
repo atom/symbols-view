@@ -78,5 +78,5 @@ class ProjectView extends SymbolsView
     return
 
   unwatchTagsFiles: ->
-    @tagFileSubscriptions?.dispose()
-    @tagFileSubscriptions = null
+    @tagsFileSubscriptions?.dispose()
+    @tagsFileSubscriptions = null
