@@ -22,12 +22,12 @@ module.exports =
 
     async.each(
       atom.project.getPaths(),
-      (projectPath, done) =>
+      (projectPath, done) ->
         tagsFile = getTagsFile(projectPath)
         return done() unless tagsFile?
         ctags.findTags tagsFile, symbol, (err, tags=[]) ->
           tag.directory = projectPath for tag in tags
-          allTags.push(tags...)
+          allTags = allTags.concat(tags)
           done(err)
       (err) -> callback(err, allTags)
     )
