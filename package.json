@@ -20,7 +20,7 @@
     "ctags": "^2.0.0",
     "fs-plus": "^2.0.0",
     "humanize-plus": "1.4.2",
-    "pathwatcher": "^3.0.0",
+    "pathwatcher": "^4.3",
     "q": "^1.1.2",
     "temp": "~0.8.1"
   },
