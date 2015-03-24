@@ -59,8 +59,7 @@ class TagGenerator
       for line in lines.split('\n')
         if tag = @parseTagLine(line)
           tags[tag.position.row] ?= tag
-    stderr = (lines) ->
-      return
+    stderr = ->
     exit = ->
       tags = (tag for row, tag of tags)
       deferred.resolve(tags)
