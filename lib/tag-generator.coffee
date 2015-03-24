@@ -59,10 +59,12 @@ class TagGenerator
       for line in lines.split('\n')
         if tag = @parseTagLine(line)
           tags[tag.position.row] ?= tag
+    stderr = (lines) ->
+      return
     exit = ->
       tags = (tag for row, tag of tags)
       deferred.resolve(tags)
 
-    new BufferedProcess({command, args, stdout, exit})
+    new BufferedProcess({command, args, stdout, stderr, exit})
 
     deferred.promise
