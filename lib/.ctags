@@ -22,6 +22,7 @@
 --langmap=Css:+.scss
 --regex-Css=/^[ \t]*(.+)[ \t]*\{/\1/f,function/
 --regex-Css=/^[ \t]*(.+)[ \t]*,[ \t]*$/\1/f,function/
+--regex-Css=/^[ \t]*[@$]([a-zA-Z$_][-a-zA-Z$_0-9]*)[ \t]*:/\1/f,function/
 
 --langdef=Sass
 --langmap=Sass:.sass
