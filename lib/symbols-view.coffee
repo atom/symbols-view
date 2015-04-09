@@ -39,7 +39,7 @@ class SymbolsView extends SelectListView
   cancelled: ->
     @panel.hide()
 
-  confirmed : (tag) ->
+  confirmed: (tag) ->
     if tag.file and not fs.isFileSync(path.join(tag.directory, tag.file))
       @setError('Selected file does not exist')
       setTimeout((=> @setError()), 2000)

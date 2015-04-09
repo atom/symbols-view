@@ -27,5 +27,8 @@
   "repository": "https://github.com/atom/symbols-view",
   "engines": {
     "atom": "*"
+  },
+  "devDependencies": {
+    "coffeelint": "^1.9.3"
   }
 }
