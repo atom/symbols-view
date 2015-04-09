@@ -6,6 +6,14 @@ module.exports =
 class TagGenerator
   constructor: (@path, @scopeName) ->
 
+  getPackageRoot: ->
+    packageRoot = path.resolve(__dirname, '..')
+    {resourcePath} = atom.getLoadSettings()
+    if path.extname(resourcePath) is '.asar'
+      if packageRoot.indexOf(resourcePath) is 0
+        packageRoot = path.join("#{resourcePath}.unpacked", 'node_modules', 'symbols-view')
+    packageRoot
+
   parseTagLine: (line) ->
     sections = line.split('\t')
     if sections.length > 3
@@ -45,8 +53,9 @@ class TagGenerator
   generate: ->
     deferred = Q.defer()
     tags = {}
-    command = path.resolve(__dirname, '..', 'vendor', "ctags-#{process.platform}")
-    defaultCtagsFile = require.resolve('./.ctags')
+    packageRoot = @getPackageRoot()
+    command = path.join(packageRoot, 'vendor', "ctags-#{process.platform}")
+    defaultCtagsFile = path.join(packageRoot, 'lib', '.ctags')
     args = ["--options=#{defaultCtagsFile}", '--fields=+KS']
 
     if atom.config.get('symbols-view.useEditorGrammarAsCtagsLanguage')
