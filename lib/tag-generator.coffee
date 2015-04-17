@@ -6,6 +6,14 @@ module.exports =
 class TagGenerator
   constructor: (@path, @scopeName) ->
 
+  getPackageRoot: ->
+    packageRoot = path.resolve(__dirname, '..')
+    {resourcePath} = atom.getLoadSettings()
+    if path.extname(resourcePath) is '.asar'
+      if packageRoot.indexOf(resourcePath) is 0
+        packageRoot = path.join("#{resourcePath}.unpacked", 'node_modules', 'symbols-view')
+    packageRoot
+
   parseTagLine: (line) ->
     sections = line.split('\t')
     if sections.length > 3
@@ -18,11 +26,6 @@ class TagGenerator
     return 'Cson' if path.extname(@path) in ['.cson', '.gyp']
 
     switch @scopeName
-      # TODO: remove once the language-c and language-objective-c packages
-      # with the new `.cpp` scope names are released
-      when 'source.c++'      then 'C++'
-      when 'source.objc++'   then 'C++'
-
       when 'source.c'        then 'C'
       when 'source.cpp'      then 'C++'
       when 'source.clojure'  then 'Lisp'
@@ -50,8 +53,9 @@ class TagGenerator
   generate: ->
     deferred = Q.defer()
     tags = {}
-    command = path.resolve(__dirname, '..', 'vendor', "ctags-#{process.platform}")
-    defaultCtagsFile = require.resolve('./.ctags')
+    packageRoot = @getPackageRoot()
+    command = path.join(packageRoot, 'vendor', "ctags-#{process.platform}")
+    defaultCtagsFile = path.join(packageRoot, 'lib', '.ctags')
     args = ["--options=#{defaultCtagsFile}", '--fields=+KS']
 
     if atom.config.get('symbols-view.useEditorGrammarAsCtagsLanguage')
@@ -64,10 +68,11 @@ class TagGenerator
       for line in lines.split('\n')
         if tag = @parseTagLine(line)
           tags[tag.position.row] ?= tag
+    stderr = ->
     exit = ->
       tags = (tag for row, tag of tags)
       deferred.resolve(tags)
 
-    new BufferedProcess({command, args, stdout, exit})
+    new BufferedProcess({command, args, stdout, stderr, exit})
 
     deferred.promise

@@ -1,39 +1,39 @@
 {Task} = require 'atom'
 ctags = require 'ctags'
-fs = require 'fs-plus'
+async = require 'async'
+getTagsFile = require "./get-tags-file"
 
-handlerPath = require.resolve('./load-tags-handler')
+handlerPath = require.resolve './load-tags-handler'
 
 module.exports =
-  getTagsFile: ->
-    directory = atom.project.getDirectories()[0]
-    tagsFile = directory?.resolve("tags")
-    return tagsFile if fs.isFileSync(tagsFile)
-
-    tagsFile = directory?.resolve(".tags")
-    return tagsFile if fs.isFileSync(tagsFile)
-
-    tagsFile = directory?.resolve("TAGS")
-    return tagsFile if fs.isFileSync(tagsFile)
-
   find: (editor, callback) ->
     if editor.getLastCursor().getScopeDescriptor().getScopesArray().indexOf('source.ruby') isnt -1
       # Include ! and ? in word regular expression for ruby files
       range = editor.getLastCursor().getCurrentWordBufferRange(wordRegex: /[\w!?]*/g)
     else
       range = editor.getLastCursor().getCurrentWordBufferRange()
+
     symbol = editor.getTextInRange(range)
 
-    tagsFile = @getTagsFile()
+    unless symbol?.length > 0
+      return process.nextTick -> callback(null, [])
 
-    if symbol?.length > 0 and tagsFile
-      ctags.findTags(tagsFile, symbol, callback)
-    else
-      process.nextTick -> callback(null, [])
+    allTags = []
+
+    async.each(
+      atom.project.getPaths(),
+      (projectPath, done) ->
+        tagsFile = getTagsFile(projectPath)
+        return done() unless tagsFile?
+        ctags.findTags tagsFile, symbol, (err, tags=[]) ->
+          tag.directory = projectPath for tag in tags
+          allTags = allTags.concat(tags)
+          done(err)
+      (err) -> callback(err, allTags)
+    )
 
   getAllTags: (callback) ->
     projectTags = []
-    [projectPath] = atom.project.getPaths()
-    task = Task.once handlerPath, projectPath, -> callback(projectTags)
-    task.on 'tags', (paths) -> projectTags.push(paths...)
+    task = Task.once handlerPath, atom.project.getPaths(), -> callback(projectTags)
+    task.on 'tags', (tags) -> projectTags.push(tags...)
     task

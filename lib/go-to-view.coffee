@@ -31,10 +31,8 @@ class GoToView extends SymbolsView
       for match in matches
         position = @getTagLine(match)
         continue unless position
-        tags.push
-          file: match.file
-          name: path.basename(match.file)
-          position: position
+        match.name = path.basename(match.file)
+        tags.push(match)
 
       if tags.length is 1
         @openTag(tags[0])

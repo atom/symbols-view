@@ -19,7 +19,9 @@ class SymbolsView extends SelectListView
 
   getFilterKey: -> 'name'
 
-  viewForItem: ({position, name, file}) ->
+  viewForItem: ({position, name, file, directory}) ->
+    if atom.project.getPaths().length > 1
+      file = path.join(path.basename(directory), file)
     $$ ->
       @li class: 'two-lines', =>
         if position?
@@ -42,7 +44,7 @@ class SymbolsView extends SelectListView
     @openTag(tag)
 
   openTag: (tag) ->
-    if tag.file and not fs.isFileSync(atom.project.getDirectories()[0]?.resolve(tag.file))
+    if tag.file and not fs.isFileSync(path.join(tag.directory, tag.file))
       @setError('Selected file does not exist')
       setTimeout((=> @setError()), 2000)
     else
@@ -51,13 +53,13 @@ class SymbolsView extends SelectListView
           position: editor.getCursorBufferPosition()
           file: editor.getURI()
 
-      {position} = tag
-      position = @getTagLine(tag) unless position
-      if tag.file
-        atom.workspace.open(tag.file).done =>
-          @moveToPosition(position) if position
-      else if position and not (previous.position.isEqual(position))
-        @moveToPosition(position)
+    {position} = tag
+    position = @getTagLine(tag) unless position
+    if tag.file
+      atom.workspace.open(path.join(tag.directory, tag.file)).done =>
+        @moveToPosition(position) if position
+    else if position and not (previous.position.isEqual(position))
+      @moveToPosition(position)
 
       @stack.push(previous)
 
@@ -77,7 +79,7 @@ class SymbolsView extends SelectListView
     pattern = tag.pattern?.replace(/(^^\/\^)|(\$\/$)/g, '').trim()
 
     return unless pattern
-    file = atom.project.getDirectories()[0]?.resolve(tag.file)
+    file = path.join(tag.directory, tag.file)
     return unless fs.isFileSync(file)
     for line, index in fs.readFileSync(file, 'utf8').split('\n')
       return new Point(index, 0) if pattern is line.trim()

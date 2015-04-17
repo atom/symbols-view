@@ -46,7 +46,7 @@ module.exports =
       @fileView = new FileView(@stack)
     @fileView
 
-  createProjectView:  ->
+  createProjectView: ->
     unless @projectView?
       ProjectView  = require './project-view'
       @projectView = new ProjectView(@stack)
