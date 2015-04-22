@@ -12,6 +12,6 @@
 ]
 
 'context-menu':
-  'atom-text-editor': [
+  'atom-text-editor:not([mini])': [
     { 'label': 'Go to Declaration', 'command': 'symbols-view:go-to-declaration' }
   ]
