@@ -39,3 +39,6 @@ class GoToView extends SymbolsView
       else if tags.length > 0
         @setItems(tags)
         @attach()
+
+  dispose: ->
+    @destroy()

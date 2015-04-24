@@ -83,3 +83,6 @@ class SymbolsView extends SelectListView
     return unless fs.isFileSync(file)
     for line, index in fs.readFileSync(file, 'utf8').split('\n')
       return new Point(index, 0) if pattern is line.trim()
+
+  dispose: ->
+    @destroy()

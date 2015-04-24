@@ -1,8 +1,30 @@
+{CompositeDisposable} = require 'atom'
+
 module.exports =
   config:
+    enableBuiltinProvider:
+      title: 'Enable Built-In Provider'
+      description: 'The package comes with a built-in Ctags symbols provider.'
+      type: 'boolean'
+      default: true
+      order: 1
+    scopeBlacklist:
+      title: 'Scope Blacklist'
+      description: 'Symbols will not be provided for scope selectors matching this list (use commas to separate items). See: https://atom.io/docs/latest/behind-atom-scoped-settings-scopes-and-scope-descriptors'
+      type: 'array'
+      default: []
+      items:
+        type: 'string'
+      order: 2
     useEditorGrammarAsCtagsLanguage:
+      title: 'Use The Editor\'s Grammar As The Ctags Language'
+      description: 'If disabled, Ctags will try to determine the language itself.'
       default: true
       type: 'boolean'
+      order: 3
+
+  providerManager: null
+  subscriptions: null
 
   activate: ->
     @stack = []
@@ -63,3 +85,20 @@ module.exports =
       GoBackView = require './go-back-view'
       @goBackView = new GoBackView(@stack)
     @goBackView
+
+  getProviderManager: ->
+    unless @providerManager?
+      ProviderManager = require './provider-manager'
+      @providerManager = new ProviderManager()
+      @subscriptions.add(@providerManager)
+    @providerManager
+
+  # 0.1.0 API
+  # providers - either a provider or a list of providers
+  consumeProvider: (providers, apiVersion='0.1.0') ->
+    providers = [providers] if providers? and not Array.isArray(providers)
+    return unless providers?.length > 0
+    registrations = new CompositeDisposable
+    for provider in providers
+      registrations.add @getProviderManager().registerProvider(provider, apiVersion)
+    registrations

@@ -26,9 +26,16 @@
   },
   "repository": "https://github.com/atom/symbols-view",
   "engines": {
-    "atom": "*"
+    "atom": ">=0.194.0 <2.0.0"
   },
   "devDependencies": {
     "coffeelint": "^1.9.3"
+  },
+  "consumedServices": {
+    "autocomplete.provider": {
+      "versions": {
+        "0.1.0": "consumeProvider"
+      }
+    }
   }
 }
