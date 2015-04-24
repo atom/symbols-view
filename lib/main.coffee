@@ -27,63 +27,52 @@ module.exports =
   subscriptions: null
 
   activate: ->
+    @subscriptions = new CompositeDisposable
     @stack = []
 
-    @workspaceSubscription = atom.commands.add 'atom-workspace',
-      'symbols-view:toggle-project-symbols': => @createProjectView().toggle()
+    @subscriptions.add atom.commands.add 'atom-workspace',
+      'symbols-view:toggle-project-symbols': => @getProjectView().toggle()
 
-    @editorSubscription = atom.commands.add 'atom-text-editor',
-      'symbols-view:toggle-file-symbols': => @createFileView().toggle()
-      'symbols-view:go-to-declaration': => @createGoToView().toggle()
-      'symbols-view:return-from-declaration': => @createGoBackView().toggle()
+    @subscriptions.add atom.commands.add 'atom-text-editor',
+      'symbols-view:toggle-file-symbols': => @getFileView().toggle()
+      'symbols-view:go-to-declaration': => @getGoToView().toggle()
+      'symbols-view:return-from-declaration': => @getGoBackView().toggle()
 
   deactivate: ->
-    if @fileView?
-      @fileView.destroy()
-      @fileView = null
+    @subscriptions.dispose()
+    @subscriptions = null
+    @providerManager = null
+    @fileView = null
+    @projectView = null
+    @goToView = null
+    @goBackView = null
 
-    if @projectView?
-      @projectView.destroy()
-      @projectView = null
-
-    if @goToView?
-      @goToView.destroy()
-      @goToView = null
-
-    if @goBackView?
-      @goBackView.destroy()
-      @goBackView = null
-
-    if @workspaceSubscription?
-      @workspaceSubscription.dispose()
-      @workspaceSubscription = null
-
-    if @editorSubscription?
-      @editorSubscription.dispose()
-      @editorSubscription = null
-
-  createFileView: ->
+  getFileView: ->
     unless @fileView?
       FileView  = require './file-view'
       @fileView = new FileView(@stack)
+      @subscriptions.add(@fileView)
     @fileView
 
-  createProjectView: ->
+  getProjectView: ->
     unless @projectView?
       ProjectView  = require './project-view'
       @projectView = new ProjectView(@stack)
+      @subscriptions.add(@projectView)
     @projectView
 
-  createGoToView: ->
+  getGoToView: ->
     unless @goToView?
       GoToView = require './go-to-view'
       @goToView = new GoToView(@stack)
+      @subscriptions.add(@goToView)
     @goToView
 
-  createGoBackView: ->
+  getGoBackView: ->
     unless @goBackView?
       GoBackView = require './go-back-view'
       @goBackView = new GoBackView(@stack)
+      @subscriptions.add(@goBackView)
     @goBackView
 
   getProviderManager: ->
