@@ -23,64 +23,30 @@ module.exports =
       type: 'boolean'
       order: 3
 
-  providerManager: null
   subscriptions: null
+  symbolsManager: null
 
   activate: ->
     @subscriptions = new CompositeDisposable
-    @stack = []
-
     @subscriptions.add atom.commands.add 'atom-workspace',
-      'symbols-view:toggle-project-symbols': => @getProjectView().toggle()
+      'symbols-view:toggle-project-symbols': => @getSymbolsManager().getProjectView().toggle()
 
     @subscriptions.add atom.commands.add 'atom-text-editor',
-      'symbols-view:toggle-file-symbols': => @getFileView().toggle()
-      'symbols-view:go-to-declaration': => @getGoToView().toggle()
-      'symbols-view:return-from-declaration': => @getGoBackView().toggle()
+      'symbols-view:toggle-file-symbols': => @getSymbolsManager().getFileView().toggle()
+      'symbols-view:go-to-declaration': => @getSymbolsManager().getGoToView().toggle()
+      'symbols-view:return-from-declaration': => @getSymbolsManager().getGoBackView().toggle()
 
   deactivate: ->
     @subscriptions.dispose()
     @subscriptions = null
-    @providerManager = null
-    @fileView = null
-    @projectView = null
-    @goToView = null
-    @goBackView = null
+    @symbolsManager = null
 
-  getFileView: ->
-    unless @fileView?
-      FileView  = require './file-view'
-      @fileView = new FileView(@stack)
-      @subscriptions.add(@fileView)
-    @fileView
-
-  getProjectView: ->
-    unless @projectView?
-      ProjectView  = require './project-view'
-      @projectView = new ProjectView(@stack)
-      @subscriptions.add(@projectView)
-    @projectView
-
-  getGoToView: ->
-    unless @goToView?
-      GoToView = require './go-to-view'
-      @goToView = new GoToView(@stack)
-      @subscriptions.add(@goToView)
-    @goToView
-
-  getGoBackView: ->
-    unless @goBackView?
-      GoBackView = require './go-back-view'
-      @goBackView = new GoBackView(@stack)
-      @subscriptions.add(@goBackView)
-    @goBackView
-
-  getProviderManager: ->
-    unless @providerManager?
-      ProviderManager = require './provider-manager'
-      @providerManager = new ProviderManager()
-      @subscriptions.add(@providerManager)
-    @providerManager
+  getSymbolsManager: ->
+    unless @symbolsManager?
+      SymbolsManager = require './symbols-manager'
+      @symbolsManager = new SymbolsManager()
+      @subscriptions.add(@symbolsManager)
+    @symbolsManager
 
   # 0.1.0 API
   # providers - either a provider or a list of providers
@@ -89,5 +55,5 @@ module.exports =
     return unless providers?.length > 0
     registrations = new CompositeDisposable
     for provider in providers
-      registrations.add @getProviderManager().registerProvider(provider, apiVersion)
+      registrations.add(@getSymbolsManager().providerManager.registerProvider(provider, apiVersion))
     registrations
