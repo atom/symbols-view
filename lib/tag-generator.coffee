@@ -49,6 +49,7 @@ class TagGenerator
       when 'source.yaml'     then 'Yaml'
       when 'text.html'       then 'Html'
       when 'text.html.php'   then 'Php'
+      when 'source.elixir'   then 'Elixir'
 
   generate: ->
     deferred = Q.defer()
