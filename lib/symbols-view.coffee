@@ -2,6 +2,7 @@ path = require 'path'
 {Point} = require 'atom'
 {$$, SelectListView} = require 'atom-space-pen-views'
 fs = require 'fs-plus'
+{match} = require 'fuzzaldrin'
 
 module.exports =
 class SymbolsView extends SelectListView
