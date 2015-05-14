@@ -2,6 +2,7 @@
 {CompositeDisposable} = require 'atom'
 SymbolsView = require './symbols-view'
 TagGenerator = require './tag-generator'
+{match} = require 'fuzzaldrin'
 
 module.exports =
 class FileView extends SymbolsView
@@ -25,9 +26,33 @@ class FileView extends SymbolsView
     super
 
   viewForItem: ({position, name}) ->
+    # Style matched characters in search results
+    filterQuery = @getFilterQuery()
+    matches = match(name, filterQuery)
+
     $$ ->
+      highlighter = (name, matches, offsetIndex) =>
+        lastIndex = 0
+        matchedChars = [] # Build up a set of matched chars to be more semantic
+
+        for matchIndex in matches
+          matchIndex -= offsetIndex
+          continue if matchIndex < 0 # If marking up the basename, omit name matches
+          unmatched = name.substring(lastIndex, matchIndex)
+          if unmatched
+            @span matchedChars.join(''), class: 'character-match' if matchedChars.length
+            matchedChars = []
+            @text unmatched
+          matchedChars.push(name[matchIndex])
+          lastIndex = matchIndex + 1
+
+        @span matchedChars.join(''), class: 'character-match' if matchedChars.length
+
+        # Remaining characters are plain text
+        @text name.substring(lastIndex)
+
       @li class: 'two-lines', =>
-        @div name, class: 'primary-line'
+        @div class: 'primary-line', -> highlighter(name, matches, 0)
         @div "Line #{position.row + 1}", class: 'secondary-line'
 
   toggle: ->
