@@ -20,14 +20,39 @@ class SymbolsView extends SelectListView
   getFilterKey: -> 'name'
 
   viewForItem: ({position, name, file, directory}) ->
+    # Style matched characters in search results
+    filterQuery = @getFilterQuery()
+    matches = match(name, filterQuery)
+
     if atom.project.getPaths().length > 1
       file = path.join(path.basename(directory), file)
+
     $$ ->
+      highlighter = (name, matches, offsetIndex) =>
+        lastIndex = 0
+        matchedChars = [] # Build up a set of matched chars to be more semantic
+
+        for matchIndex in matches
+          matchIndex -= offsetIndex
+          continue if matchIndex < 0 # If marking up the basename, omit name matches
+          unmatched = name.substring(lastIndex, matchIndex)
+          if unmatched
+            @span matchedChars.join(''), class: 'character-match' if matchedChars.length
+            matchedChars = []
+            @text unmatched
+          matchedChars.push(name[matchIndex])
+          lastIndex = matchIndex + 1
+
+        @span matchedChars.join(''), class: 'character-match' if matchedChars.length
+
+        # Remaining characters are plain text
+        @text name.substring(lastIndex)
+
       @li class: 'two-lines', =>
         if position?
           @div "#{name}:#{position.row + 1}", class: 'primary-line'
         else
-          @div name, class: 'primary-line'
+          @div class: 'primary-line', -> highlighter(name, matches, 0)
         @div file, class: 'secondary-line'
 
   getEmptyMessage: (itemCount) ->
