@@ -9,6 +9,26 @@ class SymbolsView extends SelectListView
   @activate: ->
     new SymbolsView
 
+  @highlightMatches: (context, name, matches, offsetIndex=0) ->
+    lastIndex = 0
+    matchedChars = [] # Build up a set of matched chars to be more semantic
+
+    for matchIndex in matches
+      matchIndex -= offsetIndex
+      continue if matchIndex < 0 # If marking up the basename, omit name matches
+      unmatched = name.substring(lastIndex, matchIndex)
+      if unmatched
+        context.span matchedChars.join(''), class: 'character-match' if matchedChars.length
+        matchedChars = []
+        context.text unmatched
+      matchedChars.push(name[matchIndex])
+      lastIndex = matchIndex + 1
+
+    context.span matchedChars.join(''), class: 'character-match' if matchedChars.length
+
+    # Remaining characters are plain text
+    context.text name.substring(lastIndex)
+
   initialize: (@stack) ->
     super
     @panel = atom.workspace.addModalPanel(item: this, visible: false)
@@ -29,31 +49,11 @@ class SymbolsView extends SelectListView
       file = path.join(path.basename(directory), file)
 
     $$ ->
-      highlighter = (name, matches, offsetIndex) =>
-        lastIndex = 0
-        matchedChars = [] # Build up a set of matched chars to be more semantic
-
-        for matchIndex in matches
-          matchIndex -= offsetIndex
-          continue if matchIndex < 0 # If marking up the basename, omit name matches
-          unmatched = name.substring(lastIndex, matchIndex)
-          if unmatched
-            @span matchedChars.join(''), class: 'character-match' if matchedChars.length
-            matchedChars = []
-            @text unmatched
-          matchedChars.push(name[matchIndex])
-          lastIndex = matchIndex + 1
-
-        @span matchedChars.join(''), class: 'character-match' if matchedChars.length
-
-        # Remaining characters are plain text
-        @text name.substring(lastIndex)
-
       @li class: 'two-lines', =>
         if position?
           @div "#{name}:#{position.row + 1}", class: 'primary-line'
         else
-          @div class: 'primary-line', -> highlighter(name, matches, 0)
+          @div class: 'primary-line', => SymbolsView.highlightMatches(this, name, matches)
         @div file, class: 'secondary-line'
 
   getEmptyMessage: (itemCount) ->

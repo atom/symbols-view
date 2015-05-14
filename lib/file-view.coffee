@@ -31,28 +31,8 @@ class FileView extends SymbolsView
     matches = match(name, filterQuery)
 
     $$ ->
-      highlighter = (name, matches, offsetIndex) =>
-        lastIndex = 0
-        matchedChars = [] # Build up a set of matched chars to be more semantic
-
-        for matchIndex in matches
-          matchIndex -= offsetIndex
-          continue if matchIndex < 0 # If marking up the basename, omit name matches
-          unmatched = name.substring(lastIndex, matchIndex)
-          if unmatched
-            @span matchedChars.join(''), class: 'character-match' if matchedChars.length
-            matchedChars = []
-            @text unmatched
-          matchedChars.push(name[matchIndex])
-          lastIndex = matchIndex + 1
-
-        @span matchedChars.join(''), class: 'character-match' if matchedChars.length
-
-        # Remaining characters are plain text
-        @text name.substring(lastIndex)
-
       @li class: 'two-lines', =>
-        @div class: 'primary-line', -> highlighter(name, matches, 0)
+        @div class: 'primary-line', => FileView.highlightMatches(this, name, matches)
         @div "Line #{position.row + 1}", class: 'secondary-line'
 
   toggle: ->
