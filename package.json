@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "async": "^0.2.6",
+    "atom-slick": "^2.0.0",
     "atom-space-pen-views": "^2.0.0",
     "ctags": "^2.0.0",
     "fs-plus": "^2.0.0",
@@ -23,13 +24,21 @@
     "humanize-plus": "1.4.2",
     "pathwatcher": "^4.3",
     "q": "^1.1.2",
+    "selector-kit": "^0.1",
     "temp": "~0.8.1"
   },
   "repository": "https://github.com/atom/symbols-view",
   "engines": {
-    "atom": "*"
+    "atom": ">=0.194.0 <2.0.0"
   },
   "devDependencies": {
     "coffeelint": "^1.9.3"
+  },
+  "consumedServices": {
+    "symbols.provider": {
+      "versions": {
+        "0.1.0": "consumeProvider"
+      }
+    }
   }
 }

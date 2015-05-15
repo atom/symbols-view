@@ -8,3 +8,6 @@ class GoBackView extends SymbolsView
 
     atom.workspace.open(previousTag.file).done =>
       @moveToPosition(previousTag.position, false) if previousTag.position
+
+  dispose: ->
+    @destroy()

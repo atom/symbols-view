@@ -59,3 +59,6 @@ class FileView extends SymbolsView
       @cachedTags[filePath] = tags
       @setMaxItems(Infinity)
       @setItems(tags)
+
+  dispose: ->
+    @destroy()

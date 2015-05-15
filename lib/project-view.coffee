@@ -80,3 +80,6 @@ class ProjectView extends SymbolsView
   unwatchTagsFiles: ->
     @tagsFileSubscriptions?.dispose()
     @tagsFileSubscriptions = null
+  
+  dispose: ->
+    @destroy()
