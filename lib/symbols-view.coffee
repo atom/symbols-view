@@ -39,8 +39,7 @@ class SymbolsView extends SelectListView
 
   viewForItem: ({position, name, file, directory}) ->
     # Style matched characters in search results
-    filterQuery = @getFilterQuery()
-    matches = match(name, filterQuery)
+    matches = match(name, @getFilterQuery())
 
     if atom.project.getPaths().length > 1
       file = path.join(path.basename(directory), file)

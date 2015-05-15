@@ -27,8 +27,7 @@ class FileView extends SymbolsView
 
   viewForItem: ({position, name}) ->
     # Style matched characters in search results
-    filterQuery = @getFilterQuery()
-    matches = match(name, filterQuery)
+    matches = match(name, @getFilterQuery())
 
     $$ ->
       @li class: 'two-lines', =>
