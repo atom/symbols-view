@@ -19,6 +19,7 @@
     "atom-space-pen-views": "^2.0.0",
     "ctags": "^2.0.0",
     "fs-plus": "^2.0.0",
+    "fuzzaldrin": "^2.1.0",
     "humanize-plus": "1.4.2",
     "pathwatcher": "^4.3",
     "q": "^1.1.2",

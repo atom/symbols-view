@@ -478,3 +478,76 @@ describe "SymbolsView", ->
         expect($(getWorkspaceView()).find('.symbols-view')).toExist()
         expect(symbolsView.list.children('li:first').find('.primary-line')).toHaveText 'test'
         expect(symbolsView.list.children('li:first').find('.secondary-line')).toHaveText 'Line 1'
+
+  describe "match highlighting", ->
+    beforeEach ->
+      waitsForPromise ->
+        atom.workspace.open(directory.resolve('sample.js'))
+
+    it "highlights an exact match", ->
+      runs ->
+        atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
+
+      waitsForPromise ->
+        activationPromise
+
+      runs ->
+        symbolsView = $(getWorkspaceView()).find('.symbols-view').view()
+
+      waitsFor ->
+        symbolsView.list.children('li').length > 0
+
+      runs ->
+        symbolsView.filterEditorView.getModel().setText('quicksort')
+        expect(symbolsView.filterEditorView.getModel().getText()).toBe 'quicksort'
+        symbolsView.populateList()
+        resultView = symbolsView.getSelectedItemView()
+
+        matches = resultView.find('.character-match')
+        expect(matches.length).toBe 1
+        expect(matches.last().text()).toBe 'quicksort'
+
+    it "highlights a partial match", ->
+      runs ->
+        atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
+
+      waitsForPromise ->
+        activationPromise
+
+      runs ->
+        symbolsView = $(getWorkspaceView()).find('.symbols-view').view()
+
+      waitsFor ->
+        symbolsView.list.children('li').length > 0
+
+      runs ->
+        symbolsView.filterEditorView.getModel().setText('quick')
+        symbolsView.populateList()
+        resultView = symbolsView.getSelectedItemView()
+
+        matches = resultView.find('.character-match')
+        expect(matches.length).toBe 1
+        expect(matches.last().text()).toBe 'quick'
+
+    it "highlights multiple matches in the symbol name", ->
+      runs ->
+        atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
+
+      waitsForPromise ->
+        activationPromise
+
+      runs ->
+        symbolsView = $(getWorkspaceView()).find('.symbols-view').view()
+
+      waitsFor ->
+        symbolsView.list.children('li').length > 0
+
+      runs ->
+        symbolsView.filterEditorView.getModel().setText('quicort')
+        symbolsView.populateList()
+        resultView = symbolsView.getSelectedItemView()
+
+        matches = resultView.find('.character-match')
+        expect(matches.length).toBe 2
+        expect(matches.first().text()).toBe 'quic'
+        expect(matches.last().text()).toBe 'ort'
