@@ -6,9 +6,6 @@ fs = require 'fs-plus'
 
 module.exports =
 class SymbolsView extends SelectListView
-  @activate: ->
-    new SymbolsView
-
   @highlightMatches: (context, name, matches, offsetIndex=0) ->
     lastIndex = 0
     matchedChars = [] # Build up a set of matched chars to be more semantic
