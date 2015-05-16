@@ -576,7 +576,7 @@ describe "SymbolsView", ->
         expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [1,2]
 
     it "restores previous editor state on cancel", ->
-      bufferRanges = [{"start":{"row":0,"column":0},"end":{"row":0,"column":3}}]
+      bufferRanges = [{"start": {"row": 0, "column": 0}, "end": {"row": 0, "column": 3}}]
       runs ->
         atom.workspace.getActiveTextEditor().setSelectedBufferRanges bufferRanges
         atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
