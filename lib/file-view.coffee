@@ -34,12 +34,35 @@ class FileView extends SymbolsView
         @div class: 'primary-line', => FileView.highlightMatches(this, name, matches)
         @div "Line #{position.row + 1}", class: 'secondary-line'
 
+  selectItemView: ->
+    super
+    item = @getSelectedItem()
+    @openTag(item) if item?
+
+  cancelled: ->
+    super
+    if @initialState?
+      @deserializeEditorState(@initialState)
+
   toggle: ->
     if @panel.isVisible()
       @cancel()
     else if filePath = @getPath()
+      if editor = atom.workspace.getActiveTextEditor()
+        @initialState = @serializeEditorState()
       @populate(filePath)
       @attach()
+
+  serializeEditorState: ->
+    editor = atom.workspace.getActiveTextEditor()
+    bufferRanges: editor?.getSelectedBufferRanges()
+    scrollTop: editor?.getScrollTop()
+
+  deserializeEditorState: (state) ->
+    {bufferRanges, scrollTop} = state
+    editor = atom.workspace.getActiveTextEditor()
+    editor?.setSelectedBufferRanges(bufferRanges)
+    editor?.setScrollTop(scrollTop)
 
   getPath: -> atom.workspace.getActiveTextEditor()?.getPath()
 

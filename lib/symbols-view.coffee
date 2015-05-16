@@ -61,29 +61,29 @@ class SymbolsView extends SelectListView
   cancelled: ->
     @panel.hide()
 
-  confirmed: (tag) ->
+  confirmed : (tag) ->
+    @cancel()
+    @openTag(tag)
+
+  openTag: (tag) ->
     if tag.file and not fs.isFileSync(path.join(tag.directory, tag.file))
       @setError('Selected file does not exist')
       setTimeout((=> @setError()), 2000)
     else
-      @cancel()
-      @openTag(tag)
-
-  openTag: (tag) ->
-    if editor = atom.workspace.getActiveTextEditor()
-      previous =
-        position: editor.getCursorBufferPosition()
-        file: editor.getURI()
+      if editor = atom.workspace.getActiveTextEditor()
+        previous =
+          position: editor.getCursorBufferPosition()
+          file: editor.getURI()
 
     {position} = tag
     position = @getTagLine(tag) unless position
     if tag.file
       atom.workspace.open(path.join(tag.directory, tag.file)).done =>
         @moveToPosition(position) if position
-    else if position
+    else if position and not (previous.position.isEqual(position))
       @moveToPosition(position)
 
-    @stack.push(previous)
+      @stack.push(previous)
 
   moveToPosition: (position, beginningOfLine=true) ->
     if editor = atom.workspace.getActiveTextEditor()

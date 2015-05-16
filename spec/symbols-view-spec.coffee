@@ -159,6 +159,58 @@ describe "SymbolsView", ->
         expect(symbolsView.error.text().length).toBeGreaterThan 0
         expect(symbolsView.loadingArea).not.toBeVisible()
 
+  it "moves the cursor to the selected function", ->
+    waitsForPromise ->
+      atom.workspace.open('sample.js')
+
+    runs ->
+      expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [0,0]
+      expect($(getWorkspaceView()).find('.symbols-view')).not.toExist()
+      atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
+
+    waitsFor ->
+      $(getWorkspaceView()).find('.symbols-view').find('li').length
+
+    runs ->
+      $(getWorkspaceView()).find('.symbols-view').find('li:eq(1)').mousedown().mouseup()
+      expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [1,2]
+
+  it "moves the cursor to the selected function during keyboard selection", ->
+    waitsForPromise ->
+      atom.workspace.open('sample.js')
+
+    runs ->
+      expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [0,0]
+      expect($(getWorkspaceView()).find('.symbols-view')).not.toExist()
+      atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
+
+    waitsFor ->
+      $(getWorkspaceView()).find('.symbols-view').find('li').length
+
+    runs ->
+      symbolsView = $(getWorkspaceView()).find('.symbols-view').view()
+      symbolsView.selectNextItemView()
+      expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [1,2]
+
+  it "restores cursor position if view gets cancelled", ->
+    waitsForPromise ->
+      atom.workspace.open('sample.js')
+
+    runs ->
+      atom.workspace.getActiveTextEditor().setCursorBufferPosition([0,3])
+      expect($(getWorkspaceView()).find('.symbols-view')).not.toExist()
+      atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
+
+    waitsFor ->
+      $(getWorkspaceView()).find('.symbols-view').find('li').length
+
+    runs ->
+      symbolsView = $(getWorkspaceView()).find('.symbols-view').view()
+      symbolsView.selectNextItemView()
+      expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [1,2]
+      symbolsView.cancel()
+      expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [0,3]
+
   describe "TagGenerator", ->
     it "generates tags for all JavaScript functions", ->
       tags = []
