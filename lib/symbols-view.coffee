@@ -80,7 +80,7 @@ class SymbolsView extends SelectListView
     if tag.file
       atom.workspace.open(path.join(tag.directory, tag.file)).done =>
         @moveToPosition(position) if position
-    else if position
+    else if position and not (previous.position.isEqual(position))
       @moveToPosition(position)
 
     @stack.push(previous)
