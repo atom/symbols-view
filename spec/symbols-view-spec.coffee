@@ -123,7 +123,7 @@ describe "SymbolsView", ->
 
     it "moves the cursor to the selected function", ->
       runs ->
-        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [0,0]
+        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [0, 0]
         expect($(getWorkspaceView()).find('.symbols-view')).not.toExist()
         atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
 
@@ -132,7 +132,7 @@ describe "SymbolsView", ->
 
       runs ->
         $(getWorkspaceView()).find('.symbols-view').find('li:eq(1)').mousedown().mouseup()
-        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [1,2]
+        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [1, 2]
 
   describe "when tags can't be generated for a file", ->
     beforeEach ->
@@ -191,14 +191,14 @@ describe "SymbolsView", ->
 
       runs ->
         editor = atom.workspace.getActiveTextEditor()
-        editor.setCursorBufferPosition([0,2])
+        editor.setCursorBufferPosition([0, 2])
         atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
 
       waitsForPromise ->
         activationPromise
 
       runs ->
-        expect(editor.getCursorBufferPosition()).toEqual [0,2]
+        expect(editor.getCursorBufferPosition()).toEqual [0, 2]
 
     it "moves the cursor to the declaration when there is a single matching declaration", ->
       waitsForPromise ->
@@ -206,7 +206,7 @@ describe "SymbolsView", ->
 
       runs ->
         editor = atom.workspace.getActiveTextEditor()
-        editor.setCursorBufferPosition([6,24])
+        editor.setCursorBufferPosition([6, 24])
         spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
         atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
 
@@ -214,7 +214,7 @@ describe "SymbolsView", ->
         SymbolsView::moveToPosition.callCount is 1
 
       runs ->
-        expect(editor.getCursorBufferPosition()).toEqual [2,0]
+        expect(editor.getCursorBufferPosition()).toEqual [2, 0]
 
     it "displays matches when more than one exists and opens the selected match", ->
       waitsForPromise ->
@@ -222,7 +222,7 @@ describe "SymbolsView", ->
 
       runs ->
         editor = atom.workspace.getActiveTextEditor()
-        editor.setCursorBufferPosition([8,14])
+        editor.setCursorBufferPosition([8, 14])
         atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
 
       waitsFor ->
@@ -240,7 +240,7 @@ describe "SymbolsView", ->
 
       runs ->
         expect(atom.workspace.getActiveTextEditor().getPath()).toBe directory.resolve("tagged-duplicate.js")
-        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [0,4]
+        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [0, 4]
 
     it "includes ? and ! characters in ruby symbols", ->
       atom.project.setPaths([temp.mkdirSync("atom-symbols-view-ruby-")])
@@ -254,7 +254,7 @@ describe "SymbolsView", ->
 
       runs ->
         spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
-        atom.workspace.getActiveTextEditor().setCursorBufferPosition([13,4])
+        atom.workspace.getActiveTextEditor().setCursorBufferPosition([13, 4])
         atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
 
       waitsForPromise ->
@@ -264,25 +264,25 @@ describe "SymbolsView", ->
         SymbolsView::moveToPosition.callCount is 1
 
       runs ->
-        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [5,2]
+        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [5, 2]
         SymbolsView::moveToPosition.reset()
-        atom.workspace.getActiveTextEditor().setCursorBufferPosition([14,2])
+        atom.workspace.getActiveTextEditor().setCursorBufferPosition([14, 2])
         atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
 
       waitsFor ->
         SymbolsView::moveToPosition.callCount is 1
 
       runs ->
-        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [9,2]
+        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [9, 2]
         SymbolsView::moveToPosition.reset()
-        atom.workspace.getActiveTextEditor().setCursorBufferPosition([15,5])
+        atom.workspace.getActiveTextEditor().setCursorBufferPosition([15, 5])
         atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
 
       waitsFor ->
         SymbolsView::moveToPosition.callCount is 1
 
       runs ->
-        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [1,2]
+        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [1, 2]
 
     describe "return from declaration", ->
       it "doesn't do anything when no go-to have been triggered", ->
@@ -291,14 +291,14 @@ describe "SymbolsView", ->
 
         runs ->
           editor = atom.workspace.getActiveTextEditor()
-          editor.setCursorBufferPosition([6,0])
+          editor.setCursorBufferPosition([6, 0])
           atom.commands.dispatch(getEditorView(), 'symbols-view:return-from-declaration')
 
         waitsForPromise ->
           activationPromise
 
         runs ->
-          expect(editor.getCursorBufferPosition()).toEqual [6,0]
+          expect(editor.getCursorBufferPosition()).toEqual [6, 0]
 
       it "returns to previous row and column", ->
         waitsForPromise ->
@@ -306,7 +306,7 @@ describe "SymbolsView", ->
 
         runs ->
           editor = atom.workspace.getActiveTextEditor()
-          editor.setCursorBufferPosition([6,24])
+          editor.setCursorBufferPosition([6, 24])
           spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
           atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
 
@@ -317,14 +317,14 @@ describe "SymbolsView", ->
           SymbolsView::moveToPosition.callCount is 1
 
         runs ->
-          expect(editor.getCursorBufferPosition()).toEqual [2,0]
+          expect(editor.getCursorBufferPosition()).toEqual [2, 0]
           atom.commands.dispatch(getEditorView(), 'symbols-view:return-from-declaration')
 
         waitsFor ->
           SymbolsView::moveToPosition.callCount is 2
 
         runs ->
-          expect(editor.getCursorBufferPosition()).toEqual [6,24]
+          expect(editor.getCursorBufferPosition()).toEqual [6, 24]
 
     describe "when the tag is in a file that doesn't exist", ->
       it "doesn't display the tag", ->
@@ -335,7 +335,7 @@ describe "SymbolsView", ->
 
         runs ->
           editor = atom.workspace.getActiveTextEditor()
-          editor.setCursorBufferPosition([8,14])
+          editor.setCursorBufferPosition([8, 14])
           spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
           atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
 
@@ -343,7 +343,7 @@ describe "SymbolsView", ->
           SymbolsView::moveToPosition.callCount is 1
 
         runs ->
-          expect(editor.getCursorBufferPosition()).toEqual [8,0]
+          expect(editor.getCursorBufferPosition()).toEqual [8, 0]
 
   describe "project symbols", ->
     it "displays all tags", ->
