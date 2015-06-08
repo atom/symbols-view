@@ -43,6 +43,7 @@ class FileView extends SymbolsView
     super
     if @initialState? and editor = @getEditor()
       @deserializeEditorState(editor, @initialState)
+    @initialState = null
 
   toggle: ->
     if @panel.isVisible()
@@ -57,8 +58,7 @@ class FileView extends SymbolsView
     bufferRanges: editor.getSelectedBufferRanges()
     scrollTop: editor.getScrollTop()
 
-  deserializeEditorState: (editor, state) ->
-    {bufferRanges, scrollTop} = state
+  deserializeEditorState: (editor, {bufferRanges, scrollTop}) ->
     editor.setSelectedBufferRanges(bufferRanges)
     editor.setScrollTop(scrollTop)
 
