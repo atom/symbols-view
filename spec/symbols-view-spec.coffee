@@ -551,3 +551,47 @@ describe "SymbolsView", ->
         expect(matches.length).toBe 2
         expect(matches.first().text()).toBe 'quic'
         expect(matches.last().text()).toBe 'ort'
+
+  describe "quickjump to symbol", ->
+    beforeEach ->
+      waitsForPromise ->
+        atom.workspace.open(directory.resolve('sample.js'))
+
+    it "jumps to the selected function", ->
+      runs ->
+        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [0,0]
+        atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
+
+      waitsForPromise ->
+        activationPromise
+
+      runs ->
+        symbolsView = $(getWorkspaceView()).find('.symbols-view').view()
+
+      waitsFor ->
+        symbolsView.list.children('li').length > 0
+
+      runs ->
+        symbolsView.selectNextItemView()
+        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [1,2]
+
+    it "restores previous editor state on cancel", ->
+      bufferRanges = [{"start": {"row": 0, "column": 0}, "end": {"row": 0, "column": 3}}]
+      runs ->
+        atom.workspace.getActiveTextEditor().setSelectedBufferRanges bufferRanges
+        atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
+
+      waitsForPromise ->
+        activationPromise
+
+      runs ->
+        symbolsView = $(getWorkspaceView()).find('.symbols-view').view()
+
+      waitsFor ->
+        symbolsView.list.children('li').length > 0
+
+      runs ->
+        symbolsView.selectNextItemView()
+        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [1,2]
+        symbolsView.cancel()
+        expect(atom.workspace.getActiveTextEditor().getSelectedBufferRanges()).toEqual bufferRanges
