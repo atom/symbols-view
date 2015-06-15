@@ -559,7 +559,7 @@ describe "SymbolsView", ->
 
     it "jumps to the selected function", ->
       runs ->
-        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [0,0]
+        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [0, 0]
         atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
 
       waitsForPromise ->
@@ -573,7 +573,7 @@ describe "SymbolsView", ->
 
       runs ->
         symbolsView.selectNextItemView()
-        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [1,2]
+        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [1, 2]
 
     it "restores previous editor state on cancel", ->
       bufferRanges = [{start: {row: 0, column: 0}, end: {row: 0, column: 3}}]
@@ -593,6 +593,6 @@ describe "SymbolsView", ->
 
       runs ->
         symbolsView.selectNextItemView()
-        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [1,2]
+        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [1, 2]
         symbolsView.cancel()
         expect(atom.workspace.getActiveTextEditor().getSelectedBufferRanges()).toEqual bufferRanges
