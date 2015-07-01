@@ -5,14 +5,14 @@ Display the list of functions/methods in the editor via `cmd-r` in Atom.
 If your project has a `tags`/`.tags`/`TAGS`/`.TAGS` file at the root then
 following are supported:
 
-  * `cmd-r` to view all function/methods in the current file
+  * <kbd>cmd-r</kbd> to view all function/methods in the current file
 
-  * `cmd-shift-r` to view all function/methods in the project
+  * <kbd>cmd-shift-r</kbd> to view all function/methods in the project
 
-  * `ctrl-alt-down` to jump to the declaration of the method/function under
+  * <kbd>ctrl-alt-down</kbd> to jump to the declaration of the method/function under
     the cursor
 
-  * `ctrl-alt-up` to return from the jump
+  * <kbd>ctrl-alt-up</kbd> to return from the jump
 
 This package uses [ctags](http://ctags.sourceforge.net).
 
