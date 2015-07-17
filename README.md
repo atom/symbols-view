@@ -5,7 +5,7 @@ Display the list of functions/methods in the editor via `cmd-r` in Atom.
 If your project has a `tags`/`.tags`/`TAGS`/`.TAGS` file at the root then
 following are supported:
 
-|Command|Description|Keybinding<br>(Linux)|Keybinding<br>(OS X)|Keybinding<br>(Windows)|
+|Command|Description|Keybinding (Linux)|Keybinding (OS X)|Keybinding (Windows)|
 |-------|-----------|------------------|-----------------|--------------------|
 |`symbols-view:toggle-file-symbols`|Show all symbols in current file|<kbd>Ctrl-r</kbd>|<kbd>Cmd-r</kbd>|<kbd>Ctrl-r</kbd>|
 |`symbols-view:toggle-project-symbols`|Show all symbols in the project|<kbd>Ctrl-Shift-R</kbd>|<kbd>Cmd-Shift-R</kbd>|<kbd>Ctrl-Shift-R</kbd>|
