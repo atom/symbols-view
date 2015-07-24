@@ -8,7 +8,7 @@ following are supported:
 |Command|Description|Keybinding (Linux)|Keybinding (OS X)|Keybinding (Windows)|
 |-------|-----------|------------------|-----------------|--------------------|
 |`symbols-view:toggle-file-symbols`|Show all symbols in current file|<kbd>ctrl-r</kbd>|<kbd>cmd-r</kbd>|<kbd>ctrl-r</kbd>|
-|`symbols-view:toggle-project-symbols`|Show all symbols in the project|<kbd>ctrl-R</kbd>|<kbd>cmd-R</kbd>|<kbd>ctrl-R</kbd>|
+|`symbols-view:toggle-project-symbols`|Show all symbols in the project|<kbd>ctrl-shift-R</kbd>|<kbd>cmd-shift-R</kbd>|<kbd>ctrl-shift-R</kbd>|
 |`symbols-view:go-to-declaration`|Jump to the symbol under the cursor|<kbd>ctrl-alt-down</kbd>|<kbd>cmd-alt-down</kbd>||
 |`symbols-view:return-from-declaration`|Return from the jump|<kbd>ctrl-alt-up</kbd>|<kbd>cmd-alt-up</kbd>||
 
