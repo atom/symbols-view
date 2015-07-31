@@ -128,3 +128,8 @@
 --langmap=Fountain:.fountain
 --langmap=Fountain:+.ftn
 --regex-Fountain=/^(([iI][nN][tT]|[eE][xX][tT]|[^\w][eE][sS][tT]|\.|[iI]\.?\/[eE]\.?)([^\n]+))/\1/f,function/
+
+--langdef=Julia
+--langmap=Julia:.jl
+--regex-Julia=/^[ \t]*(function|macro|abstract|type|typealias|immutable)[ \t]+([^ \t({[]+).*$/\2/f,function/
+--regex-Julia=/^[ \t]*(([^@#$ \t({[]+)|\(([^@#$ \t({[]+)\)|\((\$)\))[ \t]*(\{.*\})?[ \t]*\([^#]*\)[ \t]*=([^=].*$|$)/\2\3\4/f,function/
