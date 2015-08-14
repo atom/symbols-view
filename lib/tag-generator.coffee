@@ -42,6 +42,7 @@ class TagGenerator
       when 'source.js.jsx'   then 'JavaScript'
       when 'source.jsx'      then 'JavaScript'
       when 'source.json'     then 'Json'
+      when 'source.julia'    then 'Julia'
       when 'source.makefile' then 'Make'
       when 'source.objc'     then 'C'
       when 'source.objcpp'   then 'C++'
@@ -51,7 +52,6 @@ class TagGenerator
       when 'source.yaml'     then 'Yaml'
       when 'text.html'       then 'Html'
       when 'text.html.php'   then 'Php'
-      when 'source.julia'    then 'Julia'
 
   generate: ->
     deferred = Q.defer()
