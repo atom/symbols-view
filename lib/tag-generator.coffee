@@ -58,7 +58,7 @@ class TagGenerator
     tags = {}
     packageRoot = @getPackageRoot()
     command = path.join(packageRoot, 'vendor', "ctags-#{process.platform}")
-    defaultCtagsFile = path.join(packageRoot, 'lib', '.ctags')
+    defaultCtagsFile = path.join(packageRoot, 'lib', 'ctags-config')
     args = ["--options=#{defaultCtagsFile}", '--fields=+KS']
 
     if atom.config.get('symbols-view.useEditorGrammarAsCtagsLanguage')
