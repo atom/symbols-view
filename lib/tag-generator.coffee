@@ -53,7 +53,6 @@ class TagGenerator
       when 'source.yaml'     then 'Yaml'
       when 'text.html'       then 'Html'
       when 'text.html.php'   then 'Php'
-    console.log @scopeName
 
   generate: ->
     deferred = Q.defer()
@@ -65,13 +64,11 @@ class TagGenerator
 
     if atom.config.get('symbols-view.useEditorGrammarAsCtagsLanguage')
       if language = @getLanguage()
-        console.log language
         args.push("--language-force=#{language}")
 
     args.push('-nf', '-', @path)
 
     stdout = (lines) =>
-      console.log lines
       for line in lines.split('\n')
         if tag = @parseTagLine(line)
           tags[tag.position.row] ?= tag
