@@ -72,6 +72,7 @@
 --regex-Capnp=/struct[ \t]+([A-Za-z]+)/\1/s,struct/
 --regex-Capnp=/enum[ \t]+([A-Za-z]+)/\1/e,enum/
 --regex-Capnp=/using[ \t]+([A-Za-z]+)[ \t]+=[ \t]+import/\1/u,using/
+--regex-Capnp=/const[ \t]+([A-Za-z]+)/\1/c,const/
 
 --langmap=perl:+.pod
 --regex-perl=/with[ \t]+([^;]+)[ \t]*?;/\1/w,role,roles/
