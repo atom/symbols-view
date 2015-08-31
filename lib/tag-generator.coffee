@@ -29,6 +29,7 @@ class TagGenerator
       when 'source.c'        then 'C'
       when 'source.cpp'      then 'C++'
       when 'source.clojure'  then 'Lisp'
+      when 'source.capnp'    then 'Capnp'
       when 'source.coffee'   then 'CoffeeScript'
       when 'source.css'      then 'Css'
       when 'source.css.less' then 'Css'
@@ -52,6 +53,7 @@ class TagGenerator
       when 'source.yaml'     then 'Yaml'
       when 'text.html'       then 'Html'
       when 'text.html.php'   then 'Php'
+    console.log @scopeName
 
   generate: ->
     deferred = Q.defer()
@@ -63,11 +65,13 @@ class TagGenerator
 
     if atom.config.get('symbols-view.useEditorGrammarAsCtagsLanguage')
       if language = @getLanguage()
+        console.log language
         args.push("--language-force=#{language}")
 
     args.push('-nf', '-', @path)
 
     stdout = (lines) =>
+      console.log lines
       for line in lines.split('\n')
         if tag = @parseTagLine(line)
           tags[tag.position.row] ?= tag

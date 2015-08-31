@@ -67,6 +67,12 @@
 --regex-Go=/var[ \t]+([a-zA-Z_][a-zA-Z0-9_]*)/\1/v,var/
 --regex-Go=/type[ \t]+([a-zA-Z_][a-zA-Z0-9_]*)/\1/t,type/
 
+--langdef=Capnp
+--langmap=Capnp:.capnp
+--regex-Capnp=/struct[ \t]+([A-Za-z]+)/\1/s,struct/
+--regex-Capnp=/enum[ \t]+([A-Za-z]+)/\1/e,enum/
+--regex-Capnp=/using[ \t]+([A-Za-z]+)[ \t]+=[ \t]+import/\1/u,using/
+
 --langmap=perl:+.pod
 --regex-perl=/with[ \t]+([^;]+)[ \t]*?;/\1/w,role,roles/
 --regex-perl=/extends[ \t]+['"]([^'"]+)['"][ \t]*?;/\1/e,extends/
