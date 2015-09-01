@@ -29,6 +29,7 @@ class TagGenerator
       when 'source.c'        then 'C'
       when 'source.cpp'      then 'C++'
       when 'source.clojure'  then 'Lisp'
+      when 'source.capnp'    then 'Capnp'
       when 'source.coffee'   then 'CoffeeScript'
       when 'source.css'      then 'Css'
       when 'source.css.less' then 'Css'
