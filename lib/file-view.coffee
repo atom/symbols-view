@@ -78,7 +78,7 @@ class FileView extends SymbolsView
       @generateTags(filePath)
 
   generateTags: (filePath) ->
-    new TagGenerator(filePath, @getScopeName()).generate().done (tags) =>
+    new TagGenerator(filePath, @getScopeName()).generate().then (tags) =>
       @cachedTags[filePath] = tags
       @setMaxItems(Infinity)
       @setItems(tags)

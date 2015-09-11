@@ -78,7 +78,7 @@ class SymbolsView extends SelectListView
     {position} = tag
     position = @getTagLine(tag) unless position
     if tag.file
-      atom.workspace.open(path.join(tag.directory, tag.file)).done =>
+      atom.workspace.open(path.join(tag.directory, tag.file)).then =>
         @moveToPosition(position) if position
     else if position and not (previous.position.isEqual(position))
       @moveToPosition(position)
