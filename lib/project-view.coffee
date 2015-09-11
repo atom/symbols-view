@@ -1,5 +1,4 @@
-{CompositeDisposable} = require 'atom'
-{File} = require 'pathwatcher'
+{CompositeDisposable, File} = require 'atom'
 humanize = require 'humanize-plus'
 SymbolsView = require './symbols-view'
 TagReader = require './tag-reader'
