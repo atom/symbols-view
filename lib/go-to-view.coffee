@@ -1,5 +1,4 @@
 path = require 'path'
-Q = require 'q'
 SymbolsView = require './symbols-view'
 TagReader = require './tag-reader'
 
@@ -12,15 +11,18 @@ class GoToView extends SymbolsView
       @populate()
 
   detached: ->
-    @deferredFind?.resolve([])
+    @resolveFindTagPromise?([])
 
   findTag: (editor) ->
-    @deferredFind?.resolve([])
+    @resolveFindTagPromise?([])
 
-    deferred = Q.defer()
-    TagReader.find editor, (error, matches=[]) -> deferred.resolve(matches)
-    @deferredFind = deferred
-    @deferredFind.promise
+    new Promise (resolve, reject) =>
+      @resolveFindTagPromise = resolve
+      TagReader.find editor, (error, matches=[]) ->
+        if error
+          reject(error)
+        else
+          resolve(matches)
 
   populate: ->
     editor = atom.workspace.getActiveTextEditor()

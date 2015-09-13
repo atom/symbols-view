@@ -1,5 +1,4 @@
 {BufferedProcess, Point} = require 'atom'
-Q = require 'q'
 path = require 'path'
 
 module.exports =
@@ -55,7 +54,6 @@ class TagGenerator
       when 'text.html.php'   then 'Php'
 
   generate: ->
-    deferred = Q.defer()
     tags = {}
     packageRoot = @getPackageRoot()
     command = path.join(packageRoot, 'vendor', "ctags-#{process.platform}")
@@ -68,15 +66,16 @@ class TagGenerator
 
     args.push('-nf', '-', @path)
 
-    stdout = (lines) =>
-      for line in lines.split('\n')
-        if tag = @parseTagLine(line)
-          tags[tag.position.row] ?= tag
-    stderr = ->
-    exit = ->
-      tags = (tag for row, tag of tags)
-      deferred.resolve(tags)
-
-    new BufferedProcess({command, args, stdout, stderr, exit})
-
-    deferred.promise
+    new Promise (resolve) =>
+      new BufferedProcess({
+        command: command,
+        args: args,
+        stdout: (lines) =>
+          for line in lines.split('\n')
+            if tag = @parseTagLine(line)
+              tags[tag.position.row] ?= tag
+        stderr: ->
+        exit: ->
+          tags = (tag for row, tag of tags)
+          resolve(tags)
+      })
