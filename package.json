@@ -21,7 +21,6 @@
     "fs-plus": "^2.0.0",
     "fuzzaldrin": "^2.1.0",
     "humanize-plus": "1.4.2",
-    "q": "^1.1.2",
     "temp": "~0.8.1"
   },
   "repository": "https://github.com/atom/symbols-view",
