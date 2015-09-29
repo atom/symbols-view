@@ -56,11 +56,11 @@ class FileView extends SymbolsView
 
   serializeEditorState: (editor) ->
     bufferRanges: editor.getSelectedBufferRanges()
-    scrollTop: editor.getScrollTop()
+    scrollTop: atom.views.getView(editor).getScrollTop()
 
   deserializeEditorState: (editor, {bufferRanges, scrollTop}) ->
     editor.setSelectedBufferRanges(bufferRanges)
-    editor.setScrollTop(scrollTop)
+    atom.views.getView(editor).setScrollTop(scrollTop)
 
   getEditor: -> atom.workspace.getActiveTextEditor()
 
