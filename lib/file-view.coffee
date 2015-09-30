@@ -4,6 +4,8 @@ SymbolsView = require './symbols-view'
 TagGenerator = require './tag-generator'
 {match} = require 'fuzzaldrin'
 
+# TODO: remove references to logical display buffer when it is released.
+
 module.exports =
 class FileView extends SymbolsView
   initialize: ->
@@ -55,12 +57,23 @@ class FileView extends SymbolsView
       @attach()
 
   serializeEditorState: (editor) ->
+    editorElement = atom.views.getView(editor)
+    if editorElement.logicalDisplayBuffer
+      scrollTop = editorElement.getScrollTop()
+    else
+      scrollTop = editor.getScrollTop()
+
     bufferRanges: editor.getSelectedBufferRanges()
-    scrollTop: editor.getScrollTop()
+    scrollTop: scrollTop
 
   deserializeEditorState: (editor, {bufferRanges, scrollTop}) ->
+    editorElement = atom.views.getView(editor)
+
     editor.setSelectedBufferRanges(bufferRanges)
-    editor.setScrollTop(scrollTop)
+    if editorElement.logicalDisplayBuffer
+      editorElement.setScrollTop(scrollTop)
+    else
+      editor.setScrollTop(scrollTop)
 
   getEditor: -> atom.workspace.getActiveTextEditor()
 
