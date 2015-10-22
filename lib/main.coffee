@@ -3,6 +3,7 @@ module.exports =
     useEditorGrammarAsCtagsLanguage:
       default: true
       type: 'boolean'
+      description: 'Force ctags to use the name of the current file\'s language in Atom when generating tags. By default, ctags automatically selects the language of a source file, ignoring those files whose language cannot be determined. This option forces the specified language to be used instead of automatically selecting the language based upon its extension.'
 
   activate: ->
     @stack = []
