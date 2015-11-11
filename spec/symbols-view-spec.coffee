@@ -12,6 +12,8 @@ describe "SymbolsView", ->
   getEditorView = -> atom.views.getView(atom.workspace.getActiveTextEditor())
 
   beforeEach ->
+    spyOn(SymbolsView::, "setLoading").andCallThrough()
+
     atom.project.setPaths([
       temp.mkdirSync("other-dir-")
       temp.mkdirSync('atom-symbols-view-')
@@ -37,7 +39,9 @@ describe "SymbolsView", ->
 
       runs ->
         symbolsView = $(getWorkspaceView()).find('.symbols-view').view()
-        expect(symbolsView.loading).toBeVisible()
+
+      waitsFor "loading", ->
+        symbolsView.setLoading.callCount > 1
 
       waitsFor ->
         symbolsView.list.children('li').length > 0
@@ -361,7 +365,9 @@ describe "SymbolsView", ->
 
       runs ->
         symbolsView = $(getWorkspaceView()).find('.symbols-view').view()
-        expect(symbolsView.loading).toBeVisible()
+
+      waitsFor "loading", ->
+        symbolsView.setLoading.callCount > 1
 
       waitsFor ->
         symbolsView.list.children('li').length > 0
@@ -466,9 +472,12 @@ describe "SymbolsView", ->
       runs ->
         atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
         atom.workspace.getActiveTextEditor().setGrammar(atom.grammars.grammarForScopeName('source.js'))
+        symbolsView.setLoading.reset()
         atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
         symbolsView = $(getWorkspaceView()).find('.symbols-view').view()
-        expect(symbolsView.loading).toBeVisible()
+
+      waitsFor "loading", ->
+        symbolsView.setLoading.callCount > 1
 
       waitsFor ->
         symbolsView.list.children('li').length is 1
