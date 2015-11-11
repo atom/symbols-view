@@ -367,7 +367,7 @@ describe "SymbolsView", ->
         symbolsView = $(getWorkspaceView()).find('.symbols-view').view()
 
       waitsFor "loading", ->
-        symbolsView.setLoading.callCount is 1
+        symbolsView.setLoading.callCount > 1
 
       waitsFor ->
         symbolsView.list.children('li').length > 0
@@ -472,6 +472,7 @@ describe "SymbolsView", ->
       runs ->
         atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
         atom.workspace.getActiveTextEditor().setGrammar(atom.grammars.grammarForScopeName('source.js'))
+        symbolsView.setLoading.reset()
         atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
         symbolsView = $(getWorkspaceView()).find('.symbols-view').view()
 
