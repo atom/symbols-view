@@ -359,9 +359,9 @@ describe "SymbolsView", ->
       waitsForPromise ->
         activationPromise
 
-      runs ->
+      waitsFor ->
         symbolsView = $(getWorkspaceView()).find('.symbols-view').view()
-        expect(symbolsView.loading).toBeVisible()
+        symbolsView?.loading.is(":visible")
 
       waitsFor ->
         symbolsView.list.children('li').length > 0
@@ -467,8 +467,10 @@ describe "SymbolsView", ->
         atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
         atom.workspace.getActiveTextEditor().setGrammar(atom.grammars.grammarForScopeName('source.js'))
         atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
+
+      waitsFor ->
         symbolsView = $(getWorkspaceView()).find('.symbols-view').view()
-        expect(symbolsView.loading).toBeVisible()
+        symbolsView?.loading.is(":visible")
 
       waitsFor ->
         symbolsView.list.children('li').length is 1
