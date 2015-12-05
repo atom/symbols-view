@@ -100,6 +100,11 @@ class SymbolsView extends SelectListView
     # Remove leading /^ and trailing $/
     pattern = tag.pattern?.replace(/(^^\/\^)|(\$\/$)/g, '').trim()
 
+    # `ctags -excmd=number`, giving line numbers instead of patterns to locate
+    # symbols. The line number is being interpreted as a pattern by node-ctags
+    if not isNaN(pattern) and tag.lineNumber is parseInt(pattern)
+      return new Point(tag.lineNumber - 1, 0)
+
     return unless pattern
     file = path.join(tag.directory, tag.file)
     return unless fs.isFileSync(file)
