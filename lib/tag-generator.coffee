@@ -46,13 +46,13 @@ class TagGenerator
       when 'source.makefile'     then 'Make'
       when 'source.objc'         then 'C'
       when 'source.objcpp'       then 'C++'
+      when 'source.plsql.oracle' then 'Sql'
       when 'source.python'       then 'Python'
       when 'source.ruby'         then 'Ruby'
       when 'source.sass'         then 'Sass'
       when 'source.yaml'         then 'Yaml'
       when 'text.html'           then 'Html'
       when 'text.html.php'       then 'Php'
-      when 'source.plsql.oracle' then 'Sql'
 
   generate: ->
     tags = {}
