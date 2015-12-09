@@ -11,9 +11,13 @@ class ProjectView extends SymbolsView
     @reloadTags = true
     @setMaxItems(10)
 
+    @relativeTagsDirectoryWatcher = atom.config.onDidChange 'symbols-view.tagsDirectory', (newValue) =>
+      @triggerReloadTags()
+
   destroy: ->
     @stopTask()
     @unwatchTagsFiles()
+    @relativeTagsDirectoryWatcher.dispose()
     super
 
   toggle: ->
@@ -59,20 +63,22 @@ class ProjectView extends SymbolsView
 
     @watchTagsFiles()
 
+  triggerReloadTags: ->
+    @reloadTags = true
+    @watchTagsFiles()
+
   watchTagsFiles: ->
     @unwatchTagsFiles()
 
     @tagsFileSubscriptions = new CompositeDisposable()
-    reloadTags = =>
-      @reloadTags = true
-      @watchTagsFiles()
 
-    for projectPath in atom.project.getPaths()
-      if tagsFilePath = getTagsFile(projectPath)
+    relativeTagsDirectory = atom.config.get('symbols-view.tagsDirectory')
+    for {tagsPath} in TagReader.getTagsPaths(relativeTagsDirectory)
+      if tagsFilePath = getTagsFile(tagsPath)
         tagsFile = new File(tagsFilePath)
-        @tagsFileSubscriptions.add(tagsFile.onDidChange(reloadTags))
-        @tagsFileSubscriptions.add(tagsFile.onDidDelete(reloadTags))
-        @tagsFileSubscriptions.add(tagsFile.onDidRename(reloadTags))
+        @tagsFileSubscriptions.add(tagsFile.onDidChange(=> @triggerReloadTags()))
+        @tagsFileSubscriptions.add(tagsFile.onDidDelete(=> @triggerReloadTags()))
+        @tagsFileSubscriptions.add(tagsFile.onDidRename(=> @triggerReloadTags()))
 
     return
 

@@ -37,12 +37,13 @@ class SymbolsView extends SelectListView
 
   getFilterKey: -> 'name'
 
-  viewForItem: ({position, name, file, directory}) ->
+  viewForItem: ({position, name, file, directory, projectPath}) ->
     # Style matched characters in search results
     matches = match(name, @getFilterQuery())
 
+    file = path.relative(projectPath, path.join(directory, file))
     if atom.project.getPaths().length > 1
-      file = path.join(path.basename(directory), file)
+      file = path.join(path.basename(projectPath), file)
 
     $$ ->
       @li class: 'two-lines', =>
@@ -63,7 +64,8 @@ class SymbolsView extends SelectListView
 
   confirmed: (tag) ->
     if tag.file and not fs.isFileSync(path.join(tag.directory, tag.file))
-      @setError('Selected file does not exist')
+      @setError("Selected file does not exist. Try running ctags with the " +
+                "--tag-relative option inside your project directory.")
       setTimeout((=> @setError()), 2000)
     else
       @cancel()

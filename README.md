@@ -2,8 +2,8 @@
 
 Display the list of functions/methods in the editor via `cmd-r` in Atom.
 
-If your project has a `tags`/`.tags`/`TAGS`/`.TAGS` file at the root then
-following are supported:
+If your project has a `tags`/`.tags`/`TAGS`/`.TAGS` file at the root or at a
+custom directory defined in `tagsDirectory` then the following are supported:
 
 |Command|Description|Keybinding (Linux)|Keybinding (OS X)|Keybinding (Windows)|
 |-------|-----------|------------------|-----------------|--------------------|
