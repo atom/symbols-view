@@ -1,3 +1,4 @@
+path = require 'path'
 {Task} = require 'atom'
 ctags = require 'ctags'
 async = require 'async'
@@ -21,12 +22,14 @@ module.exports =
     allTags = []
 
     async.each(
-      atom.project.getPaths(),
-      (projectPath, done) ->
-        tagsFile = getTagsFile(projectPath)
+      @getTagsPaths(atom.config.get('symbols-view.tagsDirectory'))
+      ({tagsPath, projectPath}, done) ->
+        tagsFile = getTagsFile(tagsPath)
         return done() unless tagsFile?
         ctags.findTags tagsFile, symbol, (err, tags=[]) ->
-          tag.directory = projectPath for tag in tags
+          for tag in tags
+            tag.projectPath = projectPath
+            tag.directory = tagsPath
           allTags = allTags.concat(tags)
           done(err)
       (err) -> callback(err, allTags)
@@ -34,6 +37,16 @@ module.exports =
 
   getAllTags: (callback) ->
     projectTags = []
-    task = Task.once handlerPath, atom.project.getPaths(), -> callback(projectTags)
+    relativeTagsDirectory = atom.config.get('symbols-view.tagsDirectory')
+    task = Task.once handlerPath, @getTagsPaths(relativeTagsDirectory), -> callback(projectTags)
     task.on 'tags', (tags) -> projectTags.push(tags...)
     task
+
+  getTagsPaths: (relativeTagsDirectory) ->
+    paths = []
+    for projectPath in atom.project.getPaths()
+      paths.push(
+        projectPath: projectPath
+        tagsPath: path.join(projectPath, relativeTagsDirectory)
+      )
+    paths

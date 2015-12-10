@@ -397,6 +397,54 @@ describe "SymbolsView", ->
 
       runs ->
         expect(symbolsView.list.children('li').length).toBe 0
+    it "displays all tags when the tagsDirectory is set to \"tagsDir\"", ->
+
+      jasmine.unspy(window, 'setTimeout')
+      atom.config.set('symbols-view.tagsDirectory', 'tagsDir')
+
+      waitsForPromise ->
+        atom.workspace.open(directory.resolve("tagged.js"))
+
+      runs ->
+        atom.commands.dispatch(getWorkspaceView(), "symbols-view:toggle-project-symbols")
+
+      waitsForPromise ->
+        activationPromise
+
+      runs ->
+        symbolsView = $(getWorkspaceView()).find('.symbols-view').view()
+
+      waitsFor "loading", ->
+        symbolsView.setLoading.callCount > 1
+
+      waitsFor ->
+        symbolsView.list.children('li').length > 0
+
+      runs ->
+        directoryBasename = path.basename(directory.getPath())
+        expect(symbolsView.loading).toBeEmpty()
+        expect($(getWorkspaceView()).find('.symbols-view')).toExist()
+        expect(symbolsView.list.children('li').length).toBe 4
+        expect(symbolsView.list.children('li:first').find('.primary-line')).toHaveText 'callMeMaybe'
+        expect(symbolsView.list.children('li:first').find('.secondary-line')).toHaveText path.join(directoryBasename, 'tagged.js')
+        expect(symbolsView.list.children('li:last').find('.primary-line')).toHaveText 'thisIsCrazy'
+        expect(symbolsView.list.children('li:last').find('.secondary-line')).toHaveText path.join(directoryBasename, 'tagged.js')
+        expect(symbolsView.error).not.toBeVisible()
+        atom.commands.dispatch(getWorkspaceView(), "symbols-view:toggle-project-symbols")
+
+        fs.removeSync(directory.resolve('tagsDir/tags'))
+
+      waitsFor ->
+        symbolsView.reloadTags
+
+      runs ->
+        atom.commands.dispatch(getWorkspaceView(), "symbols-view:toggle-project-symbols")
+
+      waitsFor ->
+        symbolsView.error.text().length > 0
+
+      runs ->
+        expect(symbolsView.list.children('li').length).toBe 0
 
     describe "when there is only one project", ->
       beforeEach ->
