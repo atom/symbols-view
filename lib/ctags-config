@@ -58,6 +58,12 @@
 --langmap=C++:+.mm
 
 --langmap=Ruby:+(Rakefile)
+--regex-ruby=/^[ \t]*scope[ \t]*:([a-zA-Z0-9_]+)/\1/s,scopes/
+--regex-ruby=/^[ \t]*has_many[ \t]*:([a-zA-Z0-9_]+)/\1/s,scopes/
+--regex-ruby=/^[ \t]*has_and_belongs_to_many[ \t]*:([a-zA-Z0-9_]+)/\1/s,scopes/
+--regex-ruby=/^[ \t]*belongs_to[ \t]*:([a-zA-Z0-9_]+)/\1/s,scopes/
+--regex-ruby=/^[ \t]*([A-Z_]+)/\1/N,constants/
+--regex-ruby=/.*alias(_method)?[[:space:]]+:([[:alnum:]_=!?]+),?[[:space:]]+:([[:alnum:]_=!]+)/\\2/f/
 
 --langmap=Php:+.module
 
