@@ -7,15 +7,18 @@ handlerPath = require.resolve './load-tags-handler'
 
 module.exports =
   find: (editor, callback) ->
-    cursor = editor.getLastCursor()
-    scopes = cursor.getScopeDescriptor().getScopesArray()
-    rubyScopes = scopes.filter (scope) -> /^source\.ruby($|\.)/.test(scope)
-    wordRegex = /[a-zA-Z_][\w!?]*/g if rubyScopes.length
+    symbol = editor.getSelectedText()
 
-    range = cursor.getCurrentWordBufferRange({wordRegex})
-    symbol = editor.getTextInRange(range)
+    unless symbol
+      cursor = editor.getLastCursor()
+      scopes = cursor.getScopeDescriptor().getScopesArray()
+      rubyScopes = scopes.filter (scope) -> /^source\.ruby($|\.)/.test(scope)
+      wordRegex = /[a-zA-Z_][\w!?]*/g if rubyScopes.length
 
-    unless symbol?.length > 0
+      range = cursor.getCurrentWordBufferRange({wordRegex})
+      symbol = editor.getTextInRange(range)
+
+    unless symbol
       return process.nextTick -> callback(null, [])
 
     allTags = []
