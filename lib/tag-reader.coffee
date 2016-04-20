@@ -7,12 +7,12 @@ handlerPath = require.resolve './load-tags-handler'
 
 module.exports =
   find: (editor, callback) ->
-    if editor.getLastCursor().getScopeDescriptor().getScopesArray().indexOf('source.ruby') isnt -1
-      # Include ! and ? in word regular expression for ruby files
-      range = editor.getLastCursor().getCurrentWordBufferRange(wordRegex: /[\w!?]*/g)
-    else
-      range = editor.getLastCursor().getCurrentWordBufferRange()
+    cursor = editor.getLastCursor()
+    scopes = cursor.getScopeDescriptor().getScopesArray()
+    rubyScopes = scopes.filter (scope) -> /^source\.ruby($|\.)/.test(scope)
+    wordRegex = /[a-zA-Z_][\w!?]*/g if rubyScopes.length
 
+    range = cursor.getCurrentWordBufferRange({wordRegex})
     symbol = editor.getTextInRange(range)
 
     unless symbol?.length > 0
