@@ -13,7 +13,7 @@ module.exports =
       cursor = editor.getLastCursor()
       scopes = cursor.getScopeDescriptor().getScopesArray()
       rubyScopes = scopes.filter (scope) -> /^source\.ruby($|\.)/.test(scope)
-      wordRegex = /[a-zA-Z_][\w!?]*/g if rubyScopes.length
+      wordRegex = /[\w!?]*/g if rubyScopes.length
 
       range = cursor.getCurrentWordBufferRange({wordRegex})
       symbol = editor.getTextInRange(range)
