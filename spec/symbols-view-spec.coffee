@@ -605,3 +605,28 @@ describe "SymbolsView", ->
         expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [1, 2]
         symbolsView.cancel()
         expect(atom.workspace.getActiveTextEditor().getSelectedBufferRanges()).toEqual bufferRanges
+
+  describe "when quickJumpToSymbol is set to false", ->
+    beforeEach ->
+      atom.config.set('symbols-view.quickJumpToFileSymbol', false)
+      waitsForPromise ->
+        atom.workspace.open(directory.resolve('sample.js'))
+
+    it "won't jumps to the selected function", ->
+
+      runs ->
+        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [0, 0]
+        atom.commands.dispatch(getEditorView(), "symbols-view:toggle-file-symbols")
+
+      waitsForPromise ->
+        activationPromise
+
+      runs ->
+        symbolsView = $(getWorkspaceView()).find('.symbols-view').view()
+
+      waitsFor ->
+        symbolsView.list.children('li').length > 0
+
+      runs ->
+        symbolsView.selectNextItemView()
+        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [0, 0]
