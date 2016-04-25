@@ -258,7 +258,7 @@ describe "SymbolsView", ->
 
       runs ->
         spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
-        atom.workspace.getActiveTextEditor().setCursorBufferPosition([13, 4])
+        atom.workspace.getActiveTextEditor().setCursorBufferPosition([16, 4])
         atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
 
       waitsForPromise ->
@@ -270,7 +270,7 @@ describe "SymbolsView", ->
       runs ->
         expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [5, 2]
         SymbolsView::moveToPosition.reset()
-        atom.workspace.getActiveTextEditor().setCursorBufferPosition([14, 2])
+        atom.workspace.getActiveTextEditor().setCursorBufferPosition([17, 2])
         atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
 
       waitsFor ->
@@ -279,7 +279,7 @@ describe "SymbolsView", ->
       runs ->
         expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [9, 2]
         SymbolsView::moveToPosition.reset()
-        atom.workspace.getActiveTextEditor().setCursorBufferPosition([15, 5])
+        atom.workspace.getActiveTextEditor().setCursorBufferPosition([18, 5])
         atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
 
       waitsFor ->
@@ -287,6 +287,24 @@ describe "SymbolsView", ->
 
       runs ->
         expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [1, 2]
+        SymbolsView::moveToPosition.reset()
+        atom.workspace.getActiveTextEditor().setCursorBufferPosition([19, 7])
+        atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
+
+      waitsFor ->
+        SymbolsView::moveToPosition.callCount is 1
+
+      runs ->
+        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [1, 2]
+        SymbolsView::moveToPosition.reset()
+        atom.workspace.getActiveTextEditor().setCursorBufferPosition([20, 5])
+        atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
+
+      waitsFor ->
+        SymbolsView::moveToPosition.callCount is 1
+
+      runs ->
+        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [12, 2]
 
     describe "return from declaration", ->
       it "doesn't do anything when no go-to have been triggered", ->

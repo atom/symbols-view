@@ -8,3 +8,4 @@ Foo	file1.rb	/^def Foo$/;"	f
 bar!	file1.rb	/^  def bar!$/;"	f	class:Foo
 bar?	file1.rb	/^  def bar?$/;"	f	class:Foo
 baz	file1.rb	/^  def baz$/;"	f	class:Foo
+baz=	file1.rb	/^  def baz=(*)$/;"	f	class:Foo

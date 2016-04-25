@@ -9,9 +9,14 @@ def Foo
 
   def baz
   end
+
+  def baz=(*)
+  end
 end
 
 if bar?
   baz
   bar!
+elsif !bar!
+  baz=
 end

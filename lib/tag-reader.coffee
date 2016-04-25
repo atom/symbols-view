@@ -2,6 +2,7 @@
 ctags = require 'ctags'
 async = require 'async'
 getTagsFile = require "./get-tags-file"
+_ = require 'underscore-plus'
 
 handlerPath = require.resolve './load-tags-handler'
 
@@ -11,12 +12,20 @@ module.exports =
 
     unless symbol
       cursor = editor.getLastCursor()
-      scopes = cursor.getScopeDescriptor().getScopesArray()
-      rubyScopes = scopes.filter (scope) -> /^source\.ruby($|\.)/.test(scope)
-      wordRegex = /[\w!?]*/g if rubyScopes.length
+      cursorPosition = cursor.getBufferPosition()
+      scope = cursor.getScopeDescriptor()
+      rubyScopes = scope.getScopesArray().filter (s) -> /^source\.ruby($|\.)/.test(s)
 
-      range = cursor.getCurrentWordBufferRange({wordRegex})
-      symbol = editor.getTextInRange(range)
+      wordRegExp = if rubyScopes.length
+        nonWordCharacters = _.escapeRegExp(editor.config.get('editor.nonWordCharacters', {scope}))
+        new RegExp("[^\\s#{nonWordCharacters}]+[!?=]?|[<=>]+", 'g')
+      else
+        cursor.wordRegExp()
+
+      # Can't use `getCurrentWordBufferRange` here because we want to select
+      # the last match of the potential 2 matches under cursor.
+      editor.scanInBufferRange wordRegExp, cursor.getCurrentLineBufferRange(), ({range, match}) ->
+        symbol = match[0] if range.containsPoint(cursorPosition)
 
     unless symbol
       return process.nextTick -> callback(null, [])
