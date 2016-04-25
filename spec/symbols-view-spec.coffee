@@ -357,7 +357,7 @@ describe "SymbolsView", ->
 
       runs ->
         spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
-        atom.workspace.getActiveTextEditor().setCursorBufferPosition([26, 2])
+        atom.workspace.getActiveTextEditor().setCursorBufferPosition([26, 10])
         atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
 
       waitsFor ->
@@ -374,6 +374,15 @@ describe "SymbolsView", ->
 
       runs ->
         expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [0, 0]
+        SymbolsView::moveToPosition.reset()
+        atom.workspace.getActiveTextEditor().setCursorBufferPosition([28, 5])
+        atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
+
+      waitsFor ->
+        SymbolsView::moveToPosition.callCount is 1
+
+      runs ->
+        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [31, 0]
 
     describe "return from declaration", ->
       it "doesn't do anything when no go-to have been triggered", ->

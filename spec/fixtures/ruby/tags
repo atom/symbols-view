@@ -7,6 +7,7 @@
 A::Foo	file1.rb	/^module A::Foo$/;"	m
 A::Foo::B	file1.rb	/^  B = 'b'$/;"	C
 B	file1.rb	/^  B = 'b'$/;"	C
+D::Foo	file1.rb	/^module D::Foo$/;"	m
 Foo	file1.rb	/^module A::Foo$/;"	m
 bar!	file1.rb	/^  def bar!$/;"	f	class:Foo
 bar?	file1.rb	/^  def bar?$/;"	f	class:Foo

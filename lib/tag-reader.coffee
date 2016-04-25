@@ -6,10 +6,10 @@ _ = require 'underscore-plus'
 
 handlerPath = require.resolve './load-tags-handler'
 
-wordAtCursor = (text, cursorIndex, wordSeparator) ->
+wordAtCursor = (text, cursorIndex, wordSeparator, noStripBefore) ->
   beforeCursor = text.slice(0, cursorIndex)
   afterCursor = text.slice(cursorIndex)
-  beforeCursorWordBegins = beforeCursor.lastIndexOf(wordSeparator) + 1
+  beforeCursorWordBegins = if noStripBefore then 0 else beforeCursor.lastIndexOf(wordSeparator) + 1
   afterCursorWordEnds = afterCursor.indexOf(wordSeparator)
   afterCursorWordEnds = afterCursor.length if afterCursorWordEnds is -1
   beforeCursor.slice(beforeCursorWordBegins) + afterCursor.slice(0, afterCursorWordEnds)
@@ -49,10 +49,14 @@ module.exports =
       editor.scanInBufferRange wordRegExp, cursor.getCurrentLineBufferRange(), ({range, match}) ->
         if range.containsPoint(cursorPosition)
           symbol = match[0]
-          addSymbol symbol
           if rubyScopes.length and symbol.indexOf(':') > -1
-            # Beside fully-qualified Ruby constant, also look up the bare word under cursor
-            addSymbol wordAtCursor(symbol, cursorPosition.column - range.start.column, ':')
+            cursorWithinSymbol = cursorPosition.column - range.start.column
+            # Add fully-qualified ruby constant up until the cursor position
+            addSymbol wordAtCursor(symbol, cursorWithinSymbol, ':', true)
+            # Additionally, also look up the bare word under cursor
+            addSymbol wordAtCursor(symbol, cursorWithinSymbol, ':')
+          else
+            addSymbol symbol
 
     unless symbols.length
       return process.nextTick -> callback(null, [])

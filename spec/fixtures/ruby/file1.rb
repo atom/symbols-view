@@ -26,4 +26,8 @@ elsif !bar!
   { :baz => 4 }
   A::Foo::B
   C::Foo::B
+  D::Foo::E
+end
+
+module D::Foo
 end
