@@ -1,4 +1,6 @@
-def Foo
+module A::Foo
+  B = 'b'
+
   def bar!
 
   end
@@ -18,5 +20,7 @@ if bar?
   baz
   bar!
 elsif !bar!
-  baz=
+  baz= 1
+  baz = 2
+  Foo = 3
 end

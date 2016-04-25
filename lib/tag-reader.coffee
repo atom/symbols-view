@@ -8,9 +8,12 @@ handlerPath = require.resolve './load-tags-handler'
 
 module.exports =
   find: (editor, callback) ->
-    symbol = editor.getSelectedText()
+    symbols = []
 
-    unless symbol
+    if symbol = editor.getSelectedText()
+      symbols.push symbol
+
+    unless symbols.length
       cursor = editor.getLastCursor()
       cursorPosition = cursor.getBufferPosition()
       scope = cursor.getScopeDescriptor()
@@ -18,30 +21,48 @@ module.exports =
 
       wordRegExp = if rubyScopes.length
         nonWordCharacters = _.escapeRegExp(editor.config.get('editor.nonWordCharacters', {scope}))
-        new RegExp("[^\\s#{nonWordCharacters}]+[!?=]?|[<=>]+", 'g')
+        new RegExp("[^\\s#{nonWordCharacters}]+([!?]|\\s*=)?|[<=>]+", 'g')
       else
         cursor.wordRegExp()
 
       # Can't use `getCurrentWordBufferRange` here because we want to select
       # the last match of the potential 2 matches under cursor.
       editor.scanInBufferRange wordRegExp, cursor.getCurrentLineBufferRange(), ({range, match}) ->
-        symbol = match[0] if range.containsPoint(cursorPosition)
+        if range.containsPoint(cursorPosition)
+          symbol = match[0]
+          if /\s+=$/.test(symbol)
+            symbols.push symbol.replace(/\s+=$/, '=')
+            symbols.push symbol.replace(/\s+=$/, '')
+          else
+            symbols.push symbol
 
-    unless symbol
+    unless symbols.length
       return process.nextTick -> callback(null, [])
 
-    allTags = []
-
-    async.each(
+    async.map(
       atom.project.getPaths(),
       (projectPath, done) ->
         tagsFile = getTagsFile(projectPath)
-        return done() unless tagsFile?
-        ctags.findTags tagsFile, symbol, (err, tags=[]) ->
-          tag.directory = projectPath for tag in tags
-          allTags = allTags.concat(tags)
-          done(err)
-      (err) -> callback(err, allTags)
+        foundTags = []
+        foundErr = null
+        detectCallback = -> done(foundErr, foundTags)
+        return detectCallback() unless tagsFile?
+        # Find the first symbol in the list that matches a tag
+        async.detectSeries symbols,
+          (symbol, doneDetect) ->
+            ctags.findTags tagsFile, symbol, (err, tags=[]) ->
+              if err
+                foundErr = err
+                doneDetect false
+              else if tags.length
+                tag.directory = projectPath for tag in tags
+                foundTags = tags
+                doneDetect true
+              else
+                doneDetect false
+          detectCallback
+      (err, foundTags) ->
+        callback err, _.flatten(foundTags)
     )
 
   getAllTags: (callback) ->
