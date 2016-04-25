@@ -23,4 +23,7 @@ elsif !bar!
   baz= 1
   baz = 2
   Foo = 3
+  { :baz => 4 }
+  A::Foo::B
+  C::Foo::B
 end
