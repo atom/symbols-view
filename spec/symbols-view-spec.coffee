@@ -258,7 +258,7 @@ describe "SymbolsView", ->
 
       runs ->
         spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
-        atom.workspace.getActiveTextEditor().setCursorBufferPosition([13, 4])
+        atom.workspace.getActiveTextEditor().setCursorBufferPosition([18, 4])
         atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
 
       waitsForPromise ->
@@ -268,18 +268,96 @@ describe "SymbolsView", ->
         SymbolsView::moveToPosition.callCount is 1
 
       runs ->
-        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [5, 2]
+        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [7, 2]
         SymbolsView::moveToPosition.reset()
-        atom.workspace.getActiveTextEditor().setCursorBufferPosition([14, 2])
+        atom.workspace.getActiveTextEditor().setCursorBufferPosition([19, 2])
         atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
 
       waitsFor ->
         SymbolsView::moveToPosition.callCount is 1
 
       runs ->
-        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [9, 2]
+        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [11, 2]
         SymbolsView::moveToPosition.reset()
-        atom.workspace.getActiveTextEditor().setCursorBufferPosition([15, 5])
+        atom.workspace.getActiveTextEditor().setCursorBufferPosition([20, 5])
+        atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
+
+      waitsFor ->
+        SymbolsView::moveToPosition.callCount is 1
+
+      runs ->
+        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [3, 2]
+        SymbolsView::moveToPosition.reset()
+        atom.workspace.getActiveTextEditor().setCursorBufferPosition([21, 7])
+        atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
+
+      waitsFor ->
+        SymbolsView::moveToPosition.callCount is 1
+
+      runs ->
+        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [3, 2]
+
+    it "handles jumping to assignment ruby method definitions", ->
+      atom.project.setPaths([temp.mkdirSync("atom-symbols-view-ruby-")])
+      fs.copySync(path.join(__dirname, 'fixtures', 'ruby'), atom.project.getPaths()[0])
+
+      waitsForPromise ->
+        atom.packages.activatePackage('language-ruby')
+
+      waitsForPromise ->
+        atom.workspace.open 'file1.rb'
+
+      runs ->
+        spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
+        atom.workspace.getActiveTextEditor().setCursorBufferPosition([22, 5])
+        atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
+
+      waitsFor ->
+        SymbolsView::moveToPosition.callCount is 1
+
+      runs ->
+        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [14, 2]
+        SymbolsView::moveToPosition.reset()
+        atom.workspace.getActiveTextEditor().setCursorBufferPosition([23, 5])
+        atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
+
+      waitsFor ->
+        SymbolsView::moveToPosition.callCount is 1
+
+      runs ->
+        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [14, 2]
+        SymbolsView::moveToPosition.reset()
+        atom.workspace.getActiveTextEditor().setCursorBufferPosition([24, 5])
+        atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
+
+      waitsFor ->
+        SymbolsView::moveToPosition.callCount is 1
+
+      runs ->
+        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [0, 0]
+        SymbolsView::moveToPosition.reset()
+        atom.workspace.getActiveTextEditor().setCursorBufferPosition([25, 5])
+        atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
+
+      waitsFor ->
+        SymbolsView::moveToPosition.callCount is 1
+
+      runs ->
+        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [11, 2]
+
+    it "handles jumping to fully qualified ruby constant definitions", ->
+      atom.project.setPaths([temp.mkdirSync("atom-symbols-view-ruby-")])
+      fs.copySync(path.join(__dirname, 'fixtures', 'ruby'), atom.project.getPaths()[0])
+
+      waitsForPromise ->
+        atom.packages.activatePackage('language-ruby')
+
+      waitsForPromise ->
+        atom.workspace.open 'file1.rb'
+
+      runs ->
+        spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
+        atom.workspace.getActiveTextEditor().setCursorBufferPosition([26, 10])
         atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
 
       waitsFor ->
@@ -287,6 +365,24 @@ describe "SymbolsView", ->
 
       runs ->
         expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [1, 2]
+        SymbolsView::moveToPosition.reset()
+        atom.workspace.getActiveTextEditor().setCursorBufferPosition([27, 5])
+        atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
+
+      waitsFor ->
+        SymbolsView::moveToPosition.callCount is 1
+
+      runs ->
+        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [0, 0]
+        SymbolsView::moveToPosition.reset()
+        atom.workspace.getActiveTextEditor().setCursorBufferPosition([28, 5])
+        atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
+
+      waitsFor ->
+        SymbolsView::moveToPosition.callCount is 1
+
+      runs ->
+        expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [31, 0]
 
     describe "return from declaration", ->
       it "doesn't do anything when no go-to have been triggered", ->
