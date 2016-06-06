@@ -90,9 +90,9 @@
 --regex-perl=/^\=head2[ \t]+(.+)/-- \1/p,pod,Plain Old Documentation/
 --regex-perl=/^\=head[3-5][ \t]+(.+)/---- \1/p,pod,Plain Old Documentation/
 
---JavaScript-kinds=-p
+--JavaScript-kinds=-pf
 --regex-JavaScript=/(,|(;|^)[ \t]*(var|let|const|([A-Za-z_$][A-Za-z0-9_$.]*\.)*))[ \t]*([A-Za-z0-9_$]+)[ \t]*=[ \t]*function[ \t]*\(/\5/,function/
---regex-JavaScript=/(,|^|\*\/)[ \t]*function[ \t]+([A-Za-z0-9_$]+)[ \t]*\([^)]*\)/\1/,function/
+--regex-JavaScript=/(,|^|\*\/)[ \t]*function[ \t]+([A-Za-z0-9_$]+)[ \t]*\([^)]*\)/\2/,function/
 --regex-JavaScript=/(,|^|\*\/)[ \t]*static[ \t]+([A-Za-z0-9_$]+)[ \t]*=/\2/,variable/
 --regex-JavaScript=/(,|^|\*\/|export|export default)[ \t]*class[ \t]+([A-Za-z0-9._$]+)[ \t]*/\2/,class/
 --regex-JavaScript=/(,|^|\*\/)[ \t]*([A-Za-z_$][A-Za-z0-9_$]+)[ \t]*:[ \t]*function[ \t]*\(/\2/,function/
