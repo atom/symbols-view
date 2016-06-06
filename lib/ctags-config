@@ -93,6 +93,7 @@
 --JavaScript-kinds=-p
 --regex-JavaScript=/(,|(;|^)[ \t]*(var|let|const|([A-Za-z_$][A-Za-z0-9_$.]*\.)*))[ \t]*([A-Za-z0-9_$]+)[ \t]*=[ \t]*function[ \t]*\(/\5/,function/
 --regex-JavaScript=/function[ \t]+([A-Za-z0-9_$]+)[ \t]*\([^)]*\)/\1/,function/
+--regex-JavaScript=/(,|^|\*\/)[ \t]*static[ \t]+([A-Za-z0-9_$]+)[ \t]*=/\2/,variable/
 --regex-JavaScript=/(,|^|\*\/)[ \t]*([A-Za-z_$][A-Za-z0-9_$]+)[ \t]*:[ \t]*function[ \t]*\(/\2/,function/
 --regex-JavaScript=/([A-Za-z0-9_$]+)[ \t]*[=:][ \t]*\([^)]*\)[ \t]*=>/\1/,function/
 --regex-JavaScript=/(,|^|\*\/)[ \t]*(static[ \t]+)?(while|if|for|function|([A-Za-z_$][A-Za-z0-9_$]+))[ \t]*\([^)]*\)[ \t]*\{/\2\4/,function/
