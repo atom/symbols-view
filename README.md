@@ -1,9 +1,9 @@
-# Symbols View package [![Build Status](https://travis-ci.org/atom/symbols-view.svg?branch=master)](https://travis-ci.org/atom/symbols-view)
+# Symbols View package
+[![OS X Build Status](https://travis-ci.org/atom/symbols-view.svg?branch=master)](https://travis-ci.org/atom/symbols-view) [![Windows Build Status](https://ci.appveyor.com/api/projects/status/al68vtv83x49eu5d/branch/master?svg=true)](https://ci.appveyor.com/project/Atom/symbols-view/branch/master) [![Dependency Status](https://david-dm.org/atom/symbols-view.svg)](https://david-dm.org/atom/symbols-view)
 
-Display the list of functions/methods in the editor via `cmd-r` in Atom.
+Display the list of functions/methods in the editor.
 
-If your project has a `tags`/`.tags`/`TAGS`/`.TAGS` file at the root then
-following are supported:
+If your project has a `tags`/`.tags`/`TAGS`/`.TAGS` file at the root then following are supported:
 
 |Command|Description|Keybinding (Linux)|Keybinding (OS X)|Keybinding (Windows)|
 |-------|-----------|------------------|-----------------|--------------------|
