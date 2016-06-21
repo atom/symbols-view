@@ -1,0 +1,4 @@
+class foo {
+  bar() {}
+  baz = () => {}
+}
