@@ -186,7 +186,7 @@ describe "SymbolsView", ->
         new TagGenerator(es6Fixture).generate().then (o) -> tags = o
 
       runs ->
-        expect(tags.length).toBe 2
+        expect(tags.length).toBe 5
         expect(tags[0].name).toBe "bar"
         expect(tags[0].position.row).toBe 1
         expect(tags[1].name).toBe "baz"
