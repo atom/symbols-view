@@ -46,6 +46,8 @@ class TagGenerator
       when 'source.makefile' then 'Make'
       when 'source.objc'     then 'C'
       when 'source.objcpp'   then 'C++'
+      when 'source.papyrus.skyrim'   then 'Papyrus'
+      when 'source.papyrus.fallout4' then 'Papyrus'
       when 'source.python'   then 'Python'
       when 'source.ruby'     then 'Ruby'
       when 'source.sass'     then 'Sass'
