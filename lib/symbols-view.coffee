@@ -98,6 +98,8 @@ class SymbolsView extends SelectListView
     @focusFilterEditor()
 
   getTagLine: (tag) ->
+    return new Point(tag.lineNumber - 1, 0) if tag.lineNumber
+
     # Remove leading /^ and trailing $/
     pattern = tag.pattern?.replace(/(^^\/\^)|(\$\/$)/g, '').trim()
 

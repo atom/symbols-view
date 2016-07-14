@@ -220,6 +220,28 @@ describe "SymbolsView", ->
       runs ->
         expect(editor.getCursorBufferPosition()).toEqual [2, 0]
 
+    it "correctly moves the cursor to the declaration of a C preprocessor macro", ->
+      atom.project.setPaths([temp.mkdirSync("atom-symbols-view-c-")])
+      fs.copySync(path.join(__dirname, 'fixtures', 'c'), atom.project.getPaths()[0])
+
+      waitsForPromise ->
+        atom.packages.activatePackage('language-c')
+
+      waitsForPromise ->
+        atom.workspace.open "sample.c"
+
+      runs ->
+        editor = atom.workspace.getActiveTextEditor()
+        editor.setCursorBufferPosition([4, 4])
+        spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
+        atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
+
+      waitsFor ->
+        SymbolsView::moveToPosition.callCount is 1
+
+      runs ->
+        expect(editor.getCursorBufferPosition()).toEqual [0, 0]
+
     it "displays matches when more than one exists and opens the selected match", ->
       waitsForPromise ->
         atom.workspace.open(directory.resolve("tagged.js"))
