@@ -141,3 +141,11 @@
 --langmap=Julia:.jl
 --regex-Julia=/^[ \t]*(function|macro|abstract|type|typealias|immutable)[ \t]+([^ \t({[]+).*$/\2/f,function/
 --regex-Julia=/^[ \t]*(([^@#$ \t({[]+)|\(([^@#$ \t({[]+)\)|\((\$)\))[ \t]*(\{.*\})?[ \t]*\([^#]*\)[ \t]*=([^=].*$|$)/\2\3\4/f,function/
+
+--langdef=Papyrus
+--langmap=Papyrus:.psc
+--regex-Papyrus=/^[ \t]*(([a-zA-Z0-9_\:]+)[ \t])?function[ \t]+([a-zA-Z0-9_]+)[ \t]*\([^)]*\)([ \t]*(native|global|debugonly|betaonly))*/\3/f,function/
+--regex-Papyrus=/^[ \t]*event[ \t]+([a-zA-Z0-9_\.]+)[ \t]*\([^)]*\)/\1/e,event/
+--regex-Papyrus=/^[ \t]*([a-zA-Z0-9_\:]+)[ \t]property[ \t]+([a-zA-Z0-9_]+)([ \t]+(autoreadonly|auto|readonly|hidden|const|mandatory|conditional|debugonly|betaonly))*/\2/p,property/
+--regex-Papyrus=/^[ \t]*group[ \t]+([a-zA-Z0-9_]+)/\1/g,group/
+--regex-Papyrus=/^[ \t]*customevent[ \t]+([a-zA-Z0-9_]+)/\1/c,customevent/
