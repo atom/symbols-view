@@ -141,3 +141,13 @@
 --langmap=Julia:.jl
 --regex-Julia=/^[ \t]*(function|macro|abstract|type|typealias|immutable)[ \t]+([^ \t({[]+).*$/\2/f,function/
 --regex-Julia=/^[ \t]*(([^@#$ \t({[]+)|\(([^@#$ \t({[]+)\)|\((\$)\))[ \t]*(\{.*\})?[ \t]*\([^#]*\)[ \t]*=([^=].*$|$)/\2\3\4/f,function/
+
+--langdef=latex
+--langmap=latex:.tex
+--regex-latex=/\\label\{([^}]*)\}/\1/l,label/
+--regex-latex=/\\section\{([^}]*)\}/\1/s,section/
+--regex-latex=/\\subsection\{([^}]*)\}/\1/t,subsection/
+--regex-latex=/\\subsubsection\{([^}]*)\}/\1/u,subsubsection/
+--regex-latex=/\\section\*\{([^}]*)\}/\1/s,section/
+--regex-latex=/\\subsection\*\{([^}]*)\}/\1/t,subsection/
+--regex-latex=/\\subsubsection\*\{([^}]*)\}/\1/u,subsubsection/
