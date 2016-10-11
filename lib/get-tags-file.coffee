@@ -16,8 +16,8 @@ module.exports = (directoryPath) ->
   tagsFile = path.join(directoryPath, ".TAGS")
   return tagsFile if fs.isFileSync(tagsFile)
 
-  tagsFile = path.join(directoryPath, ".git/tags")
+  tagsFile = path.join(directoryPath, ".git", "tags")
   return tagsFile if fs.isFileSync(tagsFile)
 
-  tagsFile = path.join(directoryPath, ".git/TAGS")
+  tagsFile = path.join(directoryPath, ".git", "TAGS")
   return tagsFile if fs.isFileSync(tagsFile)
