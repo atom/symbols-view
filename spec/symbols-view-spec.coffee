@@ -178,6 +178,20 @@ describe "SymbolsView", ->
         expect(tags[1].name).toBe "quicksort.sort"
         expect(tags[1].position.row).toBe 1
 
+    it "generates tags for all ES6 JavaScript functions", ->
+      tags = []
+
+      waitsForPromise ->
+        es6Fixture = directory.resolve('es6.js')
+        new TagGenerator(es6Fixture).generate().then (o) -> tags = o
+
+      runs ->
+        expect(tags.length).toBe 5
+        expect(tags[0].name).toBe "bar"
+        expect(tags[0].position.row).toBe 1
+        expect(tags[1].name).toBe "baz"
+        expect(tags[1].position.row).toBe 2
+
     it "generates no tags for text file", ->
       tags = []
 
