@@ -28,7 +28,7 @@ module.exports =
       rubyScopes = scope.getScopesArray().filter (s) -> /^source\.ruby($|\.)/.test(s)
 
       wordRegExp = if rubyScopes.length
-        nonWordCharacters = editor.config.get 'editor.nonWordCharacters', {scope}
+        nonWordCharacters = atom.config.get 'editor.nonWordCharacters', {scope}
         # Allow special handling for fully-qualified ruby constants
         nonWordCharacters = nonWordCharacters.replace(/:/g, '')
         new RegExp("[^\\s#{_.escapeRegExp nonWordCharacters}]+([!?]|\\s*=>?)?|[<=>]+", 'g')

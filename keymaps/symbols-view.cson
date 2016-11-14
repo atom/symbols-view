@@ -12,7 +12,7 @@
   'ctrl-alt-up': 'symbols-view:return-from-declaration'
 
 '.platform-darwin':
-  'cmd-R': 'symbols-view:toggle-project-symbols'
+  'cmd-shift-r': 'symbols-view:toggle-project-symbols'
 
 '.platform-win32, .platform-linux':
-  'ctrl-R': 'symbols-view:toggle-project-symbols'
+  'ctrl-shift-r': 'symbols-view:toggle-project-symbols'
