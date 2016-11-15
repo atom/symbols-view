@@ -98,8 +98,8 @@ class SymbolsView extends SelectListView
     @focusFilterEditor()
 
   getTagLine: (tag) ->
-    # Remove leading /^ and trailing $/
-    pattern = tag.pattern?.replace(/(^^\/\^)|(\$\/$)/g, '').trim()
+    # Remove leading /^ , trailing $/ , and escape char (\)
+    pattern = tag.pattern?.replace(/(^^\/\^)|(\$\/$)|(\\)/g, '').trim()
 
     return unless pattern
     file = path.join(tag.directory, tag.file)
