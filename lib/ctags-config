@@ -93,7 +93,7 @@
 --regex-JavaScript=/(,|(;|^)[ \t]*(var|let|([A-Za-z_$][A-Za-z0-9_$.]*\.)*))[ \t]*([A-Za-z0-9_$]+)[ \t]*=[ \t]*function[ \t]*\(/\5/,function/
 --regex-JavaScript=/function[ \t]+([A-Za-z0-9_$]+)[ \t]*\([^)]*\)/\1/,function/
 --regex-JavaScript=/(,|^|\*\/)[ \t]*([A-Za-z_$][A-Za-z0-9_$]+)[ \t]*:[ \t]*function[ \t]*\(/\2/,function/
---regex-JavaScript=/(,|^|\*\/)[ \t]*(static[ \t]+)?(while|if|for|function|([A-Za-z_$][A-Za-z0-9_$]+))[ \t]*\([^)]*\)[ \t]*\{/\2\4/,function/
+--regex-JavaScript=/(,|^|\*\/)[ \t]*(static[ \t]+)?(while|if|for|function|([A-Za-z_$][A-Za-z0-9_$]+))[ \t]*\(.*\)[ \t]*\{/\2\4/,function/
 --regex-JavaScript=/(,|^|\*\/)[ \t]*get[ \t]+([A-Za-z_$][A-Za-z0-9_$]+)[ \t]*\([ \t]*\)[ \t]*\{/get \2/,function/
 --regex-JavaScript=/(,|^|\*\/)[ \t]*set[ \t]+([A-Za-z_$][A-Za-z0-9_$]+)[ \t]*\([ \t]*([A-Za-z_$][A-Za-z0-9_$]+)?[ \t]*\)[ \t]*\{/set \2/,function/
 --regex-JavaScript=/(,|^|\*\/)[ \t]*async[ \t]+([A-Za-z_$][A-Za-z0-9_$]+)[ \t]*\([ \t]*([A-Za-z_$].+)?[ \t]*\)[ \t]*\{/\2/,function/
