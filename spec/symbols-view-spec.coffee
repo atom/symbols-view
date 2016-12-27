@@ -246,6 +246,25 @@ describe "SymbolsView", ->
         expect(atom.workspace.getActiveTextEditor().getPath()).toBe directory.resolve("tagged-duplicate.js")
         expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual [0, 4]
 
+    it "moves the cursor to the declaration if the tags are numbered instead of patterned", ->
+      atom.project.setPaths([temp.mkdirSync("atom-symbols-view-js-excmd-number-")])
+      fs.copySync(path.join(__dirname, "fixtures", "js-excmd-number"), atom.project.getPaths()[0])
+
+      waitsForPromise ->
+        atom.workspace.open "sorry.js"
+
+      runs ->
+        editor = atom.workspace.getActiveTextEditor()
+        editor.setCursorBufferPosition([9, 16])
+        spyOn(SymbolsView.prototype, "moveToPosition").andCallThrough()
+        atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration')
+
+      waitsFor ->
+        SymbolsView::moveToPosition.callCount is 1
+
+      runs ->
+        expect(editor.getCursorBufferPosition()).toEqual [6, 0]
+
     it "includes ? and ! characters in ruby symbols", ->
       atom.project.setPaths([temp.mkdirSync("atom-symbols-view-ruby-")])
       fs.copySync(path.join(__dirname, 'fixtures', 'ruby'), atom.project.getPaths()[0])
