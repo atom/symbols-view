@@ -31,9 +31,9 @@ describe('SymbolsView', () => {
   });
 
   describe('when tags can be generated for a file', () => {
-    beforeEach(() =>
-      waitsForPromise(() => atom.workspace.open(directory.resolve('sample.js')))
-    );
+    beforeEach(() => {
+      waitsForPromise(() => atom.workspace.open(directory.resolve('sample.js')));
+    });
 
     it('initially displays all JavaScript functions with line numbers', () => {
       runs(() => atom.commands.dispatch(getEditorView(), 'symbols-view:toggle-file-symbols'));
@@ -142,9 +142,9 @@ describe('SymbolsView', () => {
   });
 
   describe("when tags can't be generated for a file", () => {
-    beforeEach(() =>
-      waitsForPromise(() => atom.workspace.open('sample.txt'))
-    );
+    beforeEach(() => {
+      waitsForPromise(() => atom.workspace.open('sample.txt'));
+    });
 
     it('shows an error message when no matching tags are found', () => {
       runs(() => atom.commands.dispatch(getEditorView(), 'symbols-view:toggle-file-symbols'));
@@ -423,7 +423,7 @@ describe('SymbolsView', () => {
       });
     });
 
-    describe("when the tag is in a file that doesn't exist", () =>
+    describe("when the tag is in a file that doesn't exist", () => {
       it("doesn't display the tag", () => {
         fs.removeSync(directory.resolve('tagged-duplicate.js'));
 
@@ -439,7 +439,8 @@ describe('SymbolsView', () => {
         waitsFor(() => SymbolsView.prototype.moveToPosition.callCount === 1);
 
         runs(() => expect(editor.getCursorBufferPosition()).toEqual([8, 0]));
-      }));
+      });
+    });
   });
 
   describe('project symbols', () => {
@@ -512,7 +513,7 @@ describe('SymbolsView', () => {
       });
     });
 
-    describe('when selecting a tag', () =>
+    describe('when selecting a tag', () => {
       describe("when the file doesn't exist", () => {
         beforeEach(() => fs.removeSync(directory.resolve('tagged.js')));
 
@@ -532,11 +533,11 @@ describe('SymbolsView', () => {
             expect(symbolsView.error.text().length).toBeGreaterThan(0);
           });
         });
-      })
-    );
+      });
+    });
   });
 
-  describe('when useEditorGrammarAsCtagsLanguage is set to true', () =>
+  describe('when useEditorGrammarAsCtagsLanguage is set to true', () => {
     it("uses the language associated with the editor's grammar", () => {
       atom.config.set('symbols-view.useEditorGrammarAsCtagsLanguage', true);
 
@@ -572,13 +573,13 @@ describe('SymbolsView', () => {
         expect(symbolsView.list.children('li:first').find('.primary-line')).toHaveText('test');
         expect(symbolsView.list.children('li:first').find('.secondary-line')).toHaveText('Line 1');
       });
-    })
-  );
+    });
+  });
 
   describe('match highlighting', () => {
-    beforeEach(() =>
-      waitsForPromise(() => atom.workspace.open(directory.resolve('sample.js')))
-    );
+    beforeEach(() => {
+      waitsForPromise(() => atom.workspace.open(directory.resolve('sample.js')));
+    });
 
     it('highlights an exact match', () => {
       runs(() => atom.commands.dispatch(getEditorView(), 'symbols-view:toggle-file-symbols'));
@@ -644,9 +645,9 @@ describe('SymbolsView', () => {
   });
 
   describe('quickjump to symbol', () => {
-    beforeEach(() =>
-      waitsForPromise(() => atom.workspace.open(directory.resolve('sample.js')))
-    );
+    beforeEach(() => {
+      waitsForPromise(() => atom.workspace.open(directory.resolve('sample.js')));
+    });
 
     it('jumps to the selected function', () => {
       runs(() => {
@@ -696,7 +697,6 @@ describe('SymbolsView', () => {
     });
 
     it("won't jumps to the selected function", () => {
-
       runs(() => {
         expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual([0, 0]);
         atom.commands.dispatch(getEditorView(), 'symbols-view:toggle-file-symbols');
