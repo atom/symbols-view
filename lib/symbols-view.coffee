@@ -1,11 +1,12 @@
 path = require 'path'
 {Point} = require 'atom'
-{$$, SelectListView} = require 'atom-space-pen-views'
+{$$} = require 'atom-space-pen-views'
+BaseSymbolsView = require './base-symbols-view'
 fs = require 'fs-plus'
 {match} = require 'fuzzaldrin'
 
 module.exports =
-class SymbolsView extends SelectListView
+class SymbolsView extends BaseSymbolsView
   @highlightMatches: (context, name, matches, offsetIndex=0) ->
     lastIndex = 0
     matchedChars = [] # Build up a set of matched chars to be more semantic
