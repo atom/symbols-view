@@ -49,5 +49,12 @@
     "eslint-plugin-jasmine": "^2.2.0",
     "eslint-plugin-prefer-object-spread": "^1.1.0",
     "eslint-plugin-react": "^5.2.2"
+  },
+  "consumedServices": {
+    "symbols.provider": {
+      "versions": {
+        "0.0.1": "consumeProvider_0_0_1"
+      }
+    }
   }
 }
