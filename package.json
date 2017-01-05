@@ -44,7 +44,7 @@
   "devDependencies": {
     "babel-eslint": "^6.1.2",
     "eslint": "^3.12.2",
-    "eslint-config-fbjs": "^1.1.1",
+    "eslint-config-fbjs": "^2.0.0-alpha.1",
     "eslint-plugin-babel": "^3.3.0",
     "eslint-plugin-flowtype": "^2.29.1",
     "eslint-plugin-jasmine": "^2.2.0",
@@ -54,7 +54,7 @@
   "consumedServices": {
     "symbols.provider": {
       "versions": {
-        "0.0.1": "consumeProvider_0_0_1"
+        "0.0.1": "consumeProviders_0_0_1"
       }
     }
   }
