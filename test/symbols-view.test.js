@@ -38,11 +38,13 @@ describe('SymbolsView', () => {
       await symbolsViewPackage.activate();
       fileView = symbolsViewPackage.createFileView();
       sinon.spy(fileView, 'setItems');
+      sinon.spy(fileView, 'generateTags');
     });
 
     afterEach(() => {
       if (fileView) {
         fileView.setItems.restore();
+        fileView.generateTags.restore();
         fileView.dispose();
       }
       fileView = null;
@@ -65,77 +67,39 @@ describe('SymbolsView', () => {
       expect(item2[0].innerText).to.equal('quicksort.sort');
       expect(item2[1].innerText).to.equal('Line 2');
     });
-    //
-    // it('caches tags until the editor changes', () => {
-    //   runs(() => {
-    //     editor = atom.workspace.getActiveTextEditor();
-    //     fileView = mainModule.createFileView();
-    //     spyOn(fileView, 'setItems').andCallThrough();
-    //     atom.commands.dispatch(getEditorView(), 'symbols-view:toggle-file-symbols');
-    //   });
-    //
-    //   waitsFor('items to be loaded', () => {
-    //     return fileView.setItems.callCount > 0;
-    //   });
-    //
-    //   runs(() => {
-    //     symbolsView = document.querySelector('.symbols-view');
-    //   });
-    //
-    //   waitsFor(() => {
-    //     return symbolsView.getElementsByTagName('li').length > 0;
-    //   });
-    //
-    //   runs(() => {
-    //     fileView.cancel();
-    //     fileView.setItems.reset();
-    //     spyOn(fileView, 'generateTags').andCallThrough();
-    //     atom.commands.dispatch(getEditorView(), 'symbols-view:toggle-file-symbols');
-    //   });
-    //
-    //   waitsFor('items to be loaded', () => {
-    //     return fileView.panel && fileView.panel.item;
-    //   });
-    //
-    //   waitsFor('items to be loaded', () => {
-    //     return fileView.setItems.callCount > 0;
-    //   });
-    //
-    //   waitsFor(() => {
-    //     return fileView.panel.item.items.length > 0;
-    //   });
-    //
-    //   runs(() => {
-    //     expect(fileView.selectListView.props.infoMessage).toBeFalsy();
-    //     expect(fileView.panel.item.items.length).toBe(2);
-    //     expect(fileView.generateTags).not.toHaveBeenCalled();
-    //     editor.save();
-    //     fileView.cancel();
-    //     fileView.setItems.reset();
-    //     expect(fileView.panel).toBeFalsy();
-    //     atom.commands.dispatch(getEditorView(), 'symbols-view:toggle-file-symbols');
-    //   });
-    //
-    //   waitsFor('items to be loaded', () => {
-    //     return fileView.panel && fileView.panel.item;
-    //   });
-    //
-    //   waitsFor('items to be loaded', () => {
-    //     return fileView.setItems.callCount > 0;
-    //   });
-    //
-    //   waitsFor(() => {
-    //     return fileView.panel.item.items.length > 0;
-    //   });
-    //
-    //   runs(() => {
-    //     expect(fileView.selectListView.props.infoMessage).toBeFalsy();
-    //     expect(fileView.panel.item.items.length).toBe(2);
-    //     expect(fileView.generateTags).toHaveBeenCalled();
-    //     editor.destroy();
-    //     expect(fileView.cachedTags).toEqual({});
-    //   });
-    // });
+
+    it('caches tags until the editor changes', async () => {
+      await fileView.toggle();
+      await until('the items have been displayed', () => {
+        return fileView.setItems.callCount === 1;
+      });
+      await until('the element exists', () => {
+        return fileView.selectListView.element.getElementsByTagName('li').length > 1;
+      });
+      expect(fileView.selectListView.items.length).to.equal(2);
+      expect(fileView.generateTags.callCount === 1);
+      await fileView.toggle();
+      await until('the panel is destroyed', () => {
+        return fileView.panel === null;
+      });
+      expect(fileView.selectListView.items.length).to.equal(0);
+      await fileView.toggle();
+      expect(fileView.selectListView.items.length).to.equal(2);
+      expect(fileView.generateTags.callCount === 1);
+      atom.workspace.getActiveTextEditor().save();
+      await fileView.toggle();
+      await until('the panel is destroyed', () => {
+        return fileView.panel === null;
+      });
+      expect(fileView.selectListView.items.length).to.equal(0);
+      await fileView.toggle();
+      await until('the panel is created', () => {
+        return fileView.panel !== null;
+      });
+      expect(fileView.generateTags.callCount === 1);
+      atom.workspace.getActiveTextEditor().destroy();
+      expect(fileView.cachedTags).to.deep.equal({});
+    });
 
     it('displays an error when no tags match text in mini-editor', async () => {
       await fileView.toggle();
