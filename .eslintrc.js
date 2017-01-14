@@ -1,7 +1,8 @@
 module.exports = {
   parser: 'babel-eslint',
-  extends: 'fbjs',
+  extends: ['fbjs/opensource'],
   globals: {
-    atom: true
+    atom: true,
+    emit: true
   }
 };
