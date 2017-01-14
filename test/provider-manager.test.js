@@ -1,7 +1,5 @@
-'use babel';
-/* eslint-env jasmine */
-
 import ProviderManager from './../lib/provider-manager';
+import {expect} from 'chai';
 
 describe('Provider Manager', () => {
   let providerManager;
@@ -19,7 +17,7 @@ describe('Provider Manager', () => {
 
       it('returns undefined', () => {
         const registration = providerManager.registerProviders(provider);
-        expect(registration).toBeUndefined();
+        expect(registration).to.be.undefined;
       });
     });
 
@@ -30,8 +28,8 @@ describe('Provider Manager', () => {
 
       it('returns a disposable', () => {
         const registration = providerManager.registerProviders(provider);
-        expect(registration).toBeTruthy();
-        expect(registration.dispose).toBeDefined();
+        expect(registration).to.be.ok;
+        expect(registration.dispose).to.be.ok;
       });
     });
   });
