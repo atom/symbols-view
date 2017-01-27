@@ -193,6 +193,21 @@ describe('SymbolsView', () => {
 
       runs(() => expect(tags.length).toBe(0));
     });
+
+    describe('when extraCtagsArguments is used', () => {
+      it("finds no symbols when the arguments contain --help", () => {
+        atom.config.set('symbols-view.extraCtagsArguments', ['--help']);
+
+        let tags = [];
+
+        waitsForPromise(() => {
+          const sampleJsPath = directory.resolve('sample.js');
+          return new TagGenerator(sampleJsPath).generate().then(o => tags = o);
+        });
+
+        runs(() => expect(tags.length).toBe(0));
+      });
+    });
   });
 
   describe('go to declaration', () => {
