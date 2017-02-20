@@ -1,4 +1,4 @@
-'use babel';
+/** @babel */
 /* eslint-env jasmine */
 /* global waitsForPromise */
 
