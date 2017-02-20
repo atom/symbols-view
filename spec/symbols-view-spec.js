@@ -8,7 +8,7 @@ import temp from 'temp';
 import SymbolsView from '../lib/symbols-view';
 import TagGenerator from '../lib/tag-generator';
 
-import {it, fit, ffit, fffit, beforeEach, afterEach, conditionPromise} from './async-spec-helpers'
+import {it, fit, ffit, fffit, beforeEach, afterEach, conditionPromise} from './async-spec-helpers';
 
 describe('SymbolsView', () => {
   let [symbolsView, activationPromise, editor, directory] = [];
@@ -17,7 +17,7 @@ describe('SymbolsView', () => {
   const getEditorView = () => atom.views.getView(atom.workspace.getActiveTextEditor());
 
   beforeEach(async () => {
-    jasmine.unspy(global, 'setTimeout')
+    jasmine.unspy(global, 'setTimeout');
 
     atom.project.setPaths([
       temp.mkdirSync('other-dir-'),
@@ -37,12 +37,12 @@ describe('SymbolsView', () => {
     });
 
     it('initially displays all JavaScript functions with line numbers', async () => {
-      atom.commands.dispatch(getEditorView(), 'symbols-view:toggle-file-symbols')
-      await activationPromise
-      symbolsView = atom.workspace.getModalPanels()[0].item
-      await conditionPromise(() => symbolsView.element.querySelectorAll('li').length > 0)
-      expect(symbolsView.selectListView.refs.loadingMessage).toBeUndefined()
-      expect(document.body.contains(symbolsView.element)).toBe(true)
+      atom.commands.dispatch(getEditorView(), 'symbols-view:toggle-file-symbols');
+      await activationPromise;
+      symbolsView = atom.workspace.getModalPanels()[0].item;
+      await conditionPromise(() => symbolsView.element.querySelectorAll('li').length > 0);
+      expect(symbolsView.selectListView.refs.loadingMessage).toBeUndefined();
+      expect(document.body.contains(symbolsView.element)).toBe(true);
       expect(symbolsView.element.querySelectorAll('li').length).toBe(2);
       expect(symbolsView.element.querySelector('li:first-child .primary-line')).toHaveText('quicksort');
       expect(symbolsView.element.querySelector('li:first-child .secondary-line')).toHaveText('Line 1');
@@ -54,14 +54,14 @@ describe('SymbolsView', () => {
     it('caches tags until the editor changes', async () => {
       editor = atom.workspace.getActiveTextEditor();
       atom.commands.dispatch(getEditorView(), 'symbols-view:toggle-file-symbols');
-      await activationPromise
-      symbolsView = atom.workspace.getModalPanels()[0].item
-      await conditionPromise(() => symbolsView.element.querySelectorAll('li').length > 0)
+      await activationPromise;
+      symbolsView = atom.workspace.getModalPanels()[0].item;
+      await conditionPromise(() => symbolsView.element.querySelectorAll('li').length > 0);
       await symbolsView.cancel();
 
       spyOn(symbolsView, 'generateTags').andCallThrough();
       atom.commands.dispatch(getEditorView(), 'symbols-view:toggle-file-symbols');
-      await conditionPromise(() => symbolsView.element.querySelectorAll('li').length > 0)
+      await conditionPromise(() => symbolsView.element.querySelectorAll('li').length > 0);
       expect(symbolsView.selectListView.refs.loadingMessage).toBeUndefined();
       expect(symbolsView.element.querySelectorAll('li').length).toBe(2);
       expect(symbolsView.generateTags).not.toHaveBeenCalled();
@@ -69,7 +69,7 @@ describe('SymbolsView', () => {
 
       editor.save();
       atom.commands.dispatch(getEditorView(), 'symbols-view:toggle-file-symbols');
-      await conditionPromise(() => symbolsView.element.querySelectorAll('li').length > 0)
+      await conditionPromise(() => symbolsView.element.querySelectorAll('li').length > 0);
       expect(symbolsView.selectListView.refs.loadingMessage).toBeUndefined();
       expect(symbolsView.element.querySelectorAll('li').length).toBe(2);
       expect(symbolsView.generateTags).toHaveBeenCalled();
@@ -80,18 +80,18 @@ describe('SymbolsView', () => {
     it('displays an error when no tags match text in mini-editor', async () => {
       atom.commands.dispatch(getEditorView(), 'symbols-view:toggle-file-symbols');
       await activationPromise;
-      symbolsView = atom.workspace.getModalPanels()[0].item
-      await conditionPromise(() => symbolsView.element.querySelectorAll('li').length > 0)
+      symbolsView = atom.workspace.getModalPanels()[0].item;
+      await conditionPromise(() => symbolsView.element.querySelectorAll('li').length > 0);
 
       symbolsView.selectListView.refs.queryEditor.setText('nothing will match this');
-      await conditionPromise(() => symbolsView.selectListView.refs.emptyMessage)
+      await conditionPromise(() => symbolsView.selectListView.refs.emptyMessage);
       expect(document.body.contains(symbolsView.element)).toBe(true);
       expect(symbolsView.element.querySelectorAll('li').length).toBe(0);
       expect(symbolsView.selectListView.refs.emptyMessage.textContent.length).toBeGreaterThan(0);
 
       // Should remove error
       symbolsView.selectListView.refs.queryEditor.setText('');
-      await conditionPromise(() => symbolsView.element.querySelectorAll('li').length > 0)
+      await conditionPromise(() => symbolsView.element.querySelectorAll('li').length > 0);
       expect(symbolsView.element.querySelectorAll('li').length).toBe(2);
       expect(symbolsView.selectListView.refs.emptyMessage).toBeUndefined();
     });
@@ -100,26 +100,26 @@ describe('SymbolsView', () => {
       expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual([0, 0]);
       atom.commands.dispatch(getEditorView(), 'symbols-view:toggle-file-symbols');
       await activationPromise;
-      symbolsView = atom.workspace.getModalPanels()[0].item
-      await conditionPromise(() => symbolsView.element.querySelectorAll('li').length > 0)
+      symbolsView = atom.workspace.getModalPanels()[0].item;
+      await conditionPromise(() => symbolsView.element.querySelectorAll('li').length > 0);
 
-      symbolsView.element.querySelectorAll('li')[1].click()
+      symbolsView.element.querySelectorAll('li')[1].click();
       expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual([1, 2]);
     });
   });
 
   describe("when tags can't be generated for a file", () => {
     beforeEach(async () => {
-      await atom.workspace.open('sample.txt')
+      await atom.workspace.open('sample.txt');
     });
 
     it('shows an error message when no matching tags are found', async () => {
       atom.commands.dispatch(getEditorView(), 'symbols-view:toggle-file-symbols');
       await activationPromise;
-      symbolsView = atom.workspace.getModalPanels()[0].item
+      symbolsView = atom.workspace.getModalPanels()[0].item;
 
-      await conditionPromise(() => symbolsView.selectListView.refs.emptyMessage)
-      expect(document.body.contains(symbolsView.element))
+      await conditionPromise(() => symbolsView.selectListView.refs.emptyMessage);
+      expect(document.body.contains(symbolsView.element));
       expect(symbolsView.element.querySelectorAll('li').length).toBe(0);
       expect(symbolsView.selectListView.refs.emptyMessage).toBeVisible();
       expect(symbolsView.selectListView.refs.emptyMessage.textContent.length).toBeGreaterThan(0);
@@ -154,7 +154,7 @@ describe('SymbolsView', () => {
       editor.setCursorBufferPosition([0, 2]);
       atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration');
 
-      await activationPromise
+      await activationPromise;
 
       expect(editor.getCursorBufferPosition()).toEqual([0, 2]);
     });
@@ -175,7 +175,7 @@ describe('SymbolsView', () => {
       editor = atom.workspace.getActiveTextEditor();
       editor.setCursorBufferPosition([8, 14]);
       atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration');
-      symbolsView = atom.workspace.getModalPanels()[0].item
+      symbolsView = atom.workspace.getModalPanels()[0].item;
 
       await conditionPromise(() => symbolsView.element.querySelectorAll('li').length > 0);
       expect(symbolsView.element.querySelectorAll('li').length).toBe(2);
@@ -183,7 +183,7 @@ describe('SymbolsView', () => {
       spyOn(SymbolsView.prototype, 'moveToPosition').andCallThrough();
       symbolsView.selectListView.confirmSelection();
 
-      await conditionPromise(() => SymbolsView.prototype.moveToPosition.callCount === 1)
+      await conditionPromise(() => SymbolsView.prototype.moveToPosition.callCount === 1);
       expect(atom.workspace.getActiveTextEditor().getPath()).toBe(directory.resolve('tagged-duplicate.js'));
       expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual([0, 4]);
     });
@@ -199,7 +199,7 @@ describe('SymbolsView', () => {
       atom.workspace.getActiveTextEditor().setCursorBufferPosition([18, 4]);
       atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration');
 
-      await activationPromise
+      await activationPromise;
       await conditionPromise(() => SymbolsView.prototype.moveToPosition.callCount === 1);
       expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual([7, 2]);
       SymbolsView.prototype.moveToPosition.reset();
@@ -286,7 +286,7 @@ describe('SymbolsView', () => {
         editor.setCursorBufferPosition([6, 0]);
         atom.commands.dispatch(getEditorView(), 'symbols-view:return-from-declaration');
 
-        await activationPromise
+        await activationPromise;
         expect(editor.getCursorBufferPosition()).toEqual([6, 0]);
       });
 
@@ -297,7 +297,7 @@ describe('SymbolsView', () => {
         spyOn(SymbolsView.prototype, 'moveToPosition').andCallThrough();
         atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration');
 
-        await activationPromise
+        await activationPromise;
         await conditionPromise(() => SymbolsView.prototype.moveToPosition.callCount === 1);
         expect(editor.getCursorBufferPosition()).toEqual([2, 0]);
         atom.commands.dispatch(getEditorView(), 'symbols-view:return-from-declaration');
@@ -326,17 +326,17 @@ describe('SymbolsView', () => {
   describe('project symbols', () => {
     it('displays all tags', async () => {
       await atom.workspace.open(directory.resolve('tagged.js'));
-      expect(getWorkspaceView().querySelector('.symbols-view')).toBeNull()
+      expect(getWorkspaceView().querySelector('.symbols-view')).toBeNull();
       atom.commands.dispatch(getWorkspaceView(), 'symbols-view:toggle-project-symbols');
 
-      await activationPromise
-      symbolsView = atom.workspace.getModalPanels()[0].item
+      await activationPromise;
+      symbolsView = atom.workspace.getModalPanels()[0].item;
 
       await conditionPromise(() => symbolsView.element.querySelectorAll('li').length > 0);
       const directoryBasename = path.basename(directory.getPath());
       const taggedFile = path.join(directoryBasename, 'tagged.js');
       expect(symbolsView.selectListView.refs.loadingMessage).toBeUndefined();
-      expect(document.body.contains(symbolsView.element)).toBe(true)
+      expect(document.body.contains(symbolsView.element)).toBe(true);
       expect(symbolsView.element.querySelectorAll('li').length).toBe(4);
       expect(symbolsView.element.querySelector('li:first-child .primary-line')).toHaveText('callMeMaybe');
       expect(symbolsView.element.querySelector('li:first-child .secondary-line')).toHaveText(taggedFile);
@@ -357,11 +357,11 @@ describe('SymbolsView', () => {
 
       it("does not include the root directory's name when displaying the tag's filename", async () => {
         await atom.workspace.open(directory.resolve('tagged.js'));
-        expect(getWorkspaceView().querySelector('.symbols-view')).toBeNull()
+        expect(getWorkspaceView().querySelector('.symbols-view')).toBeNull();
         atom.commands.dispatch(getWorkspaceView(), 'symbols-view:toggle-project-symbols');
 
-        await activationPromise
-        symbolsView = atom.workspace.getModalPanels()[0].item
+        await activationPromise;
+        symbolsView = atom.workspace.getModalPanels()[0].item;
         await conditionPromise(() => symbolsView.element.querySelectorAll('li').length > 0);
         expect(symbolsView.element.querySelector('li:first-child .primary-line')).toHaveText('callMeMaybe');
         expect(symbolsView.element.querySelector('li:first-child .secondary-line')).toHaveText('tagged.js');
@@ -375,14 +375,14 @@ describe('SymbolsView', () => {
         it("doesn't open the editor", async () => {
           atom.commands.dispatch(getWorkspaceView(), 'symbols-view:toggle-project-symbols');
 
-          await activationPromise
+          await activationPromise;
 
-          symbolsView = atom.workspace.getModalPanels()[0].item
+          symbolsView = atom.workspace.getModalPanels()[0].item;
 
           await conditionPromise(() => symbolsView.element.querySelectorAll('li').length > 0);
           spyOn(atom.workspace, 'open').andCallThrough();
           symbolsView.element.querySelector('li:first-child').click();
-          await conditionPromise(() => symbolsView.selectListView.refs.errorMessage)
+          await conditionPromise(() => symbolsView.selectListView.refs.errorMessage);
           expect(atom.workspace.open).not.toHaveBeenCalled();
           expect(symbolsView.selectListView.refs.errorMessage.textContent.length).toBeGreaterThan(0);
         });
@@ -399,16 +399,16 @@ describe('SymbolsView', () => {
       atom.workspace.getActiveTextEditor().setText('var test = function() {}');
       atom.workspace.getActiveTextEditor().save();
       atom.commands.dispatch(getEditorView(), 'symbols-view:toggle-file-symbols');
-      await activationPromise
+      await activationPromise;
 
-      symbolsView = atom.workspace.getModalPanels()[0].item
+      symbolsView = atom.workspace.getModalPanels()[0].item;
       await conditionPromise(() => symbolsView.selectListView.refs.emptyMessage);
       atom.commands.dispatch(getEditorView(), 'symbols-view:toggle-file-symbols');
 
       atom.workspace.getActiveTextEditor().setGrammar(atom.grammars.grammarForScopeName('source.js'));
       atom.commands.dispatch(getEditorView(), 'symbols-view:toggle-file-symbols');
       await conditionPromise(() => symbolsView.element.querySelectorAll('li').length === 1);
-      expect(document.body.contains(symbolsView.element)).toBe(true)
+      expect(document.body.contains(symbolsView.element)).toBe(true);
       expect(symbolsView.element.querySelector('li:first-child .primary-line')).toHaveText('test');
       expect(symbolsView.element.querySelector('li:first-child .secondary-line')).toHaveText('Line 1');
     });
@@ -422,11 +422,11 @@ describe('SymbolsView', () => {
     it('highlights an exact match', async () => {
       atom.commands.dispatch(getEditorView(), 'symbols-view:toggle-file-symbols');
 
-      await activationPromise
-      symbolsView = atom.workspace.getModalPanels()[0].item
+      await activationPromise;
+      symbolsView = atom.workspace.getModalPanels()[0].item;
       await conditionPromise(() => symbolsView.element.querySelectorAll('li').length > 0);
       symbolsView.selectListView.refs.queryEditor.setText('quicksort');
-      await etch.getScheduler().getNextUpdatePromise()
+      await etch.getScheduler().getNextUpdatePromise();
       const resultView = symbolsView.element.querySelector('.selected');
       const matches = resultView.querySelectorAll('.character-match');
       expect(matches.length).toBe(1);
@@ -435,11 +435,11 @@ describe('SymbolsView', () => {
 
     it('highlights a partial match', async () => {
       atom.commands.dispatch(getEditorView(), 'symbols-view:toggle-file-symbols');
-      await activationPromise
-      symbolsView = atom.workspace.getModalPanels()[0].item
+      await activationPromise;
+      symbolsView = atom.workspace.getModalPanels()[0].item;
       await conditionPromise(() => symbolsView.element.querySelectorAll('li').length > 0);
       symbolsView.selectListView.refs.queryEditor.setText('quick');
-      await etch.getScheduler().getNextUpdatePromise()
+      await etch.getScheduler().getNextUpdatePromise();
       const resultView = symbolsView.element.querySelector('.selected');
       const matches = resultView.querySelectorAll('.character-match');
       expect(matches.length).toBe(1);
@@ -448,11 +448,11 @@ describe('SymbolsView', () => {
 
     it('highlights multiple matches in the symbol name', async () => {
       atom.commands.dispatch(getEditorView(), 'symbols-view:toggle-file-symbols');
-      await activationPromise
-      symbolsView = atom.workspace.getModalPanels()[0].item
+      await activationPromise;
+      symbolsView = atom.workspace.getModalPanels()[0].item;
       await conditionPromise(() => symbolsView.element.querySelectorAll('li').length > 0);
       symbolsView.selectListView.refs.queryEditor.setText('quicort');
-      await etch.getScheduler().getNextUpdatePromise()
+      await etch.getScheduler().getNextUpdatePromise();
       const resultView = symbolsView.element.querySelector('.selected');
       const matches = resultView.querySelectorAll('.character-match');
       expect(matches.length).toBe(2);
@@ -469,8 +469,8 @@ describe('SymbolsView', () => {
     it('jumps to the selected function', async () => {
       expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual([0, 0]);
       atom.commands.dispatch(getEditorView(), 'symbols-view:toggle-file-symbols');
-      await activationPromise
-      symbolsView = atom.workspace.getModalPanels()[0].item
+      await activationPromise;
+      symbolsView = atom.workspace.getModalPanels()[0].item;
       await conditionPromise(() => symbolsView.element.querySelectorAll('li').length > 0);
       symbolsView.selectListView.selectNext();
       expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual([1, 2]);
@@ -481,8 +481,8 @@ describe('SymbolsView', () => {
       atom.workspace.getActiveTextEditor().setSelectedBufferRanges(bufferRanges);
       atom.commands.dispatch(getEditorView(), 'symbols-view:toggle-file-symbols');
 
-      await activationPromise
-      symbolsView = atom.workspace.getModalPanels()[0].item
+      await activationPromise;
+      symbolsView = atom.workspace.getModalPanels()[0].item;
       await conditionPromise(() => symbolsView.element.querySelectorAll('li').length > 0);
 
       symbolsView.selectListView.selectNext();
@@ -502,8 +502,8 @@ describe('SymbolsView', () => {
       expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual([0, 0]);
       atom.commands.dispatch(getEditorView(), 'symbols-view:toggle-file-symbols');
 
-      await activationPromise
-      symbolsView = atom.workspace.getModalPanels()[0].item
+      await activationPromise;
+      symbolsView = atom.workspace.getModalPanels()[0].item;
       await conditionPromise(() => symbolsView.element.querySelectorAll('li').length > 0);
       symbolsView.selectListView.selectNext();
       expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual([0, 0]);
