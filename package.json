@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "async": "^0.2.6",
-    "atom-select-list": "0.0.14",
+    "atom-select-list": "0.0.16",
     "ctags": "^3.0.0",
     "fs-plus": "^2.9.3",
     "fuzzaldrin": "^2.1.0",
