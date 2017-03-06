@@ -18,7 +18,7 @@
     "async": "^0.2.6",
     "atom-select-list": "0.0.16",
     "ctags": "^3.0.0",
-    "fs-plus": "^2.10.0",
+    "fs-plus": "^3.0.0",
     "fuzzaldrin": "^2.1.0",
     "humanize-plus": "^1.8.2",
     "temp": "^0.8.3",
