@@ -426,7 +426,7 @@ describe('SymbolsView', () => {
       symbolsView = atom.workspace.getModalPanels()[0].item;
       await conditionPromise(() => symbolsView.element.querySelectorAll('li').length > 0);
       symbolsView.selectListView.refs.queryEditor.setText('quicksort');
-      await etch.getScheduler().getNextUpdatePromise();
+      await getOrScheduleUpdatePromise();
       const resultView = symbolsView.element.querySelector('.selected');
       const matches = resultView.querySelectorAll('.character-match');
       expect(matches.length).toBe(1);
@@ -439,7 +439,7 @@ describe('SymbolsView', () => {
       symbolsView = atom.workspace.getModalPanels()[0].item;
       await conditionPromise(() => symbolsView.element.querySelectorAll('li').length > 0);
       symbolsView.selectListView.refs.queryEditor.setText('quick');
-      await etch.getScheduler().getNextUpdatePromise();
+      await getOrScheduleUpdatePromise();
       const resultView = symbolsView.element.querySelector('.selected');
       const matches = resultView.querySelectorAll('.character-match');
       expect(matches.length).toBe(1);
@@ -452,7 +452,7 @@ describe('SymbolsView', () => {
       symbolsView = atom.workspace.getModalPanels()[0].item;
       await conditionPromise(() => symbolsView.element.querySelectorAll('li').length > 0);
       symbolsView.selectListView.refs.queryEditor.setText('quicort');
-      await etch.getScheduler().getNextUpdatePromise();
+      await getOrScheduleUpdatePromise();
       const resultView = symbolsView.element.querySelector('.selected');
       const matches = resultView.querySelectorAll('.character-match');
       expect(matches.length).toBe(2);
@@ -510,3 +510,7 @@ describe('SymbolsView', () => {
     });
   });
 });
+
+function getOrScheduleUpdatePromise () {
+  return new Promise((resolve) => etch.getScheduler().updateDocument(resolve))
+}
