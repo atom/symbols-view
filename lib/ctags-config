@@ -97,6 +97,7 @@
 --regex-JavaScript=/(,|^|\*\/)[ \t]*get[ \t]+([A-Za-z_$][A-Za-z0-9_$]+)[ \t]*\([ \t]*\)[ \t]*\{/get \2/,function/
 --regex-JavaScript=/(,|^|\*\/)[ \t]*set[ \t]+([A-Za-z_$][A-Za-z0-9_$]+)[ \t]*\([ \t]*([A-Za-z_$][A-Za-z0-9_$]+)?[ \t]*\)[ \t]*\{/set \2/,function/
 --regex-JavaScript=/(,|^|\*\/)[ \t]*async[ \t]+([A-Za-z_$][A-Za-z0-9_$]+)[ \t]*\([ \t]*([A-Za-z_$].+)?[ \t]*\)[ \t]*\{/\2/,function/
+--regex-JavaScript=/class[ \t]+([A-Za-z0-9._$]+)[ \t]*/\1/c,class/
 
 --langdef=haxe
 --langmap=haxe:.hx
