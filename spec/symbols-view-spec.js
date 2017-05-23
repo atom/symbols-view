@@ -67,7 +67,7 @@ describe('SymbolsView', () => {
       expect(symbolsView.generateTags).not.toHaveBeenCalled();
       await symbolsView.cancel();
 
-      editor.save();
+      await editor.save();
       atom.commands.dispatch(getEditorView(), 'symbols-view:toggle-file-symbols');
       await conditionPromise(() => symbolsView.element.querySelectorAll('li').length > 0);
       expect(symbolsView.selectListView.refs.loadingMessage).toBeUndefined();
@@ -397,7 +397,7 @@ describe('SymbolsView', () => {
       await atom.packages.activatePackage('language-javascript');
       await atom.workspace.open('sample.javascript');
       atom.workspace.getActiveTextEditor().setText('var test = function() {}');
-      atom.workspace.getActiveTextEditor().save();
+      await atom.workspace.getActiveTextEditor().save();
       atom.commands.dispatch(getEditorView(), 'symbols-view:toggle-file-symbols');
       await activationPromise;
 
