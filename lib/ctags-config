@@ -16,6 +16,38 @@
 --regex-CoffeeScript=/^[ \t]*xit[ \t]'([^']+)'[ \t]*,[ \t]+[-=]>/disabled: \1/f,function/
 --regex-CoffeeScript=/^[ \t]*class[ \t]*([a-zA-Z$_\.0-9]+)[ \t]*/\1/f,function/
 
+--langdef=ColdFusion
+--langmap=ColdFusion:.cfc
+--langmap=ColdFusion:+.cfm
+--langmap=ColdFusion:+.cfml
+--regex-ColdFusion=/(,|(;|^)[ \t]*(var|([A-Za-z_$][A-Za-z0-9_$.]*\.)*))[ \t]*([A-Za-z0-9_$]+)[ \t]*=[ \t]*function[ \t]*\(/\5/,function/
+--regex-ColdFusion=/function[ \t]+([A-Za-z0-9_$]+)[ \t]*\([^)]*\)/\1/,function/
+--regex-ColdFusion=/cffunction[ \t]+([A-Za-z0-9_$]+)[ \t]*\([^)]*\)/\1/,cffunction/
+--regex-ColdFusion=/(,|^|\*\/)[ \t]*([A-Za-z_$][A-Za-z0-9_$]+)[ \t]*:[ \t]*function[ \t]*\(/\2/,function/
+--regex-ColdFusion=/(,|^|\*\/)[ \t]*(static[ \t]+)?(while|if|for|function|switch|with|([A-Za-z_$][A-Za-z0-9_$]+))[ \t]*\(.*\)[ \t]*\{/\2\4/,function/
+--regex-ColdFusion=/(,|^|\*\/)[ \t]*get[ \t]+([A-Za-z_$][A-Za-z0-9_$]+)[ \t]*\([ \t]*\)[ \t]*\{/get \2/,function/
+--regex-ColdFusion=/(,|^|\*\/)[ \t]*set[ \t]+([A-Za-z_$][A-Za-z0-9_$]+)[ \t]*\([ \t]*([A-Za-z_$][A-Za-z0-9_$]+)?[ \t]*\)[ \t]*\{/set \2/,function/
+--regex-ColdFusion=/(,|^|\*\/)[ \t]*async[ \t]+([A-Za-z_$][A-Za-z0-9_$]+)[ \t]*\([ \t]*([A-Za-z_$].+)?[ \t]*\)[ \t]*\{/\2/,function/
+--regex-ColdFusion=/component[ \t]+([A-Za-z0-9._$]+)[ \t]*/\1/c,component/
+--regex-ColdFusion=/^[ \t]*given[ \t]"(.+)"[ \t]*,[ \t]+[-=]>/\1/f,function/
+--regex-ColdFusion=/^[ \t]*given[ \t]'(.+)'[ \t]*,[ \t]+[-=]>/\1/f,function/
+--regex-ColdFusion=/^[ \t]*story[ \t]"(.+)"[ \t]*,[ \t]+[-=]>/\1/f,function/
+--regex-ColdFusion=/^[ \t]*story[ \t]"(.+)"[ \t]*,[ \t]+[-=]>/\1/f,function/
+--regex-ColdFusion=/^[ \t]*feature[ \t]'(.+)'[ \t]*,[ \t]+[-=]>/\1/f,function/
+--regex-ColdFusion=/^[ \t]*feature[ \t]'(.+)'[ \t]*,[ \t]+[-=]>/\1/f,function/
+--regex-ColdFusion=/^[ \t]*when[ \t]"(.+)"[ \t]*,[ \t]+[-=]>/\1/f,function/
+--regex-ColdFusion=/^[ \t]*when[ \t]'(.+)'[ \t]*,[ \t]+[-=]>/\1/f,function/
+--regex-ColdFusion=/^[ \t]*then[ \t]"(.+)"[ \t]*,[ \t]+[-=]>/\1/f,function/
+--regex-ColdFusion=/^[ \t]*then[ \t]'(.+)'[ \t]*,[ \t]+[-=]>/\1/f,function/
+--regex-ColdFusion=/^[ \t]*describe[ \t]"(.+)"[ \t]*,[ \t]+[-=]>/\1/f,function/
+--regex-ColdFusion=/^[ \t]*describe[ \t]'(.+)'[ \t]*,[ \t]+[-=]>/\1/f,function/
+--regex-ColdFusion=/^[ \t]*it[ \t]"([^"]+)"[ \t]*,[ \t]+[-=]>/\1/f,function/
+--regex-ColdFusion=/^[ \t]*it[ \t]'([^']+)'[ \t]*,[ \t]+[-=]>/\1/f,function/
+--regex-ColdFusion=/^[ \t]*xdescribe[ \t]"(.+)"[ \t]*,[ \t]+[-=]>/disabled\: \1/f,function/
+--regex-ColdFusion=/^[ \t]*xdescribe[ \t]'(.+)'[ \t]*,[ \t]+[-=]>/disabled: \1/f,function/
+--regex-ColdFusion=/^[ \t]*xit[ \t]"([^"]+)"[ \t]*,[ \t]+[-=]>/disabled: \1/f,function/
+--regex-ColdFusion=/^[ \t]*xit[ \t]'([^']+)'[ \t]*,[ \t]+[-=]>/disabled: \1/f,function/
+
 --langdef=Css
 --langmap=Css:.css
 --langmap=Css:+.less
