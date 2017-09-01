@@ -130,6 +130,18 @@
 --regex-JavaScript=/(,|^|\*\/)[ \t]*set[ \t]+([A-Za-z_$][A-Za-z0-9_$]+)[ \t]*\([ \t]*([A-Za-z_$][A-Za-z0-9_$]+)?[ \t]*\)[ \t]*\{/set \2/,function/
 --regex-JavaScript=/(,|^|\*\/)[ \t]*async[ \t]+([A-Za-z_$][A-Za-z0-9_$]+)[ \t]*\([ \t]*([A-Za-z_$].+)?[ \t]*\)[ \t]*\{/\2/,function/
 --regex-JavaScript=/class[ \t]+([A-Za-z0-9._$]+)[ \t]*/\1/c,class/
+--regex-JavaScript=/^[ \t]*describe\("([^"]+)"[ \t]*,/\1/f,function/
+--regex-JavaScript=/^[ \t]*describe\('([^']+)'[ \t]*,/\1/f,function/
+--regex-JavaScript=/^[ \t]*it\("([^"]+)"[ \t]*,/\1/f,function/
+--regex-JavaScript=/^[ \t]*it\('([^']+)'[ \t]*,/\1/f,function/
+--regex-JavaScript=/^[ \t]*f+describe\('([^']+)'[ \t]*,/focused: \1/f,function/
+--regex-JavaScript=/^[ \t]*f+describe\("([^"]+)"[ \t]*,/focused: \1/f,function/
+--regex-JavaScript=/^[ \t]*f+it\('([^']+)'[ \t]*,/focused: \1/f,function/
+--regex-JavaScript=/^[ \t]*f+it\("([^"]+)"[ \t]*,/focused: \1/f,function/
+--regex-JavaScript=/^[ \t]*xdescribe\('([^']+)'[ \t]*,/disabled: \1/f,function/
+--regex-JavaScript=/^[ \t]*xdescribe\("([^"]+)"[ \t]*,/disabled: \1/f,function/
+--regex-JavaScript=/^[ \t]*xit\('([^']+)'[ \t]*,/disabled: \1/f,function/
+--regex-JavaScript=/^[ \t]*xit\("([^"]+)"[ \t]*,/disabled: \1/f,function/
 
 --langdef=haxe
 --langmap=haxe:.hx
