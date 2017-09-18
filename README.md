@@ -9,8 +9,8 @@ If your project has a `tags`/`.tags`/`TAGS`/`.TAGS` file at the root then follow
 |-------|-----------|------------------|-----------------|--------------------|
 |`symbols-view:toggle-file-symbols`|Show all symbols in current file|<kbd>ctrl-r</kbd>|<kbd>cmd-r</kbd>|<kbd>ctrl-r</kbd>|
 |`symbols-view:toggle-project-symbols`|Show all symbols in the project|<kbd>ctrl-shift-r</kbd>|<kbd>cmd-shift-r</kbd>|<kbd>ctrl-shift-r</kbd>|
-|`symbols-view:go-to-declaration`|Jump to the symbol under the cursor|<kbd>ctrl-alt-down</kbd>|<kbd>cmd-alt-down</kbd>||
-|`symbols-view:return-from-declaration`|Return from the jump|<kbd>ctrl-alt-up</kbd>|<kbd>cmd-alt-up</kbd>||
+|`symbols-view:go-to-declaration`|Jump to the symbol under the cursor|<kbd>ctrl-alt-down</kbd><br><kbd>F12</kbd>|<kbd>cmd-alt-down</kbd><br><kbd>F12</kbd>|<kbd>F12</kbd>|
+|`symbols-view:return-from-declaration`|Return from the jump|<kbd>ctrl-alt-up</kbd><br><kbd>ctrl-F12</kbd>|<kbd>cmd-alt-up</kbd><br><kbd>cmd-F12</kbd>|<kbd>ctrl-F12</kbd>|
 
 This package uses [ctags](http://ctags.sourceforge.net).
 
