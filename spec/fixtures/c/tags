@@ -3,6 +3,6 @@
 !_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
-!_TAG_PROGRAM_VERSION	5.8	//
-UNUSED	.\sample.c	1;"	d	file:
-f	.\sample.c	/^static void f(int x)$/;"	f	file:
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+UNUSED	sample.c	1;"	d	file:
+f	sample.c	/^static void f(int x)$/;"	f	file:
