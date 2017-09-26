@@ -279,6 +279,19 @@ describe('SymbolsView', () => {
       expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual([31, 0]);
     });
 
+    it('handles jumping to C macros for pattern only tags file', async () => {
+      atom.project.setPaths([temp.mkdirSync('atom-symbols-view-c-pattern-')]);
+      fs.copySync(path.join(__dirname, 'fixtures', 'c', 'pattern'), atom.project.getPaths()[0]);
+      await atom.packages.activatePackage('language-c');
+      await atom.workspace.open('hello.c');
+      spyOn(SymbolsView.prototype, 'moveToPosition').andCallThrough();
+      atom.workspace.getActiveTextEditor().setCursorBufferPosition([5, 19]);
+      atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration');
+
+      await conditionPromise(() => SymbolsView.prototype.moveToPosition.callCount === 1);
+      expect(atom.workspace.getActiveTextEditor().getCursorBufferPosition()).toEqual([2, 0]);
+    });
+
     describe('return from declaration', () => {
       it("doesn't do anything when no go-to have been triggered", async () => {
         await atom.workspace.open(directory.resolve('tagged.js'));
