@@ -170,6 +170,22 @@ describe('SymbolsView', () => {
       expect(editor.getCursorBufferPosition()).toEqual([2, 0]);
     });
 
+    it('correctly moves the cursor to the declaration of a C preprocessor macro', async () => {
+      atom.project.setPaths([temp.mkdirSync('atom-symbols-view-c-')]);
+      fs.copySync(path.join(__dirname, 'fixtures', 'c'), atom.project.getPaths()[0]);
+
+      await atom.packages.activatePackage('language-c');
+      await atom.workspace.open('sample.c');
+
+      editor = atom.workspace.getActiveTextEditor();
+      editor.setCursorBufferPosition([4, 4]);
+      spyOn(SymbolsView.prototype, 'moveToPosition').andCallThrough();
+      atom.commands.dispatch(getEditorView(), 'symbols-view:go-to-declaration');
+
+      await conditionPromise(() => SymbolsView.prototype.moveToPosition.callCount === 1);
+      expect(editor.getCursorBufferPosition()).toEqual([0, 0]);
+    });
+
     it('displays matches when more than one exists and opens the selected match', async () => {
       await atom.workspace.open(directory.resolve('tagged.js'));
       editor = atom.workspace.getActiveTextEditor();
