@@ -5,6 +5,8 @@
 
 '.platform-win32 atom-text-editor':
   'ctrl-r': 'symbols-view:toggle-file-symbols'
+  'ctrl-alt-down': 'symbols-view:go-to-declaration'
+  'ctrl-alt-up': 'symbols-view:return-from-declaration'
 
 '.platform-linux atom-text-editor':
   'ctrl-r': 'symbols-view:toggle-file-symbols'
