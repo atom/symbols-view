@@ -196,3 +196,10 @@
 --regex-latex=/\\section\*\{([^}]*)\}/\1/s,section/
 --regex-latex=/\\subsection\*\{([^}]*)\}/\1/t,subsection/
 --regex-latex=/\\subsubsection\*\{([^}]*)\}/\1/u,subsubsection/
+
+--langdef=Scilab
+--langmap=Scilab:.sce
+--langmap=Scilab:+.sci
+--langmap=Scilab:+.m
+--langmap=Scilab:+.kla
+--regex-Scilab=#^[ \t]*function.*[ \t=]]*([a-zA-Z_][a-zA-Z0-9_]*)\(#\1#q,function#
