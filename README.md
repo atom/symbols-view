@@ -1,4 +1,5 @@
-# Symbols View package
+##### Atom and all repositories under Atom will be archived on December 15, 2022. Learn more in our [official announcement](https://github.blog/2022-06-08-sunsetting-atom/)
+ # Symbols View package
 [![macOS Build Status](https://travis-ci.org/atom/symbols-view.svg?branch=master)](https://travis-ci.org/atom/symbols-view) [![Windows Build Status](https://ci.appveyor.com/api/projects/status/al68vtv83x49eu5d/branch/master?svg=true)](https://ci.appveyor.com/project/Atom/symbols-view/branch/master) [![Dependency Status](https://david-dm.org/atom/symbols-view.svg)](https://david-dm.org/atom/symbols-view)
 
 Display the list of functions/methods in the editor.
